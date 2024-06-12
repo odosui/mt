@@ -1,0 +1,178 @@
+@import '../breakpoints';
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  --accent: #bf9f33;
+  --accentHover: #cfaf43;
+  --text-color: #030027;
+}
+
+body,
+* {
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  outline: none;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+
+p {
+  line-height: 160%;
+  margin: 1em 0;
+}
+
+h1 {
+  line-height: 130%;
+  font-family: Roboto Slab;
+  color: var(--head-color);
+
+  font-size: 36px;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  @include md {
+    font-size: 42px;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+h2 {
+  line-height: 130%;
+  font-family: Roboto Slab;
+  color: var(--head-color);
+
+  font-size: 26px;
+  margin-top: 2.2rem;
+  margin-bottom: 1rem;
+  @include md {
+    font-size: 30px;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+h3 {
+  font-family: Roboto Slab;
+  color: var(--head-color);
+  font-size: 24px;
+  margin-bottom: 2rem;
+  line-height: 140%;
+  letter-spacing: 0.25px;
+  text-align: center;
+}
+
+i {
+  font-style: italic;
+}
+
+b {
+  font-weight: bold;
+}
+
+a {
+  color: var(--accent);
+  &:hover {
+    color: var(--accent-hover);
+  }
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 75%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+
+em {
+  font-style: italic;
+}
+
+b {
+  font-weight: bold;
+}
+
+ul {
+  margin: 1em 0;
+  padding: 0;
+  list-style: none;
+  li {
+    margin-bottom: 1rem;
+    line-height: 150%;
+    &::before {
+      color: var(--accent);
+      content: '–';
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    p {
+      display: inline;
+      margin: 0;
+    }
+  }
+}
+
+ol {
+  margin: 1em 0;
+  padding: 0;
+  counter-reset: my-awesome-counter;
+  list-style: none;
+  li {
+    counter-increment: my-awesome-counter;
+    margin-bottom: 1rem;
+    line-height: 150%;
+    &::before {
+      color: var(--accent);
+      content: counter(my-awesome-counter) '.';
+      margin-right: 8px;
+      font-weight: bold;
+    }
+    p {
+      display: inline;
+      margin: 0;
+    }
+  }
+}
+
+blockquote {
+  font-style: italic;
+  padding: 1rem;
+  background: #f1f1f1;
+  border-left: 2px solid var(--accent);
+  line-height: 150%;
+  margin: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.notes-page {
+  padding: 2rem 1rem;
+  @include md {
+    padding: 5rem;
+  }
+
+  .note-body {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  .powered {
+    text-align: center;
+    width: 100%;
+    max-width: 550px;
+    margin: 3rem auto 0rem;
+    font-size: 14px;
+    a {
+      font-size: 14px;
+    }
+
+    @include md {
+      margin: 4rem auto 0rem;
+    }
+  }
+}

@@ -1,0 +1,236 @@
+.board-page {
+  width: 100%;
+  height: 100vh;
+  flex: 1;
+  overflow: hidden;
+
+  // .board-header {
+  //   height: $unit6;
+  //   // background-color: var(--color-menu-bg);
+  // }
+  .board-main {
+    padding-top: $unit3;
+    padding-bottom: $unit3;
+    background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
+    background-size: 16px 16px;
+    overflow-y: auto;
+    background-color: var(--color-bg);
+
+    display: flex;
+    height: calc(100vh);
+    display: flex;
+    .new-col {
+      width: $unit10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.5;
+      transition: background-color 0.1s ease-in-out;
+      p {
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        text-transform: uppercase;
+        svg {
+          margin-right: $unit1;
+        }
+      }
+      &:hover {
+        background-color: var(--color-bg-hover);
+        cursor: pointer;
+        p {
+          opacity: 1;
+        }
+      }
+    }
+    .board-col {
+      width: $unit12;
+      flex: 0 0 $unit12;
+      padding: 0 $unit2;
+      &.empty {
+        .note-search {
+          opacity: 1;
+        }
+      }
+      &:hover {
+        border-right: 2px dashed var(--color-menu-border);
+        padding-right: calc(#{$unit2} - 2px);
+
+        .note-search {
+          opacity: 1;
+        }
+
+        .delete-col {
+          button {
+            opacity: 1;
+          }
+        }
+      }
+
+      .board-item {
+        position: relative;
+        background-color: white;
+        border-radius: $unit0;
+        margin-bottom: $unit3;
+        overflow-y: auto;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px 0px,
+          rgba(0, 0, 0, 0.2) 0px 0px 1px 0px;
+
+        ol {
+          margin-left: $unit5;
+        }
+
+        .board-item-body {
+          padding: 0 $unit2 $unit1 $unit2;
+        }
+
+        .board-item-menu {
+          padding: $unit1 $unit2 0;
+          height: $unit4;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: $unit0;
+
+          .left {
+            display: flex;
+            align-items: center;
+
+            svg.save {
+              font-size: $text2;
+            }
+          }
+
+          .menu-icon {
+            border-radius: $unit0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: $unit3;
+            height: $unit3;
+            cursor: pointer;
+            &:hover,
+            &.open {
+              opacity: 1;
+              background-color: var(--color-bg);
+              svg {
+                fill: var(--color-notes-text-secondary);
+              }
+            }
+            svg {
+              font-size: $text2;
+              fill: var(--lighter);
+            }
+          }
+
+          .dropdown-menu-icon {
+            .dropdown-menu {
+              width: $unit10;
+              top: $unit5;
+              right: $unit2;
+              opacity: 0;
+              transition: opacity 0.2s ease-in-out;
+            }
+
+            &.open {
+              .dropdown-menu {
+                opacity: 1;
+              }
+            }
+          }
+        }
+
+        .resize-handle {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: $unit1;
+          cursor: ns-resize;
+          &:hover {
+            background-color: var(--color-menu-border);
+          }
+        }
+      }
+
+      .delete-col {
+        display: flex;
+        justify-content: center;
+        button {
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+
+  .note-search {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    position: relative;
+    margin-bottom: $unit3;
+
+    input {
+      width: 100%;
+      padding: $unit1 $unit2;
+      border: 0;
+      background-color: transparent;
+      outline: none;
+
+      &:focus {
+        // border-color: var(--color-menu-accent);
+      }
+    }
+
+    .note-items {
+      position: absolute;
+      width: 100%;
+      max-height: $unit14;
+      overflow-y: auto;
+      border: 1px solid var(--color-menu-border);
+      border-top: 0;
+      border-radius: $unit0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      background-color: white;
+      // box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
+      box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0px 8px 10px 0px rgba(0, 0, 0, 0.14),
+        0px 3px 14px 0px rgba(0, 0, 0, 0.12);
+
+      .note-item {
+        padding: $unit3 $unit4;
+        border-bottom: 1px solid var(--color-menu-border);
+        transition: background-color 0.1s ease-in-out;
+        &:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+        cursor: pointer;
+        &:hover {
+          background-color: var(--color-bg-hover);
+        }
+
+        i {
+          color: var(--color-menu-text-secondary);
+        }
+      }
+    }
+
+    &.active {
+      opacity: 1;
+      border: 1px solid var(--color-menu-border);
+      border-radius: $unit0;
+      background-color: white;
+      box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%),
+        0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
+      input {
+        border: 0;
+        padding: calc(#{$unit1} - 1px) calc(#{$unit2} - 1px);
+      }
+    }
+  }
+}

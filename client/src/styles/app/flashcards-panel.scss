@@ -1,0 +1,131 @@
+.flashcards-panel {
+  width: $unit12;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: $unit4 $unit3;
+  border-left: 1px solid var(--color-flashcards-panel-border);
+  background-color: var(--color-flashcards-panel-bg);
+  position: relative;
+
+  .quiz-menu-empty {
+    padding: $unit5 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    p {
+      color: var(--color-flashcards-panel-text-secondary);
+    }
+  }
+
+  .quiz-menu-toggle {
+    opacity: 0;
+    transition: opacity 0.2s ease-out, background-color 0.2s ease-out;
+    position: absolute;
+    top: $unit0;
+    left: $unit1;
+    cursor: pointer;
+    padding: $unit0 $unit1;
+    border-radius: $unit1;
+    svg {
+      fill: var(--color-flashcards-panel-text-secondary);
+    }
+
+    &:hover {
+      background-color: var(--color-flashcards-panel-bg-hover);
+      svg {
+        fill: var(--color-flashcards-panel-text-secondary-intense);
+      }
+    }
+  }
+
+  &:hover {
+    .quiz-menu-toggle {
+      opacity: 1;
+    }
+  }
+
+  h3 {
+    color: var(--color-flashcards-panel-text-secondary);
+    font-size: 12px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ai-note {
+    font-size: $text2;
+    color: var(--color-flashcards-panel-text);
+    padding: $unit2 $unit2;
+    margin-bottom: $unit2;
+    text-align: center;
+    background: var(--color-flashcards-panel-info-bg);
+    border-radius: $unit0;
+  }
+
+  .quiz-menu-form {
+    background-color: var(--color-flashcards-panel-form-bg);
+    width: 100%;
+    border-radius: $unit0;
+    margin-bottom: $unit3;
+    padding: $unit2;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    position: relative;
+
+    textarea {
+      border: 0;
+      width: 100%;
+      background: transparent;
+      padding: $unit1 0;
+      resize: none;
+      font-size: $text2;
+    }
+
+    label {
+      font-size: $text0;
+      text-transform: uppercase;
+      color: var(--color-flashcards-panel-text-secondary);
+      margin-bottom: $unit0;
+      display: block;
+    }
+
+    button.del {
+      position: absolute;
+      top: $unit1;
+      right: $unit1;
+      background: transparent;
+      color: var(--color-flashcards-panel-text-secondary);
+      font-size: $text2;
+      cursor: pointer;
+      transition: background-color 0.2s ease-out;
+      border: 0;
+      border-radius: $unit1;
+      svg {
+        fill: var(--color-flashcards-panel-text-secondary);
+      }
+      &:hover {
+        background: var(--color-flashcards-panel-bg);
+      }
+    }
+
+    .form-row.add-btn {
+      margin-top: $unit3;
+      display: flex;
+      justify-content: center;
+
+      button {
+        background: transparent;
+        color: var(--color-flashcards-panel-accent);
+        justify-content: center;
+        transition: background-color 0.2s ease-out;
+        &:hover {
+          background: var(--color-flashcards-panel-bg-hover);
+        }
+      }
+    }
+  }
+}

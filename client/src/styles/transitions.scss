@@ -1,0 +1,123 @@
+// TRANSITIONS
+
+.atop-enter {
+  transition: transform 0.1s ease-in, opacity 0.1s ease-in;
+  opacity: 0;
+  transform: translateY(-30px);
+  &.atop-enter-active {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.atop-exit {
+  opacity: 1;
+  transform: translateY(0px);
+}
+.atop-exit-active {
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: transform 0.1s ease-in, opacity 0.1s ease-in;
+}
+
+.atop-appear {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.atop-appear-active {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: transform 0.1s ease-in, opacity 0.1s ease-in;
+}
+
+// aleft
+
+.aleft-enter {
+  transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+  opacity: 0;
+  transform: translateX(100px);
+  &.aleft-enter-active {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.aleft-exit {
+  opacity: 1;
+  transform: translateX(0px);
+}
+.aleft-exit-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+}
+
+.aleft-appear {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.aleft-appear-active {
+  opacity: 1;
+  transform: translateX(0px);
+  transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+}
+
+// Slide
+
+$slidePeriod: 200ms;
+
+.slide-enter {
+  opacity: 0;
+  transform: translate(-250px, 0);
+  transform: translate3d(-250px, 0, 0);
+}
+.slide-enter-active {
+  opacity: 1;
+  transform: translate(0, 0);
+  transform: translate3d(0, 0, 0);
+  transition-property: transform, opacity;
+  transition-duration: $slidePeriod;
+  transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+}
+
+.slide-exit {
+  opacity: 1;
+  transform: translate(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.slide-exit-active {
+  opacity: 0;
+  transform: translate(-250px, 0);
+  transform: translate3d(-250px, 0, 0);
+  transition-property: transform, opacity;
+  transition-duration: $slidePeriod;
+  transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+}
+
+// slide right
+
+.slide-right-enter {
+  opacity: 0;
+  transform: translate(250px, 0);
+}
+
+.slide-right-enter-active {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition-property: transform, opacity;
+  transition-duration: $slidePeriod;
+  transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+}
+
+.slide-right-exit {
+  opacity: 1;
+  transform: translate(0, 0, 0);
+}
+
+.slide-right-exit-active {
+  opacity: 0;
+  transform: translate(250px, 0);
+  transition-property: transform, opacity;
+  transition-duration: $slidePeriod;
+  transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+}

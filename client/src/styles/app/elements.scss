@@ -1,0 +1,131 @@
+.btn {
+  border: none;
+  margin: 0;
+  padding: $unit1 $unit2;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: inherit;
+  outline: none;
+  background-color: var(--accent);
+  color: var(--accentText);
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out;
+  &:hover {
+    background-color: var(--accentHover);
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  svg {
+    fill: var(--accentText);
+    margin-right: 4px;
+    font-size: 1.2rem;
+  }
+  &.danger {
+    background-color: var(--danger);
+    &:hover {
+      background-color: var(--dangerHover);
+    }
+    &.lite {
+      background-color: transparent;
+      color: var(--danger);
+      svg {
+        fill: var(--danger);
+      }
+    }
+  }
+  &.big {
+    padding: 8px 16px;
+  }
+
+  button:disabled,
+  button[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+}
+
+a.action-btn {
+  padding: $unit1 $unit2;
+  transition: background-color 0.2s ease-out;
+  border-radius: $unit2;
+  &:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+
+.spinner {
+  font-size: 10px;
+  margin: $unit4 auto;
+  text-indent: -9999em;
+  width: $unit5;
+  height: $unit5;
+  border-radius: 50%;
+  background: #ffffff;
+  background: linear-gradient(to right, var(--accent) 10%, var(--color-bg) 42%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+
+  &:before {
+    width: 50%;
+    height: 50%;
+    background: var(--color-bg);
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+  }
+
+  &:after {
+    background: var(--color-bg);
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

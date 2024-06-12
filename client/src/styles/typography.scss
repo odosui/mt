@@ -1,0 +1,155 @@
+@import './vars';
+
+.note-preview {
+  width: 100%;
+  max-width: $unit14;
+
+  a {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+
+    color: var(--color-note-area-accent);
+    * {
+      color: var(--color-note-area-accent);
+    }
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+    font-size: 75%;
+    span {
+      color: rgb(248, 248, 242);
+    }
+    &.inline {
+      background-color: rgba(27, 31, 35, 0.05);
+      border-radius: 3px;
+      padding: 0.2em 0.4em;
+    }
+  }
+
+  .code-error {
+    background-color: var(--color-note-preview-error-bg);
+    border-radius: $unit1;
+    padding: $unit2;
+    margin-bottom: $unit3;
+    color: var(--color-text);
+    overflow: hidden;
+    white-space: pre-wrap;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  b {
+    font-weight: bold;
+  }
+
+  blockquote {
+    font-style: italic;
+    padding: 1rem;
+    background: var(--color-note-area-bg-hover);
+    border-left: 2px solid var(--accent);
+    line-height: 150%;
+    margin-bottom: $unit3;
+    border-radius: $unit0;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a.cross-link {
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dashed;
+  }
+
+  h1 {
+    font-family: Roboto Slab;
+    font-weight: bold;
+    font-size: 1.8rem;
+    line-height: 140%;
+    margin-bottom: $unit4;
+  }
+
+  h2 {
+    font-family: Roboto Slab;
+    font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 140%;
+    margin-top: $unit5;
+    margin-bottom: $unit3;
+  }
+
+  h3 {
+    font-family: Roboto Slab;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 140%;
+    margin-bottom: 0.8rem;
+  }
+
+  p {
+    white-space: pre-wrap;
+    line-height: 150%;
+    margin: 0 0 $unit3 0;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  ul {
+    margin: 0 0 0 0;
+    li {
+      margin-bottom: $unit1;
+      line-height: 150%;
+      &::before {
+        color: var(--accent);
+        content: '–';
+        margin-right: $unit1;
+        font-weight: bold;
+      }
+      &:last-child {
+        margin-bottom: $unit3;
+      }
+    }
+  }
+
+  ol {
+    margin: 0 0 0 0;
+    padding: 0;
+    counter-reset: li-counter;
+    list-style: none;
+    li {
+      margin-bottom: $unit3;
+      counter-increment: li-counter;
+      line-height: 150%;
+      position: relative;
+
+      &::before {
+        font-size: $text0;
+        position: absolute;
+        left: -$unit5;
+        color: #bbb;
+        content: counter(li-counter, decimal-leading-zero);
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .code-block {
+    margin: 0 0 $unit3 0;
+  }
+
+  span.tag {
+    color: var(--accent);
+    font-weight: bold;
+    caret-color: var(--accent);
+    margin-right: $unit0;
+    font-size: 14px;
+  }
+}

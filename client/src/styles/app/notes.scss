@@ -1,0 +1,118 @@
+.notes {
+  width: $notes-width;
+  background-color: var(--color-notes-bg);
+  border-right: 1px solid var(--color-notes-border);
+  display: flex;
+  flex-direction: column;
+  &.meditation {
+    display: none;
+  }
+
+  .notes-bar {
+    height: $notes-bar-height;
+    display: flex;
+    border-bottom: 1px solid var(--color-notes-border);
+    padding: 0 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    .search {
+      width: 88%;
+      display: flex;
+      background: var(--color-notes-input-bg);
+      padding: 5px;
+      align-items: center;
+      border-radius: 5px;
+      input {
+        width: 100%;
+        border: 0;
+        font-size: 14px;
+      }
+      svg {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
+    .newNote {
+      cursor: pointer;
+      svg {
+        transition: fill 0.1s ease-in;
+        fill: #333;
+        font-size: 22px;
+      }
+      &:hover {
+        svg {
+          fill: var(--color-notes-accent);
+        }
+      }
+    }
+  }
+
+  .notes-items {
+    overflow-y: overlay;
+    overflow-x: hidden;
+    flex: 1;
+
+    .item {
+      padding: $unit3 $unit3;
+      cursor: pointer;
+      transition: background-color 0.1s ease-out;
+      font-size: 14px;
+      border-bottom: 1px solid var(--color-notes-border);
+      .note-head {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: $unit1;
+        .sid {
+          font-size: 12px;
+          color: var(--color-notes-text-secondary);
+        }
+        .updated-at {
+          font-size: 12px;
+          color: var(--color-notes-text-secondary);
+        }
+      }
+      &:hover {
+        background-color: var(--color-notes-bg-hover);
+      }
+      &.active {
+        background-color: var(--color-notes-bg-hover);
+        border-left: 3px solid var(--color-notes-accent);
+        padding-left: 13px;
+      }
+
+      .note-tags {
+        margin-top: $unit1;
+        span {
+          color: var(--color-notes-text-secondary);
+          margin-right: 10px;
+          font-size: 12px;
+          font-style: italic;
+        }
+      }
+
+      .snippet {
+        line-height: 140%;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        // white-space: pre-line;
+        i {
+          background: var(--color-notes-accent);
+          color: white;
+        }
+      }
+    }
+
+    .no-results {
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-notes-text-secondary);
+      font-size: 14px;
+      line-height: 150%;
+    }
+  }
+}

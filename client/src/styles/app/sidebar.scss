@@ -1,0 +1,191 @@
+// sidebar / menu
+.menu {
+  padding-top: $unit4;
+  width: $menu-width;
+  background-color: var(--color-menu-bg);
+  border-right: 1px solid var(--color-menu-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  padding-bottom: 2rem;
+  // transition: visibility 0s, opacity 0.5s linear;
+  // animation: fade_in_show 0.2s;
+
+  &.meditation {
+    display: none;
+  }
+
+  h3.section {
+    color: var(--color-menu-text-secondary);
+    font-size: 12px;
+    padding: 0px 25px;
+    margin-bottom: $unit2;
+    &.section-tags {
+      margin-top: $unit4;
+    }
+  }
+
+  .menu-item {
+    transition: background-color 0.1s ease-out;
+    margin: 0 $unit3;
+
+    &.settings-link {
+      margin-top: auto;
+    }
+    > a {
+      font-size: 14px;
+      padding: $unit1 $unit2;
+      transition: background-color 0.2s ease-out;
+      margin-bottom: $unit0;
+      &:hover {
+        background-color: var(--color-menu-bg-hover);
+      }
+      &.active {
+        color: var(--color-menu-acccent);
+        background-color: var(--color-menu-bg-hover);
+        > div {
+          color: var(--color-menu-accent);
+        }
+        svg {
+          fill: var(--color-menu-accent);
+        }
+      }
+    }
+
+    a {
+      color: var(--color-menu-text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      border-radius: $unit1;
+      > div {
+        color: var(--color-menu-text);
+      }
+      svg {
+        font-size: 14px;
+        margin-right: 10px;
+        fill: var(--color-menu-text);
+      }
+    }
+
+    .menu-item-count {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      text-align: center;
+      vertical-align: middle;
+      background-color: var(--color-menu-bg-hover-intense);
+      border-radius: $unit3;
+      span {
+        padding: $unit0 $unit1;
+        padding: 2px $unit0;
+        margin: 0 auto;
+        font-size: $text0;
+        font-weight: bold;
+        color: var(--color-menu-accent);
+      }
+      &.secondary {
+        background-color: transparent;
+        span {
+          color: var(--color-menu-text-secondary);
+          font-weight: 200;
+        }
+      }
+    }
+  }
+
+  .menu-tags {
+    padding: 0 25px 0.5rem 25px;
+    overflow-y: hidden;
+    margin-bottom: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      align-items: center;
+      text-decoration: none;
+      &:hover,
+      &.active {
+        .tag-name,
+        .tag-count {
+          color: var(--color-menu-accent);
+          // font-weight: bold;
+        }
+        svg {
+          fill: var(--color-menu-accent) !important;
+        }
+      }
+      .tag-name {
+        transition: color 0.1s ease-out;
+        color: var(--color-menu-text);
+        mark {
+          background-color: var(--color-menu-highlight);
+        }
+      }
+      .tag-count {
+        text-align: right;
+        color: var(--color-menu-text);
+      }
+
+      .tag-and-icon {
+        display: flex;
+        align-items: left;
+        justify-content: flex-start;
+        align-items: center;
+        svg {
+          margin-right: $unit0;
+          font-size: 14px;
+          fill: #bbb;
+        }
+      }
+    }
+
+    .tags-search {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.2rem 0.2rem 0.5rem;
+      background: var(--color-menu-bg-hover-intense);
+      padding: 5px;
+      align-items: center;
+      border-radius: 5px;
+      input {
+        border: 0;
+        color: var(--color-menu-text);
+        width: 85%;
+        background-color: transparent;
+        &::placeholder {
+          color: var(--color-menu-input-text);
+        }
+      }
+      .MuiSvgIcon-root {
+        fill: var(--color-menu-input-text);
+        font-size: 18px;
+      }
+    }
+
+    .tags-items {
+      flex: 1;
+      overflow-y: auto;
+      padding-top: 0.8rem;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    i {
+      background-color: var(--color-menu-bg-hover);
+    }
+    .plch {
+      font-size: 14px;
+      text-align: center;
+      color: var(--color-menu-text);
+      margin: 1rem 0;
+    }
+  }
+}

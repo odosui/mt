@@ -1,0 +1,65 @@
+.hovering-preview {
+  box-sizing: border-box;
+  width: 500px;
+  max-width: 100%;
+  right: -510px;
+  background-color: var(--color-hovering-preview-bg);
+  box-shadow: -2px 0px 10px 1px #aaaaaa;
+  top: 0;
+  bottom: 0;
+  position: fixed;
+  transition: right 0.2s ease-in-out;
+  z-index: 2;
+
+  &.visible {
+    right: 0;
+  }
+  .bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    /* height: 50px; */
+    padding: 20px;
+    .MuiSvgIcon-root {
+      fill: var(--color-hovering-preview-text);
+      cursor: pointer;
+      &:hover {
+        fill: var(--color-hovering-preview-accent);
+      }
+    }
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .body {
+    position: absolute;
+    top: 50px;
+    padding: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
+    ol {
+      line-height: 140%;
+      margin: 1em 0;
+    }
+    ul {
+      li {
+        p {
+          display: inline;
+        }
+      }
+    }
+  }
+  .with-note-elements {
+    a {
+      color: var(--color-hovering-preview-accent);
+      transition: color 0.2s ease-in;
+      &:hover {
+        color: var(--color-hovering-preview-accent-intense);
+      }
+    }
+  }
+}
