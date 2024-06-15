@@ -208,7 +208,6 @@ const Note: React.FC<{
                 >
                   <div className="dropdown-menu">
                     <ReviewMenu
-                      noteSid={currentNote.sid}
                       upcomingReviews={currentNote.upcoming_reviews_in_days}
                     />
                   </div>

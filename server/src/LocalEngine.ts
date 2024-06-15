@@ -1,6 +1,24 @@
 import os from "os";
 import path from "path";
 import fs from "fs/promises";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
+// in days
+const LEVEL_PERIODS = [
+  7, // level 1 review
+  15, // level 2 review
+  30, // level 3 review
+  30, // level 4 review
+  45, // ...
+  45,
+  60,
+  60,
+  90,
+  180, // level 10 review (the max level)
+];
 
 class LocalEngine {
   #notes: Record<string, Note> = {};
@@ -35,24 +53,32 @@ class LocalEngine {
   }
 
   reviewCounts() {
-    return { counts: { notes: 0, questions: 0 } };
+    const reviewCount = Object.values(this.#notes).filter(requresReview).length;
+
+    return { counts: { notes: reviewCount, questions: 0 } };
   }
 
-  notes({ tags = "" }: { tags: string }) {
+  notes({ tags = "", isReview = false }: { tags: string; isReview: boolean }) {
     // query, is_review, fav_only, page, per_page
 
+    let res = Object.values(this.#notes);
+
+    // filter by tags
     const ts = tags ? tags.split(",").map((t) => t.trim().toLowerCase()) : "";
+    res = res.filter((n) => {
+      if (ts.length === 0) {
+        return true;
+      }
 
-    return Object.values(this.#notes)
-      .filter((n) => {
-        if (ts.length === 0) {
-          return true;
-        }
+      return n.tags.some((t) => ts.includes(t.trim().toLowerCase()));
+    });
 
-        return n.tags.some((t) => ts.includes(t.trim().toLowerCase()));
-      })
-      .sort(compareByModifiedDateDesc)
-      .map(noteListItem);
+    // review
+    if (isReview) {
+      res = res.filter(requresReview);
+    }
+
+    return res.sort(compareByModifiedDateDesc).map(noteListItem);
   }
 
   note(id: string) {
@@ -66,23 +92,14 @@ class LocalEngine {
   }
 
   async createNote(body: string) {
-    const maxId = Object.keys(this.#notes).reduce((acc, id) => {
-      const num = parseInt(id, 10);
-      if (num > acc) {
-        return num;
-      }
-
-      return acc;
-    }, 0);
-
-    const id = (maxId + 1).toString();
+    const id = nextId(this.#notes);
     const note: Note = {
       id,
       body,
       tags: extractTags(body),
       level: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      created_at: dayjs().format("YYYY-MM-DD"),
+      updated_at: dayjs().format("YYYY-MM-DD"),
       last_reviewed_at: "",
     };
 
@@ -104,17 +121,16 @@ async function readNotes() {
   const notesDir = path.join(homeDir, "mindthis");
 
   const files = await fs.readdir(notesDir);
-  for (const file of files) {
-    if (file && file.endsWith(".md")) {
-      const id = file.split(".")[0];
-      if (!id) {
-        throw new Error("Invalid note id");
-      }
-
-      const filePath = path.join(notesDir, file);
-      const content = await fs.readFile(filePath, "utf-8");
-      notes[id] = readNote(id, content);
+  const mdFiles = files.filter((f) => f.endsWith(".md"));
+  for (const file of mdFiles) {
+    const id = file.split(".")[0];
+    if (!id) {
+      throw new Error("Invalid note id");
     }
+
+    const filePath = path.join(notesDir, file);
+    const content = await fs.readFile(filePath, "utf-8");
+    notes[id] = readNote(id, content);
   }
 
   return notes;
@@ -146,14 +162,14 @@ function readNote(id: string, content: string): Note {
   return note;
 }
 
-function noteListItem(note: Note) {
+function noteListItem(n: Note) {
   return {
-    id: note.id,
-    level: note.level,
-    sid: parseInt(note.id, 10),
-    snippet: note.body.split("\n").slice(0, 3).join("\n"),
-    tags: note.tags,
-    updated_at_in_words: "1 day",
+    id: n.id,
+    level: n.level,
+    sid: parseInt(n.id, 10),
+    snippet: n.body.split("\n").slice(0, 3).join("\n"),
+    tags: n.tags,
+    updated_at_in_words: dayjs(n.updated_at).fromNow(),
   };
 }
 
@@ -228,7 +244,8 @@ function fullView(n: Note) {
     // created_at : "2024-06-11T13:00:02.396Z"
     created_at: n.created_at,
     favorite: false,
-    needs_review: false,
+    needs_review:
+      daysTillNextReview(n.level, n.last_reviewed_at, n.created_at) <= 0,
     published: false,
     question_count: 0,
     seo_description: null,
@@ -237,11 +254,57 @@ function fullView(n: Note) {
     sid: parseInt(n.id, 10),
     slug: null,
     snippet: "",
-    upcoming_reviews_in_days: [
-      { level: 1, days_left: 6 },
-      { level: 2, days_left: 15 },
-      { level: 3, days_left: 30 },
-    ],
-    updated_at_in_words: "1 day",
+    upcoming_reviews_in_days: nextReviewPoints(n),
+    updated_at_in_words: dayjs(n.updated_at).fromNow(),
   };
+}
+
+function nextId(notes: Record<string, Note>) {
+  const maxId = Object.keys(notes).reduce((acc, id) => {
+    const num = parseInt(id, 10);
+    if (num > acc) {
+      return num;
+    }
+
+    return acc;
+  }, 0);
+
+  return (maxId + 1).toString();
+}
+
+function requresReview(n: Note) {
+  const days = daysTillNextReview(n.level, n.last_reviewed_at, n.created_at);
+
+  return days <= 0;
+}
+
+export function daysTillNextReview(
+  currentLevel: number,
+  last_reviewed_at: string | null,
+  created_at: string
+) {
+  const sinceData = last_reviewed_at || created_at;
+
+  const daysSinceLastReview = dayjs().diff(sinceData, "day");
+  const period = LEVEL_PERIODS[currentLevel] as number;
+
+  return period - daysSinceLastReview;
+}
+
+function nextReviewPoints(n: Note) {
+  let res = [] as { level: number; days_left: number }[];
+
+  res.push({
+    level: n.level + 1,
+    days_left: daysTillNextReview(n.level, n.last_reviewed_at, n.created_at),
+  });
+
+  for (let l = n.level + 2; l <= 10; l++) {
+    res.push({
+      level: l,
+      days_left: LEVEL_PERIODS[l - 1] as number,
+    });
+  }
+
+  return res;
 }

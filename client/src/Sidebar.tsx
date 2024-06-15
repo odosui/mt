@@ -148,6 +148,7 @@ const Sidebar: React.FC = () => {
           </TransitionGroup>
         </div>
       </div>
+      {/*
       <div className="menu-item settings-link">
         <NavLink
           to={`/app/settings`}
@@ -158,7 +159,7 @@ const Sidebar: React.FC = () => {
             Settings
           </div>
         </NavLink>
-      </div>
+      </div> */}
     </aside>
   );
 };

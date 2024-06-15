@@ -42,6 +42,7 @@ async function main() {
     res.json(
       e.notes({
         tags: _req.query.tags?.toString() || "",
+        isReview: _req.query.is_review === "true",
       })
     );
   });
