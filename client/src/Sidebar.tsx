@@ -1,47 +1,49 @@
-import { Tag } from "@mui/icons-material";
-import FilterNoneIcon from "@mui/icons-material/FilterNone";
-import HistoryIcon from "@mui/icons-material/History";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import SettingsIcon from "@mui/icons-material/Settings";
-import StarIcon from "@mui/icons-material/Star";
-import * as React from "react";
-import { useContext, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import CSSTransition from "react-transition-group/CSSTransition";
-import TransitionGroup from "react-transition-group/TransitionGroup";
-import { StateContext } from "./state/StateProvider";
+import {
+  FunnelIcon as FilterIcon,
+  ListBulletIcon as HistoryIcon,
+  HomeIcon,
+  MagnifyingGlassIcon as SearchIcon,
+  StarIcon,
+  HashtagIcon as Tag,
+} from '@heroicons/react/24/solid'
+
+import * as React from 'react'
+import { useContext, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import CSSTransition from 'react-transition-group/CSSTransition'
+import TransitionGroup from 'react-transition-group/TransitionGroup'
+import { StateContext } from './state/StateProvider'
 
 const Sidebar: React.FC = () => {
-  const [tagTerm, setTagTerm] = useState("");
+  const [tagTerm, setTagTerm] = useState('')
 
   const { reviewCount, tags, focusMode, questionsCount, totalNoteCount } =
-    useContext(StateContext);
+    useContext(StateContext)
 
-  const location = useLocation();
+  const location = useLocation()
 
   const filteredTags = tags.loading
     ? []
     : (tags.data || []).filter((t) =>
-        t.title.toLowerCase().includes(tagTerm.toLowerCase())
-      );
+        t.title.toLowerCase().includes(tagTerm.toLowerCase()),
+      )
 
   const isActiveTag = (title: string) => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTag = urlParams.get("tag");
-    return title === searchTag;
-  };
+    const urlParams = new URLSearchParams(location.search)
+    const searchTag = urlParams.get('tag')
+    return title === searchTag
+  }
 
   return (
-    <aside className={`menu ${focusMode ? "meditation" : ""}`}>
+    <aside className={`menu ${focusMode ? 'meditation' : ''}`}>
       <h3 className="section">KNOWLEDGE BASE</h3>
       <div className="menu-item">
         <NavLink
           to="/app/notes"
-          className={({ isActive }) => (isActive ? "active" : "")}
-          style={{ justifyContent: "space-between" }}
+          className={({ isActive }) => (isActive ? 'active' : '')}
+          style={{ justifyContent: 'space-between' }}
         >
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <HomeIcon />
             Notes
           </div>
@@ -54,10 +56,10 @@ const Sidebar: React.FC = () => {
       <div className="menu-item">
         <NavLink
           to={`/app/fav`}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          style={{ justifyContent: "space-between" }}
+          className={({ isActive }) => (isActive ? 'active' : '')}
+          style={{ justifyContent: 'space-between' }}
         >
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <StarIcon />
             Favorites
           </div>
@@ -68,10 +70,10 @@ const Sidebar: React.FC = () => {
       <div className="menu-item">
         <NavLink
           to={`/app/review`}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          style={{ justifyContent: "space-between" }}
+          className={({ isActive }) => (isActive ? 'active' : '')}
+          style={{ justifyContent: 'space-between' }}
         >
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <HistoryIcon />
             Review
           </div>
@@ -83,11 +85,11 @@ const Sidebar: React.FC = () => {
       <div className="menu-item">
         <NavLink
           to={`/app/quiz`}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          style={{ justifyContent: "space-between" }}
+          className={({ isActive }) => (isActive ? 'active' : '')}
+          style={{ justifyContent: 'space-between' }}
         >
-          <div style={{ display: "flex" }}>
-            <FilterNoneIcon />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <FilterIcon />
             Flashcards
           </div>
           <div className="menu-item-count">
@@ -95,6 +97,7 @@ const Sidebar: React.FC = () => {
           </div>
         </NavLink>
       </div>
+      {/*
       <div className="menu-item">
         <NavLink
           to={`/app/boards`}
@@ -102,12 +105,12 @@ const Sidebar: React.FC = () => {
           style={{ justifyContent: "space-between" }}
         >
           <div style={{ display: "flex" }}>
-            <FilterNoneIcon />
+            <FilterIcon />
             Boards
           </div>
           <div className="menu-item-count"></div>
         </NavLink>
-      </div>
+      </div> */}
       <h3 className="section section-tags">TAGS</h3>
       <div className="menu-tags">
         <div className="tags-search">
@@ -129,7 +132,7 @@ const Sidebar: React.FC = () => {
                 <NavLink
                   to={`/app/notes?tag=${t.title}`}
                   className={() =>
-                    isActiveTag(t.title) ? "active item" : "item"
+                    isActiveTag(t.title) ? 'active item' : 'item'
                   }
                 >
                   <div className="tag-and-icon">
@@ -161,14 +164,14 @@ const Sidebar: React.FC = () => {
         </NavLink>
       </div> */}
     </aside>
-  );
-};
+  )
+}
 
 function fmt(title: string, term: string) {
   if (!term || !title) {
-    return title;
+    return title
   }
-  return title.replace(new RegExp(`(${term})`, "i"), "<mark>$1</mark>");
+  return title.replace(new RegExp(`(${term})`, 'i'), '<mark>$1</mark>')
 }
 
-export default Sidebar;
+export default Sidebar

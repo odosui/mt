@@ -66,6 +66,7 @@
         font-size: 14px;
         margin-right: 10px;
         fill: var(--color-menu-text);
+        width: $unit3;
       }
     }
 
@@ -140,6 +141,7 @@
         align-items: center;
         svg {
           margin-right: $unit0;
+          width: $unit2;
           font-size: 14px;
           fill: #bbb;
         }
@@ -163,9 +165,10 @@
           color: var(--color-menu-input-text);
         }
       }
-      .MuiSvgIcon-root {
+      svg {
         fill: var(--color-menu-input-text);
         font-size: 18px;
+        width: $unit4;
       }
     }
 

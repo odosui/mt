@@ -1,7 +1,7 @@
-import { debounce } from 'lodash-es'
 import React, { useCallback } from 'react'
 import Editor from './Editor'
 import Preview from './Preview'
+import debounce from './utils/debounce'
 
 const SAVE_THRESHOLD = 1500
 

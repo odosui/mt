@@ -1,10 +1,10 @@
-import { debounce } from 'lodash-es'
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import api from '../../api'
 import { INoteSearch } from '../../types'
 
 import OutsideClickHandler from 'react-outside-click-handler'
+import debounce from '../../utils/debounce'
 
 const NoteSearch: React.FC<{
   onSelected: (sid: number) => void
@@ -13,14 +13,14 @@ const NoteSearch: React.FC<{
   const [notes, setNotes] = React.useState<INoteSearch[]>([])
   const [query, setQuery] = React.useState('')
 
-  async function search(q: string) {
+  const search = useCallback(async (q: string) => {
     const res = await api.notes.list(q, 0)
     setNotes(res)
-  }
+  }, [])
 
-  const searchDebounced = React.useCallback(
+  const searchDebounced = useCallback(
     debounce((q: string) => search(q), 500),
-    [],
+    [search],
   )
 
   useEffect(() => {

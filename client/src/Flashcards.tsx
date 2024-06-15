@@ -1,12 +1,14 @@
-import PlusIcon from '@mui/icons-material/Add'
-import CloseIcon from '@mui/icons-material/Close'
-import FastForwardIcon from '@mui/icons-material/FastForward'
+import {
+  XMarkIcon as CloseIcon,
+  ForwardIcon,
+  PlusIcon,
+} from '@heroicons/react/24/solid'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import CSSTransition from 'react-transition-group/CSSTransition'
-import api from './api'
 import FlashcardForm from './FlashcardForm'
 import QuestionCard from './QuestionCard'
+import api from './api'
 import { StateContext } from './state/StateProvider'
 import { Question } from './types'
 import Spinner from './ui/Spinner'
@@ -120,7 +122,7 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
             className="quiz-menu-toggle"
             onClick={() => toggleFlashcardsVisible()}
           >
-            <FastForwardIcon />
+            <ForwardIcon />
           </div>
           <h3>
             Flashcards

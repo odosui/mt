@@ -31,6 +31,7 @@
       svg {
         font-size: 16px;
         margin-right: 8px;
+        width: $unit4;
       }
     }
     .newNote {
@@ -39,6 +40,7 @@
         transition: fill 0.1s ease-in;
         fill: #333;
         font-size: 22px;
+        width: $unit3;
       }
       &:hover {
         svg {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Modal from 'react-modal'
-import CloseIcon from '@mui/icons-material/Close'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 
 Modal.setAppElement('body')
 
@@ -41,7 +41,7 @@ const GenericModal: React.FC<{
           onClose()
         }}
       >
-        <CloseIcon />
+        <XMarkIcon />
       </a>
       <div className={['generic-modal-content', contentClass].join(' ')}>
         {children}

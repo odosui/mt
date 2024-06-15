@@ -1,6 +1,8 @@
-import CheckIcon from '@mui/icons-material/Check'
-import ReplayIcon from '@mui/icons-material/Replay'
-import VisibilityIcon from '@mui/icons-material/Visibility'
+import {
+  CheckIcon,
+  EyeIcon as VisibilityIcon,
+  ArrowPathIcon as ReplayIcon,
+} from '@heroicons/react/24/solid'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import api from './api'

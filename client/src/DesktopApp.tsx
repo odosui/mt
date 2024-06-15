@@ -1,11 +1,8 @@
-import * as React from "react";
-import { Route, Routes } from "react-router-dom";
-import Notes from "./pages/Notes";
-import FlashCards from "./pages/FlashCards";
-import Settings from "./pages/Settings";
-import Sidebar from "./Sidebar";
-import Boards from "./pages/Boards";
-import Board from "./pages/Board";
+import * as React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import Sidebar from './Sidebar'
+import FlashCards from './pages/FlashCards'
+import Notes from './pages/Notes'
 
 const DesktopApp: React.FC = () => {
   return (
@@ -19,11 +16,12 @@ const DesktopApp: React.FC = () => {
         <Route path="/app/review" element={<Notes mode="review" />} />
         <Route path="/app/review/:sid" element={<Notes mode="review" />} />
         <Route path="/app/quiz" element={<FlashCards />} />
+        {/*
         <Route path="/app/boards" element={<Boards />} />
-        <Route path="/app/boards/:id" element={<Board />} />
+        <Route path="/app/boards/:id" element={<Board />} /> */}
       </Routes>
     </div>
-  );
-};
+  )
+}
 
-export default DesktopApp;
+export default DesktopApp

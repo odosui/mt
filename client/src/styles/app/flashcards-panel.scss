@@ -30,6 +30,8 @@
     border-radius: $unit1;
     svg {
       fill: var(--color-flashcards-panel-text-secondary);
+      width: $unit3;
+      height: $unit3;
     }
 
     &:hover {

@@ -1,49 +1,49 @@
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterNoneIcon from "@mui/icons-material/FilterNone";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import HelpOutline from "@mui/icons-material/HelpOutline";
-import MenuIcon from "@mui/icons-material/Menu";
-import MyLocation from "@mui/icons-material/MyLocation";
-import ReplayIcon from "@mui/icons-material/Replay";
-import SaveIcon from "@mui/icons-material/Save";
-import StarIcon from "@mui/icons-material/Star";
-import * as React from "react";
-import { useContext, useRef, useState } from "react";
-import OutsideClickHandler from "react-outside-click-handler";
-import { useLocation } from "react-router-dom";
-import CSSTransition from "react-transition-group/CSSTransition";
-import ChangelogsModal from "./ChangelogsModal";
-import Flashcards from "./Flashcards";
-import HelpModal from "./HelpModal";
-import PreviewAndEditor from "./PreviewAndEditor";
-import ReviewMenu from "./ReviewMenu";
-import { SelectionMenu } from "./SelectionMenu";
-import { StateContext } from "./state/StateProvider";
-import Button from "./ui/Button";
-import EditSwitch from "./ui/EditSwitch";
-import { copyToClipboard } from "./uni/src/utils/clipboard";
-import pubsub from "./utils/pubsub";
+import {
+  CheckIcon,
+  FunnelIcon,
+  QuestionMarkCircleIcon,
+  StarIcon,
+  TrashIcon,
+  XMarkIcon,
+  ClipboardDocumentIcon as FilterNoneIcon,
+  SpeakerWaveIcon as SaveIcon,
+  ArrowDownIcon as GetAppIcon,
+  Bars3Icon as MenuIcon,
+  ViewfinderCircleIcon as MyLocation,
+} from '@heroicons/react/24/solid'
+import * as React from 'react'
+import { useContext, useRef, useState } from 'react'
+import OutsideClickHandler from 'react-outside-click-handler'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
+import Flashcards from './Flashcards'
+import HelpModal from './HelpModal'
+import PreviewAndEditor from './PreviewAndEditor'
+import ReviewMenu from './ReviewMenu'
+import { SelectionMenu } from './SelectionMenu'
+import { StateContext } from './state/StateProvider'
+import Button from './ui/Button'
+import EditSwitch from './ui/EditSwitch'
+import { copyToClipboard } from './uni/src/utils/clipboard'
+import pubsub from './utils/pubsub'
 
 function useQuery() {
-  const { search } = useLocation();
-  return React.useMemo(() => new URLSearchParams(search), [search]);
+  const { search } = useLocation()
+  return React.useMemo(() => new URLSearchParams(search), [search])
 }
 
 const Note: React.FC<{
-  onReview?: () => void;
-  onDelete?: () => void;
+  onReview?: () => void
+  onDelete?: () => void
 }> = ({ onReview, onDelete }) => {
-  const [pending, setPending] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [reviewMenuOpen, setReviewMenuOpen] = useState(false);
-  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
-  const [isChangelogsModalOpen, setIsChangelogsModalOpen] = useState(false);
-  const [mode, setMode] = useState<"view" | "edit">("view");
+  const [pending, setPending] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [reviewMenuOpen, setReviewMenuOpen] = useState(false)
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false)
+  const [mode, setMode] = useState<'view' | 'edit'>('view')
 
-  const query = useQuery();
-  const edit = query.get("edit");
+  const query = useQuery()
+  const edit = query.get('edit')
 
   const {
     currentNote,
@@ -57,110 +57,104 @@ const Note: React.FC<{
     flashcardsVisible,
     createNoteAndLinkFromCurrent,
     saveCurrentNote,
-  } = useContext(StateContext);
+  } = useContext(StateContext)
 
   React.useEffect(() => {
-    setMode(edit ? "edit" : "view");
-  }, [edit]);
+    setMode(edit ? 'edit' : 'view')
+  }, [edit])
 
   const handleDelete: React.MouseEventHandler = async () => {
-    if (confirm("Are you sure want to delete this note?")) {
-      deleteCurrentNote();
+    if (confirm('Are you sure want to delete this note?')) {
+      deleteCurrentNote()
 
       if (onDelete) {
-        onDelete();
+        onDelete()
       }
     }
-    setMenuOpen(false);
-  };
+    setMenuOpen(false)
+  }
 
   const handleReview: React.MouseEventHandler = async () => {
-    markReviewedCurrentNote();
+    markReviewedCurrentNote()
     if (onReview) {
-      onReview();
+      onReview()
     }
-  };
+  }
 
   const handleMenuToggle: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    setMenuOpen(!menuOpen);
-  };
+    e.preventDefault()
+    setMenuOpen(!menuOpen)
+  }
 
   const handleReviewMenuToggle: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    setReviewMenuOpen(!reviewMenuOpen);
-  };
+    e.preventDefault()
+    setReviewMenuOpen(!reviewMenuOpen)
+  }
 
   const handleCopyToClipboard = () => {
     if (!currentNote) {
-      return;
+      return
     }
-    const note = currentNote;
+    const note = currentNote
     if (!note) {
-      return;
+      return
     }
-    copyToClipboard(note.body || "");
-    setMenuOpen(false);
-  };
+    copyToClipboard(note.body || '')
+    setMenuOpen(false)
+  }
 
   const handleDownload = () => {
     if (!currentNote) {
-      return;
+      return
     }
-    const note = currentNote;
+    const note = currentNote
     if (!note) {
-      return;
+      return
     }
-    window.location.href = `/api/notes/${note.sid}.md`;
-    setMenuOpen(false);
-  };
-
-  const handleOpenChangelogs: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    setIsChangelogsModalOpen(true);
-    setMenuOpen(false);
-  };
+    window.location.href = `/api/notes/${note.sid}.md`
+    setMenuOpen(false)
+  }
 
   const handleOpenHelp: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    setIsHelpModalOpen(true);
-    setMenuOpen(false);
-  };
+    e.preventDefault()
+    setIsHelpModalOpen(true)
+    setMenuOpen(false)
+  }
 
   const handleFav: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    toggleFavCurrentNote();
-  };
+    e.preventDefault()
+    toggleFavCurrentNote()
+  }
 
-  const handleModeChange = (m: "edit" | "view") => {
-    setMode(m);
-  };
+  const handleModeChange = (m: 'edit' | 'view') => {
+    setMode(m)
+  }
 
   const handleAnswerCard = (text: string) => {
-    pubsub.publish("flashCardFromAnswer", text);
-  };
+    pubsub.publish('flashCardFromAnswer', text)
+  }
 
   const handleQuestionCard = (text: string) => {
-    pubsub.publish("flashCardFromQuestion", text);
-  };
+    pubsub.publish('flashCardFromQuestion', text)
+  }
 
   const handleCreateNote = (title: string) => {
-    createNoteAndLinkFromCurrent(title);
-  };
+    createNoteAndLinkFromCurrent(title)
+  }
 
   const handleAskAI = async (text: string) => {
-    pubsub.publish("flashCardsFromAI", text);
-  };
+    pubsub.publish('flashCardsFromAI', text)
+  }
 
-  const previewRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null)
 
   if (!currentNote) {
-    return null;
+    return null
   }
 
   return (
     <div className="inner">
-      {mode === "view" && (
+      {mode === 'view' && (
         <SelectionMenu
           onUseAsAnswer={handleAnswerCard}
           onUseAsQuestion={handleQuestionCard}
@@ -175,11 +169,12 @@ const Note: React.FC<{
         onClose={() => setIsHelpModalOpen(false)}
       />
 
+      {/* 
       <ChangelogsModal
         open={isChangelogsModalOpen}
         onClose={() => setIsChangelogsModalOpen(false)}
         sid={currentNote.sid}
-      />
+      />*/}
       <div className="note-section">
         <div className="editor-place">
           {!flashcardsVisible && !focusMode && (
@@ -187,7 +182,7 @@ const Note: React.FC<{
               className="flashcards-toggler"
               onClick={toggleFlashcardsVisible}
             >
-              <FilterNoneIcon /> Flashcards
+              <FunnelIcon /> Flashcards
             </div>
           )}
 
@@ -202,7 +197,7 @@ const Note: React.FC<{
                 <OutsideClickHandler
                   onOutsideClick={() => {
                     if (reviewMenuOpen) {
-                      setReviewMenuOpen(false);
+                      setReviewMenuOpen(false)
                     }
                   }}
                 >
@@ -222,7 +217,7 @@ const Note: React.FC<{
                 <OutsideClickHandler
                   onOutsideClick={() => {
                     if (menuOpen) {
-                      setMenuOpen(false);
+                      setMenuOpen(false)
                     }
                   }}
                 >
@@ -235,16 +230,12 @@ const Note: React.FC<{
                       <GetAppIcon />
                       <span>Download as markdown</span>
                     </div>
-                    <div className="menu-item" onClick={handleOpenChangelogs}>
-                      <ReplayIcon />
-                      <span>Latest changes</span>
-                    </div>
                     <div className="menu-item" onClick={handleOpenHelp}>
-                      <HelpOutline />
+                      <QuestionMarkCircleIcon />
                       <span>How to use the editor?</span>
                     </div>
                     <div className="menu-item" onClick={handleDelete}>
-                      <DeleteIcon />
+                      <TrashIcon />
                       <span>Delete note</span>
                     </div>
                   </div>
@@ -257,8 +248,8 @@ const Note: React.FC<{
                   </div>
 
                   <SaveIcon
-                    className={`save ${pending ? "pending" : ""} ${
-                      noteSaving ? "saving" : ""
+                    className={`save ${pending ? 'pending' : ''} ${
+                      noteSaving ? 'saving' : ''
                     }`}
                   />
                 </div>
@@ -275,12 +266,12 @@ const Note: React.FC<{
                   <a
                     href="#"
                     className={`menu-action menu-action-more ${
-                      reviewMenuOpen ? "active" : ""
+                      reviewMenuOpen ? 'active' : ''
                     }`}
                     onClick={handleReviewMenuToggle}
                   >
                     {reviewMenuOpen ? (
-                      <CloseIcon />
+                      <XMarkIcon />
                     ) : (
                       <span className="level">L{currentNote.level || 0}</span>
                     )}
@@ -288,31 +279,31 @@ const Note: React.FC<{
                   <a
                     onClick={handleFav}
                     className={`menu-action ${
-                      currentNote.favorite ? "active" : ""
+                      currentNote.favorite ? 'active' : ''
                     }`}
                   >
                     <StarIcon />
                   </a>
                   <a
                     href="#"
-                    className={`menu-action ${focusMode ? "active" : ""}`}
+                    className={`menu-action ${focusMode ? 'active' : ''}`}
                     onClick={(e) => {
-                      e.preventDefault();
-                      toggleFocusMode();
+                      e.preventDefault()
+                      toggleFocusMode()
                     }}
-                    title={focusMode ? "Quit the focus mode" : "Focus mode"}
+                    title={focusMode ? 'Quit the focus mode' : 'Focus mode'}
                   >
                     <MyLocation />
                   </a>
                   <a
                     href="#"
                     className={`menu-action menu-action-more ${
-                      menuOpen ? "active" : ""
+                      menuOpen ? 'active' : ''
                     }`}
                     title="More menu items"
                     onClick={handleMenuToggle}
                   >
-                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                    {menuOpen ? <XMarkIcon /> : <MenuIcon />}
                   </a>
                 </div>
               </div>
@@ -332,7 +323,7 @@ const Note: React.FC<{
         {!focusMode && <Flashcards noteId={currentNote.id} />}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Note;
+export default Note

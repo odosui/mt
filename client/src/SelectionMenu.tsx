@@ -1,7 +1,9 @@
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import AddIcon from '@mui/icons-material/Add'
-import BoltIcon from '@mui/icons-material/Bolt'
+import {
+  PlusIcon as AddIcon,
+  BoltIcon,
+  QuestionMarkCircleIcon as QuestionMarkIcon,
+} from '@heroicons/react/24/solid'
+
 import React, { RefObject, useEffect, useState } from 'react'
 
 type Props = {
@@ -124,7 +126,7 @@ export const SelectionMenu: React.FC<Props> = ({
       </div>
       <hr />
       <div className="menu-item" onClick={handleAnswerCard}>
-        <QuestionAnswerIcon />
+        <QuestionMarkIcon />
         <span>Flashcard as answer</span>
       </div>
       <div className="menu-item" onClick={handleQuestionCard}>
@@ -138,4 +140,3 @@ export const SelectionMenu: React.FC<Props> = ({
     </div>
   )
 }
-

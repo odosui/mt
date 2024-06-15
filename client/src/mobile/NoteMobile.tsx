@@ -7,7 +7,6 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MyLocation from '@mui/icons-material/MyLocation'
 import SaveIcon from '@mui/icons-material/Save'
 import { Fab } from '@mui/material'
-import { debounce } from 'lodash-es'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import OutsideClickHandler from 'react-outside-click-handler'
@@ -17,6 +16,7 @@ import Editor from '../Editor'
 import { StateContext } from '../state/StateProvider'
 import Spinner from '../ui/Spinner'
 import { copyToClipboard } from '../uni/src/utils/clipboard'
+import debounce from '../utils/debounce'
 
 const SAVE_THRESHOLD = 1500
 

@@ -1,12 +1,12 @@
+import { HashtagIcon as Tag } from '@heroicons/react/24/solid'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import CSSTransition from 'react-transition-group/CSSTransition'
 import SwitchTransition from 'react-transition-group/SwitchTransition'
-import api from '../api'
 import Flashcard from '../Flashcard'
 import QuestionCard from '../QuestionCard'
+import api from '../api'
 import { Question } from '../types'
-import { Tag } from '@mui/icons-material'
 
 const FlashCards: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([])

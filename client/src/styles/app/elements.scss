@@ -32,6 +32,7 @@
     fill: var(--accentText);
     margin-right: 4px;
     font-size: 1.2rem;
+    width: $unit4;
   }
   &.danger {
     background-color: var(--danger);
@@ -64,6 +65,9 @@ a.action-btn {
   border-radius: $unit2;
   &:hover {
     background-color: var(--color-bg-hover);
+  }
+  svg {
+    width: $unit3;
   }
 }
 

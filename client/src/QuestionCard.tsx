@@ -1,4 +1,8 @@
-import { Close, Edit, Image } from '@mui/icons-material'
+import {
+  XMarkIcon as Close,
+  PencilIcon as Edit,
+  PhotoIcon as Image,
+} from '@heroicons/react/24/solid'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import api from './api'

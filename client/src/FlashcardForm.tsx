@@ -1,7 +1,7 @@
+import { XMarkIcon as CloseIcon } from '@heroicons/react/24/solid'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import Textarea from 'react-textarea-autosize'
-import CloseIcon from '@mui/icons-material/Close'
 
 const FlashcardForm: React.FC<{
   initialQuestion: string

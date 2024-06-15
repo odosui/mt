@@ -1,5 +1,7 @@
-import PencilIcon from '@mui/icons-material/Edit'
-import { Switch } from '@mui/material'
+import {
+  PencilIcon,
+  AdjustmentsVerticalIcon as Switch,
+} from '@heroicons/react/24/solid'
 import React from 'react'
 
 type Mode = 'edit' | 'view'

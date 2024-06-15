@@ -93,6 +93,7 @@
             svg {
               cursor: pointer;
               fill: var(--color-note-area-text-secondary) !important;
+              width: $unit4;
             }
             &:hover {
               svg {
@@ -213,7 +214,7 @@
   textarea {
     width: 100%;
     max-width: $unit14;
-    font-family: 'Fira Mono', monospace;
+    font-family: "Fira Mono", monospace;
   }
 }
 

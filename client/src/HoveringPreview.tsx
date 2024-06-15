@@ -1,9 +1,9 @@
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Preview from './Preview'
 import { StateContext } from './state/StateProvider'
+import { CheckIcon as HighlightOffIcon } from '@heroicons/react/24/solid'
 
 const HoveringPreview: React.FC = () => {
   const [visible, setVisible] = useState(false)

@@ -1,7 +1,9 @@
-import CreateIcon from '@mui/icons-material/Create'
-import EditIcon from '@mui/icons-material/Edit'
-import SearchIcon from '@mui/icons-material/Search'
-import { debounce } from 'lodash-es'
+import {
+  MagnifyingGlassIcon as SearchIcon,
+  PencilIcon as EditIcon,
+  PencilIcon,
+} from '@heroicons/react/24/solid'
+
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -10,6 +12,7 @@ import Note from '../Note'
 import { StateContext } from '../state/StateProvider'
 import Button from '../ui/Button'
 import { title } from '../utils/notes'
+import debounce from '../utils/debounce'
 
 const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
   const {
@@ -155,7 +158,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
             />
           </div>
           <div className="newNote" onClick={handleAddNewNote}>
-            <CreateIcon />
+            <PencilIcon />
           </div>
         </div>
         <div className="notes-items">
