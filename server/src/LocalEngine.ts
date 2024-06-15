@@ -8,7 +8,7 @@ class LocalEngine {
   constructor() {}
 
   async init() {
-    this.#notes = await readLocalNotes();
+    this.#notes = await readNotes();
   }
 
   allTags(): Tag[] {
@@ -38,9 +38,19 @@ class LocalEngine {
     return { counts: { notes: 0, questions: 0 } };
   }
 
-  notes() {
-    // query, tags, is_review, fav_only, page, per_page
+  notes({ tags = "" }: { tags: string }) {
+    // query, is_review, fav_only, page, per_page
+
+    const ts = tags ? tags.split(",").map((t) => t.trim().toLowerCase()) : "";
+
     return Object.values(this.#notes)
+      .filter((n) => {
+        if (ts.length === 0) {
+          return true;
+        }
+
+        return n.tags.some((t) => ts.includes(t.trim().toLowerCase()));
+      })
       .sort(compareByModifiedDateDesc)
       .map(noteListItem);
   }
@@ -52,39 +62,41 @@ class LocalEngine {
       return null;
     }
 
-    return {
-      id: n.id,
-      body: n.body,
-      tags: n.tags,
-      level: n.level,
-      // updated_at : "2024-06-11T13:10:33.745Z"
-      updated_at: n.updated_at,
-      last_reviewed_at: n.last_reviewed_at,
-      // created_at : "2024-06-11T13:00:02.396Z"
-      created_at: n.created_at,
-      favorite: false,
-      needs_review: false,
-      published: false,
-      question_count: 0,
-      seo_description: null,
-      seo_title: null,
-      seo_url: null,
-      sid: parseInt(n.id, 10),
-      slug: null,
-      snippet: "",
-      upcoming_reviews_in_days: [
-        { level: 1, days_left: 6 },
-        { level: 2, days_left: 15 },
-        { level: 3, days_left: 30 },
-      ],
-      updated_at_in_words: "1 day",
+    return fullView(n);
+  }
+
+  async createNote(body: string) {
+    const maxId = Object.keys(this.#notes).reduce((acc, id) => {
+      const num = parseInt(id, 10);
+      if (num > acc) {
+        return num;
+      }
+
+      return acc;
+    }, 0);
+
+    const id = (maxId + 1).toString();
+    const note: Note = {
+      id,
+      body,
+      tags: extractTags(body),
+      level: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_reviewed_at: "",
     };
+
+    await storeNote(note);
+
+    this.#notes[id] = note;
+
+    return fullView(note);
   }
 }
 
 export default LocalEngine;
 
-async function readLocalNotes() {
+async function readNotes() {
   const notes: Record<string, Note> = {};
 
   // read notes
@@ -101,33 +113,37 @@ async function readLocalNotes() {
 
       const filePath = path.join(notesDir, file);
       const content = await fs.readFile(filePath, "utf-8");
-      const [, metadata, body] = content.split("---");
-      const mt: Record<string, string> = {};
-      (metadata ?? "")
-        .trim()
-        .split("\n")
-        .forEach((line) => {
-          const [key, value] = line.split(":");
-          if (key && value) {
-            mt[key.trim()] = value.trim();
-          }
-        });
-
-      const note: Note = {
-        id,
-        body: (body ?? "").trim(),
-        tags: extractTags(body ?? ""),
-        level: parseInt(mt.level ?? "0", 10),
-        created_at: mt.created_at ?? "",
-        updated_at: mt.updated_at ?? "",
-        last_reviewed_at: mt.last_reviewed_at ?? "",
-      };
-
-      notes[id] = note;
+      notes[id] = readNote(id, content);
     }
   }
 
   return notes;
+}
+
+function readNote(id: string, content: string): Note {
+  const [, metadata, body] = content.split("---");
+  const mt: Record<string, string> = {};
+  (metadata ?? "")
+    .trim()
+    .split("\n")
+    .forEach((line) => {
+      const [key, value] = line.split(":");
+      if (key && value) {
+        mt[key.trim()] = value.trim();
+      }
+    });
+
+  const note: Note = {
+    id,
+    body: (body ?? "").trim(),
+    tags: extractTags(body ?? ""),
+    level: parseInt(mt.level ?? "0", 10),
+    created_at: mt.created_at ?? "",
+    updated_at: mt.updated_at ?? "",
+    last_reviewed_at: mt.last_reviewed_at ?? "",
+  };
+
+  return note;
 }
 
 function noteListItem(note: Note) {
@@ -177,4 +193,55 @@ function extractTags(body: string): string[] {
   }
 
   return tags;
+}
+
+async function storeNote(note: Note) {
+  const homeDir = os.homedir();
+  const notesDir = path.join(homeDir, "mindthis");
+
+  await fs.mkdir(notesDir, { recursive: true });
+
+  const filePath = path.join(notesDir, `${note.id}.md`);
+  const content = [
+    `---`,
+    `level: ${note.level}`,
+    `created_at: ${note.created_at}`,
+    `updated_at: ${note.updated_at}`,
+    `last_reviewed_at: ${note.last_reviewed_at}`,
+    `---`,
+    note.body,
+  ].join("\n");
+
+  // save file
+  await fs.writeFile(filePath, content, "utf-8");
+}
+
+function fullView(n: Note) {
+  return {
+    id: n.id,
+    body: n.body,
+    tags: n.tags,
+    level: n.level,
+    // updated_at : "2024-06-11T13:10:33.745Z"
+    updated_at: n.updated_at,
+    last_reviewed_at: n.last_reviewed_at,
+    // created_at : "2024-06-11T13:00:02.396Z"
+    created_at: n.created_at,
+    favorite: false,
+    needs_review: false,
+    published: false,
+    question_count: 0,
+    seo_description: null,
+    seo_title: null,
+    seo_url: null,
+    sid: parseInt(n.id, 10),
+    slug: null,
+    snippet: "",
+    upcoming_reviews_in_days: [
+      { level: 1, days_left: 6 },
+      { level: 2, days_left: 15 },
+      { level: 3, days_left: 30 },
+    ],
+    updated_at_in_words: "1 day",
+  };
 }

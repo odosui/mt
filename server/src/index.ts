@@ -1,4 +1,6 @@
 import express from "express";
+import bodyParser from "body-parser";
+
 import LocalEngine from "./LocalEngine";
 
 const PORT = process.env.PORT || 3000;
@@ -8,6 +10,8 @@ async function main() {
   await e.init();
 
   const app = express();
+
+  app.use(bodyParser.json());
 
   // allow CORS
   app.use((_req, res, next) => {
@@ -34,8 +38,12 @@ async function main() {
   });
 
   app.get("/api/notes", async (_req, res) => {
-    // query, tags, is_review, fav_only, page, per_page
-    res.json(e.notes());
+    // query, is_review, fav_only, page, per_page
+    res.json(
+      e.notes({
+        tags: _req.query.tags?.toString() || "",
+      })
+    );
   });
 
   app.get("/api/notes/:id", async (req, res) => {
@@ -46,6 +54,11 @@ async function main() {
       return;
     }
 
+    res.json(n);
+  });
+
+  app.post("/api/notes", async (req, res) => {
+    const n = await e.createNote(req.body.body);
     res.json(n);
   });
 
