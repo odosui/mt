@@ -29,10 +29,13 @@ const Board: React.FC<{}> = () => {
 
     const res = await Promise.all(sids.map((sid) => api.notes.fetch(sid)))
 
-    const notes = res.reduce((acc, note) => {
-      acc[note.sid] = note
-      return acc
-    }, {} as { [sid: number]: INote })
+    const notes = res.reduce(
+      (acc, note) => {
+        acc[note.sid] = note
+        return acc
+      },
+      {} as { [sid: number]: INote },
+    )
 
     setNotes(notes)
   }

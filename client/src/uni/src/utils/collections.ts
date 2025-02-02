@@ -39,16 +39,19 @@ export function groupBy<T>(
   items: T[],
   keyFn: ((item: T) => string) | ((item: T) => number),
 ) {
-  return items.reduce((acc, item) => {
-    const key = keyFn(item)
-    const bucket = acc[key]
-    if (bucket) {
-      bucket.push(item)
-    } else {
-      acc[key] = [item]
-    }
-    return acc
-  }, {} as { [k: string]: T[] })
+  return items.reduce(
+    (acc, item) => {
+      const key = keyFn(item)
+      const bucket = acc[key]
+      if (bucket) {
+        bucket.push(item)
+      } else {
+        acc[key] = [item]
+      }
+      return acc
+    },
+    {} as { [k: string]: T[] },
+  )
 }
 
 export function values(obj: { [k: string]: any }) {

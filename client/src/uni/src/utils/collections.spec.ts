@@ -9,7 +9,7 @@ import {
   uniq,
   values,
   wrapArray,
-  uniqBy
+  uniqBy,
 } from './collections'
 
 describe.concurrent('uniq', () => {
@@ -136,7 +136,7 @@ describe.concurrent('uniqBy', () => {
           { id: 1, title: 'b' },
           { id: 2, title: 'c' },
         ],
-        (i) => `${i.id}` ,
+        (i) => `${i.id}`,
       ),
     ).toEqual([
       { id: 1, title: 'a' },
@@ -152,7 +152,7 @@ describe.concurrent('uniqBy', () => {
           { id: 1, title: 'b' },
           { id: 2, title: 'c' },
         ],
-        (i) => `${i.id}${i.title}` ,
+        (i) => `${i.id}${i.title}`,
       ),
     ).toEqual([
       { id: 1, title: 'a' },
@@ -160,6 +160,4 @@ describe.concurrent('uniqBy', () => {
       { id: 2, title: 'c' },
     ])
   })
-
-
 })

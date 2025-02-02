@@ -141,8 +141,8 @@ const QuestionCard: React.FC<{
               {q.days_till_next_review <= 0
                 ? 'review now'
                 : q.days_till_next_review === 1
-                ? 'review tomorrow'
-                : `review in ${q.days_till_next_review} days`}
+                  ? 'review tomorrow'
+                  : `review in ${q.days_till_next_review} days`}
             </div>
           </div>
           <div className="back">{q.answer}</div>

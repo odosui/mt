@@ -1,7 +1,7 @@
-import * as React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import DesktopApp from "./DesktopApp";
-import { StateProvider } from "./state/StateProvider";
+import * as React from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
+import DesktopApp from './DesktopApp'
+import { StateProvider } from './state/StateProvider'
 
 const App: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const App: React.FC = () => {
         <DesktopApp />
       </StateProvider>
     </Router>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react'
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 const ReviewMenu: React.FC<{
   // noteSid: number;
-  upcomingReviews: { level: number; days_left: number }[];
+  upcomingReviews: { level: number; days_left: number }[]
 }> = ({ upcomingReviews }) => {
   // const [reviewLogs, setReviewLogs] = useState<ReviewLog[]>([]);
 
@@ -19,7 +19,7 @@ const ReviewMenu: React.FC<{
   //   load();
   // }, [noteSid]);
 
-  const nextLevel = upcomingReviews[0] ? upcomingReviews[0].level : null;
+  const nextLevel = upcomingReviews[0] ? upcomingReviews[0].level : null
 
   const all = [
     ...upcomingReviews.map((r) => ({
@@ -34,14 +34,14 @@ const ReviewMenu: React.FC<{
     //   done: true,
     //   next: false,
     // })),
-  ].sort((a, b) => b.level - a.level);
+  ].sort((a, b) => b.level - a.level)
 
   return (
     <div className="review-menu">
       <div className="review-logs">
         {all.map((r) => (
           <div
-            className={`item ${r.done ? "done" : ""} ${r.next ? "next" : ""}`}
+            className={`item ${r.done ? 'done' : ''} ${r.next ? 'next' : ''}`}
             key={r.level}
           >
             <div className="log-level">L{r.level}</div>
@@ -50,8 +50,8 @@ const ReviewMenu: React.FC<{
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // function daysAgo(str: string) {
 //   const d = dayjs().diff(dayjs(str), "days");
@@ -63,12 +63,12 @@ const ReviewMenu: React.FC<{
 
 function daysTill(days: number) {
   if (days <= 0) {
-    return "review now";
+    return 'review now'
   }
   if (days === 1) {
-    return "tomorrow";
+    return 'tomorrow'
   }
-  return "in " + days + " " + (days % 10 === 1 ? "day" : "days");
+  return 'in ' + days + ' ' + (days % 10 === 1 ? 'day' : 'days')
 }
 
-export default ReviewMenu;
+export default ReviewMenu
