@@ -8,7 +8,7 @@ type Tag = {
 
 export const createTagsService = (noteStore: NoteStore) => {
   async function allTags(): Promise<Tag[]> {
-    const notes = await noteStore.getNotes("", false);
+    const notes = await noteStore.getNotes("", false, false);
     return Object.values(notes)
       .reduce((acc, n) => {
         n.tags.forEach((tag) => {

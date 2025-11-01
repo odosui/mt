@@ -2,6 +2,7 @@ export type Note = {
   id: string;
   body: string;
   tags: string[];
+  favorite: boolean;
 
   // spaced repetition
   level: number;
@@ -14,7 +15,7 @@ export type Note = {
 
 export interface NoteStore {
   noteCounts(): Promise<{ total_notes: number }>;
-  getNotes(tags: string, isReview: boolean): Promise<Note[]>;
+  getNotes(tags: string, isReview: boolean, favOnly: boolean): Promise<Note[]>;
   getNote(id: string): Promise<Note | null>;
   createNote(body: string): Promise<Note>;
   updateNote(

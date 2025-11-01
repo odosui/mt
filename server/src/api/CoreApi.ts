@@ -31,11 +31,16 @@ export const createCoreApi = (noteStore: NoteStore) => {
           return ok(counts);
         });
       },
-      list: async (tags: string | undefined, is_review: string | undefined) => {
+      list: async (
+        tags: string | undefined,
+        is_review: string | undefined,
+        fav_only: string | undefined,
+      ) => {
         return safe(async () => {
           const res = await noteStore.getNotes(
             tags ?? "",
             is_review === "true",
+            fav_only === "true",
           );
 
           return ok(res.map(listView));
@@ -54,6 +59,16 @@ export const createCoreApi = (noteStore: NoteStore) => {
         return safe(async () => {
           const note = await noteStore.createNote(body);
           return ok(fullView(note));
+        });
+      },
+      update: async (id: string, body: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          const updated = await noteStore.updateNote(id, { body }, false);
+          return ok(fullView(updated));
         });
       },
     },
@@ -76,6 +91,19 @@ export const createCoreApi = (noteStore: NoteStore) => {
   return api;
 };
 
+// Helper function to handle error handling
+async function safe(op: () => Promise<{ status: number; json: unknown }>) {
+  try {
+    return await op();
+  } catch (e) {
+    return error(500, "Unexpected error occurred");
+  }
+}
+
+// ===============
+// RESPONSES
+// ===============
+
 function ok(json: unknown) {
   return {
     status: 200,
@@ -90,14 +118,9 @@ function error(status: number, message: string) {
   };
 }
 
-// Helper function to handle error handling
-async function safe(op: () => Promise<{ status: number; json: unknown }>) {
-  try {
-    return await op();
-  } catch (e) {
-    return error(500, "Unexpected error occurred");
-  }
-}
+// ===============
+// VIEWS
+// ===============
 
 function listView(n: Note) {
   return {
@@ -107,6 +130,7 @@ function listView(n: Note) {
     snippet: n.body.split("\n").slice(0, 3).join("\n"),
     tags: n.tags,
     updated_at_in_words: dayjs(n.updated_at).fromNow(),
+    favorite: n.favorite,
   };
 }
 

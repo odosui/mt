@@ -16,7 +16,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
     return { total_notes: Object.keys(notes).length };
   }
 
-  async function getNotes(tags: string, isReview: boolean) {
+  async function getNotes(tags: string, isReview: boolean, favOnly: boolean) {
     // query, is_review, fav_only, page, per_page
 
     let res = Object.values(notes);
@@ -36,6 +36,10 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       res = res.filter(requresReview);
     }
 
+    if (favOnly) {
+      res = res.filter((n) => n.favorite);
+    }
+
     return res.sort(compareByModifiedDateDesc);
   }
 
@@ -53,6 +57,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       created_at: dayjs().toISOString(),
       updated_at: dayjs().toISOString(),
       last_reviewed_at: "",
+      favorite: false,
     };
 
     await writeToDisk(note);
@@ -110,6 +115,7 @@ async function writeToDisk(note: Note) {
     `created_at: ${note.created_at}`,
     `updated_at: ${note.updated_at}`,
     `last_reviewed_at: ${note.last_reviewed_at}`,
+    `favorite: ${note.favorite}`,
     `---`,
     note.body,
   ].join("\n");
@@ -171,6 +177,7 @@ function readNote(id: string, content: string): Note {
     created_at: mt.created_at ?? "",
     updated_at: mt.updated_at ?? "",
     last_reviewed_at: mt.last_reviewed_at ?? "",
+    favorite: mt.favorite === "true",
   };
 
   return note;

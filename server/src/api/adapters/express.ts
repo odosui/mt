@@ -26,11 +26,12 @@ export function bootExpress(app: Express, noteStore: NoteStore) {
   });
 
   app.get("/api/notes", async (_req, res) => {
-    const { tags, is_review } = _req.query;
+    const { tags, is_review, fav_only } = _req.query;
 
     const { status, json } = await CoreApi.notes.list(
       tags?.toString(),
       is_review?.toString(),
+      fav_only?.toString(),
     );
     res.status(status).json(json);
   });
@@ -42,6 +43,14 @@ export function bootExpress(app: Express, noteStore: NoteStore) {
 
   app.post("/api/notes", async (req, res) => {
     const { status, json } = await CoreApi.notes.create(req.body.body);
+    res.status(status).json(json);
+  });
+
+  app.patch("/api/notes/:id", async (req, res) => {
+    console.log("???");
+    const body = req.body.body;
+    const id = req.params.id;
+    const { status, json } = await CoreApi.notes.update(id, body);
     res.status(status).json(json);
   });
 
