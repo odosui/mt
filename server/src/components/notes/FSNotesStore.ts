@@ -20,6 +20,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
     // query, is_review, fav_only, page, per_page
 
     let res = Object.values(notes);
+    console.log("all notes count:", res.length);
 
     // filter by tags
     const ts = tags ? tags.split(",").map((t) => t.trim().toLowerCase()) : "";

@@ -60,7 +60,7 @@ export const createCoreApi = (noteStore: NoteStore) => {
     reviews: {
       counts: async () => {
         return safe(async () => {
-          const counts = reviewService.reviewCounts();
+          const counts = await reviewService.reviewCounts();
           return ok(counts);
         });
       },

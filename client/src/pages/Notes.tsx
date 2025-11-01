@@ -1,9 +1,8 @@
 import {
-  MagnifyingGlassIcon as SearchIcon,
   PencilIcon as EditIcon,
   PencilIcon,
+  MagnifyingGlassIcon as SearchIcon,
 } from '@heroicons/react/24/solid'
-
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -11,14 +10,14 @@ import HoveringPreview from '../HoveringPreview'
 import Note from '../Note'
 import { StateContext } from '../state/StateProvider'
 import Button from '../ui/Button'
-import { title } from '../utils/notes'
 import debounce from '../utils/debounce'
+import { title } from '../utils/notes'
 
 const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
   const {
     notes,
     currentNote,
-    search,
+    searchNotes,
     addNewNote,
     focusMode,
     getCurrentNodeNeighborSid,
@@ -38,7 +37,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
 
   const [query, setQuery] = useState('')
 
-  const searchDb = useMemo(() => debounce(search, 500), [search])
+  const searchDb = useMemo(() => debounce(searchNotes, 500), [searchNotes])
 
   const handleQueryChange: React.ChangeEventHandler<HTMLInputElement> = ({
     target: { value },
@@ -52,7 +51,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
       return
     }
 
-    // don't allow to switch note while it's saving is in progress
+    // don't allow to switch note while saving is in progress
     if (currentNote !== null && noteSaving) {
       return
     }
@@ -122,7 +121,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
     initLoad()
 
     async function initLoad() {
-      const data = await search('', mode === 'review', mode === 'fav', tag)
+      const data = await searchNotes('', mode === 'review', mode === 'fav', tag)
 
       if (mode === 'all' && sidLoc) {
         const item = data.find((d) => d.sid === parseInt(sidLoc))
@@ -172,7 +171,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
               className={`item ${
                 sidLoc && note.sid === parseInt(sidLoc) ? 'active' : ''
               }`}
-              key={note.id}
+              key={note.sid}
               onClick={() => selectNote(ind)}
             >
               <div className="note-head">

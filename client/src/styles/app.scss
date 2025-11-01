@@ -32,18 +32,19 @@
   --accentHover: #a18ca3;
   --accentText: white;
   --lighter: #999;
+  --subtle: #dadada;
   --danger: #d45454;
   --dangerHover: #da7474;
   --borderColor: #d9dde7;
   --bgGray: #f5f7f9;
 
   // left sidebar / menu
-  --color-menu-bg: #394362;
+  --color-menu-bg: #192037;
   --color-menu-bg-hover: #5b688e;
   --color-menu-bg-hover-intense: #7b849e;
   --color-menu-border: #d9dde7;
   --color-menu-accent: #fff;
-  --color-menu-text: #fbf8fe;
+  --color-menu-text: #cbc8ce;
   --color-menu-text-secondary: #abb8de;
   --color-menu-highlight: #7b849e;
   --color-menu-input-text: #abb8de;
@@ -60,6 +61,7 @@
   --color-note-area-bg: #fff;
   --color-note-area-accent: #5964ca;
   --color-note-area-text-secondary: #bbb;
+  --color-note-area-text-secondary-darker: #999;
   --color-note-area-bg-hover: #f5f5f5;
   --color-note-area-bg-hover-intense: #e0e0e0;
 
@@ -360,7 +362,8 @@ body,
     text-align: center;
     transition: transform 0.4s;
     transform-style: preserve-3d;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    box-shadow:
+      rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 
     &.flipped {
@@ -427,7 +430,9 @@ body,
         opacity: 0;
         padding: $unit0 $unit0;
         border-radius: $unit0;
-        transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        transition:
+          opacity 0.2s ease-in-out,
+          background-color 0.2s ease-in-out;
         &:hover {
           background-color: var(--color-flashcards-panel-bg);
         }
@@ -497,8 +502,10 @@ body,
   padding: $unit2 0;
   border-radius: $unit1;
   overflow: hidden;
-  box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%),
-    0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
+  box-shadow:
+    0px 5px 5px -3px rgb(0 0 0 / 20%),
+    0px 8px 10px 1px rgb(0 0 0 / 14%),
+    0px 3px 14px 2px rgb(0 0 0 / 12%);
 
   .menu-item {
     font-size: 14px;

@@ -17,7 +17,7 @@ interface IState {
   reviewCount: number | null // notes
   questionsCount: number | null
   focusMode: boolean
-  search: (
+  searchNotes: (
     query: string,
     isReview: boolean,
     isFav: boolean,
@@ -56,7 +56,7 @@ export const INITIAL_STATE: IState = {
   previewNote: empty(),
   reviewCount: null,
   questionsCount: null,
-  search: async () => [],
+  searchNotes: async () => [],
   addNewNote: async () => 0,
   loadPreviewNote: async () => {},
   saveCurrentNote: async () => {},
@@ -82,7 +82,7 @@ export const INITIAL_STATE: IState = {
 
 export const StateContext = createContext<IState>(INITIAL_STATE)
 
-export const StateProvider: React.FC = ({ children }) => {
+export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   const [tags, setTags] = useState<Loadable<ITag[]>>(empty())
   const [notes, setNotes] = useState<Loadable<INoteSearch[]>>(empty())
   const [reviewCount, setReviewCount] = useState<number | null>(null)
@@ -123,7 +123,7 @@ export const StateProvider: React.FC = ({ children }) => {
     setFocusMode((s) => !s)
   }, [])
 
-  const search = useCallback(
+  const searchNotes = useCallback(
     async (q: string, isReview: boolean, isFav: boolean, tag?: string) => {
       if (
         notes.data !== null &&
@@ -143,7 +143,6 @@ export const StateProvider: React.FC = ({ children }) => {
         isFav,
       )
       setNotes({ loading: false, data: n })
-
       setCachedSearchParams({ q, isReview, tag: tag || '' })
       return n
     },
@@ -425,7 +424,7 @@ export const StateProvider: React.FC = ({ children }) => {
     noteLoading,
     sid,
     flashcardsVisible,
-    search,
+    searchNotes,
     addNewNote,
     saveCurrentNote,
     deleteCurrentNote,

@@ -59,6 +59,8 @@ const Note: React.FC<{
     saveCurrentNote,
   } = useContext(StateContext)
 
+  console.log('currentNote', currentNote)
+
   React.useEffect(() => {
     setMode(edit ? 'edit' : 'view')
   }, [edit])
