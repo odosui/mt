@@ -93,7 +93,6 @@
             svg {
               cursor: pointer;
               fill: var(--color-note-area-text-secondary) !important;
-              width: $unit4;
             }
             &:hover {
               svg {
@@ -129,31 +128,41 @@
           }
         }
 
-        .flashcards-toggler {
+        .side-toggler {
           position: absolute;
-          top: $unit10;
-          right: 0;
+          right: -$unit4;
           z-index: 2;
+          width: $unit9;
           display: flex;
           align-items: center;
           justify-content: center;
           border-radius: $unit1;
           background-color: var(--color-note-area-bg-hover);
           cursor: pointer;
-          transition: opacity 0.2s ease-out, background-color 0.2s ease-out;
+          transition:
+            opacity 0.2s ease-out,
+            background-color 0.2s ease-out;
           padding: $unit0 $unit1;
           border-radius: $unit1;
-          color: var(--color-note-area-text-secondary);
+          color: var(--color-note-area-text-secondary-darker);
           transform: rotate(-90deg);
           font-size: $text0;
           text-transform: uppercase;
           svg {
-            fill: var(--color-note-area-text-secondary);
+            fill: var(--color-note-area-text-secondary-darker);
             margin-right: $unit1;
           }
           &:hover {
             background-color: var(--color-note-area-bg-hover-intense);
           }
+        }
+
+        .flashcards-toggler {
+          top: $unit9;
+        }
+
+        .images-toggler {
+          top: calc($unit10 + $unit8);
         }
       }
     }
@@ -201,6 +210,12 @@
   flex: 1;
   overflow-y: scroll;
 
+  .editor-ac {
+    width: 100%;
+    position: relative;
+    max-width: $unit14;
+  }
+
   textarea {
     width: 100%;
     border: 0;
@@ -214,7 +229,7 @@
   textarea {
     width: 100%;
     max-width: $unit14;
-    font-family: "Fira Mono", monospace;
+    font-family: 'Fira Code', monospace;
   }
 }
 

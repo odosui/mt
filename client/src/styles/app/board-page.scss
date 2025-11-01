@@ -103,6 +103,22 @@
             }
           }
 
+          .edit-toggle {
+            .switch {
+              width: $unit5;
+              height: $unit3;
+              .slider {
+                &:before {
+                  width: $unit1;
+                  height: $unit1;
+                }
+              }
+            }
+            .switch input:checked + .slider:before {
+              transform: translateX($unit3);
+            }
+          }
+
           .menu-icon {
             border-radius: $unit0;
             display: flex;

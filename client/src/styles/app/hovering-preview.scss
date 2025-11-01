@@ -1,8 +1,8 @@
 .hovering-preview {
   box-sizing: border-box;
-  width: 500px;
+  width: $unit14;
+  right: -100%;
   max-width: 100%;
-  right: -510px;
   background-color: var(--color-hovering-preview-bg);
   box-shadow: -2px 0px 10px 1px #aaaaaa;
   top: 0;
@@ -35,8 +35,8 @@
 
   .body {
     position: absolute;
-    top: 50px;
-    padding: 20px;
+    top: $unit7;
+    padding: $unit4 $unit4 $unit4 $unit7;
     bottom: 0;
     left: 0;
     right: 0;

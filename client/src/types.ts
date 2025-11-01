@@ -4,7 +4,15 @@ export interface INoteSearch {
   sid: number
   updated_at_in_words?: string
   tags: string[]
+  pinned: boolean
 }
+
+export interface ImageMeta {
+  url: string
+  ratio: number | null
+}
+
+export type IImageMetas = Record<string, ImageMeta>
 
 export interface INote extends INoteSearch {
   body: string
@@ -21,6 +29,7 @@ export interface INote extends INoteSearch {
   seo_url: string | null
   seo_title: string | null
   seo_description: string | null
+  image_metas: IImageMetas
 }
 
 export interface ITag {
@@ -52,7 +61,6 @@ export interface Question {
   days_till_review_after_current: number
   days_till_next_review: number
   tags: string[]
-  image_url: string | null
 }
 
 type Col = {
@@ -70,4 +78,19 @@ export interface IBoardSearch {
 
 export type IBoard = IBoardSearch & {
   config: { cols: Col[] }
+}
+
+export type INoteImage = {
+  id: number
+  name: string
+  url: string
+  created_at: string
+}
+
+export type TimelineItem = {
+  date: string
+  note_sid: number
+  note_title: string
+  content: string
+  color: string | null
 }

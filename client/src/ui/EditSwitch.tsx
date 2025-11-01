@@ -1,7 +1,3 @@
-import {
-  PencilIcon,
-  AdjustmentsVerticalIcon as Switch,
-} from '@heroicons/react/24/solid'
 import React from 'react'
 
 type Mode = 'edit' | 'view'
@@ -10,21 +6,17 @@ const EditSwitch: React.FC<{
   value: Mode
   onChange: (m: Mode) => void
 }> = ({ value, onChange }) => {
-  const handleChange = (
-    _e: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean,
-  ) => {
-    onChange(checked ? 'edit' : 'view')
-  }
-
   return (
-    <Switch
-      value={value === 'edit'}
-      onChange={handleChange}
-      icon={<PencilIcon />}
-      className="edit-switch"
-      checkedIcon={<PencilIcon />}
-    />
+    <label className="switch" title="Edit mode">
+      <input
+        type="checkbox"
+        value={value === 'edit' ? 'checked' : ''}
+        onChange={(e) => {
+          onChange(e.target.checked ? 'edit' : 'view')
+        }}
+      />
+      <span className="slider"></span>
+    </label>
   )
 }
 

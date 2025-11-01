@@ -3,10 +3,12 @@ import {
   IBoard,
   IBoardSearch,
   INote,
+  INoteImage,
   INoteSearch,
   ITag,
   Question,
   ReviewLog,
+  TimelineItem,
 } from './types'
 
 const PER_PAGE = 500
@@ -41,7 +43,8 @@ export default {
       api('get', `/notes/${id}/changelogs`),
     reviewlogs: (id: number): Promise<ReviewLog[]> =>
       api('get', `/notes/${id}/reviewlogs`),
-    counts: (): Promise<{ total_notes: number }> => api('get', `/notes/counts`),
+    counts: (): Promise<{ total_notes: number; timeline_count: number }> =>
+      api('get', `/notes/counts`),
     publish: (
       id: number,
       slug: string,
@@ -57,6 +60,9 @@ export default {
       api('post', `/notes/${id}/unpublish`, {}),
     fav: (id: number): Promise<void> => api('post', `/notes/${id}/fav`),
     unfav: (id: number): Promise<void> => api('post', `/notes/${id}/unfav`),
+    pin: (id: number): Promise<void> => api('post', `/notes/${id}/pin`),
+    unpin: (id: number): Promise<void> => api('post', `/notes/${id}/unpin`),
+    timeline: (): Promise<TimelineItem[]> => api('get', '/notes/timeline'),
   },
   tags: {
     list: (): Promise<Array<ITag>> => api('get', '/tags'),
@@ -89,6 +95,24 @@ export default {
     list: (): Promise<DataExport[]> => api('get', '/data_exports'),
     create: (): Promise<DataExport> => api('post', `/data_exports`, {}),
   },
+  noteImages: {
+    list: (noteSid: number): Promise<INoteImage[]> => {
+      return api('get', `/note_images?note_sid=${noteSid}`)
+    },
+    delete: (id: number): Promise<{ success: boolean }> =>
+      api('delete', `/note_images/${id}`),
+    upload: async (noteSid: number, file: File) => {
+      const result = await multipart<INoteImage>('/note_images', {
+        note_sid: `${noteSid}`,
+        image: file,
+        name: file.name,
+      })
+      if ('error' in result) {
+        throw new Error(result.error)
+      }
+      return result
+    },
+  },
   questions: {
     list: (noteId?: number): Promise<Question[]> => {
       let url = `/questions`
@@ -97,8 +121,6 @@ export default {
       }
       return api('get', url)
     },
-    regenImage: (id: number): Promise<Question> =>
-      api('post', `/questions/${id}/regen_image`),
     listForReview: (): Promise<Question[]> =>
       api('get', '/questions?for_review=true'),
     reviewGood: (id: number): Promise<void> =>
@@ -152,8 +174,8 @@ async function api(
     attrs.headers['X-CSRF-Token'] = meta.content
   }
 
+  // @ts-ignore
   const base = window.API_SERVER_URL
-
   return fetch(`${base}/api${url}`, attrs).then((x) => x.json())
 }
 
@@ -165,4 +187,45 @@ function toQuery(data: { [k: string]: string }) {
       .map((k) => esc(k) + '=' + esc(data[k]))
       .join('&')
   )
+}
+
+async function multipart<T>(
+  url: string,
+  data?: { [key: string]: string | Blob },
+  method: 'POST' | 'PATCH' = 'POST',
+): Promise<T | { error: string }> {
+  const formData = new FormData()
+
+  for (const name in data) {
+    const val = data[name]
+    if (val) {
+      formData.append(name, val)
+    }
+  }
+
+  // csrf
+  const meta = document.querySelectorAll<HTMLMetaElement>(
+    "[name='csrf-token']",
+  )[0]
+
+  const response = await fetch(`/api${url}`, {
+    method,
+    body: formData,
+    credentials: 'include',
+    headers: {
+      'X-CSRF-Token': meta ? meta.content : '',
+    },
+  })
+
+  if (response.status === 400) {
+    const e = await response.json()
+    return { error: e.error }
+  }
+
+  if (response.status > 299) {
+    throw new Error(response.statusText)
+  }
+
+  const res: T = (await response.json()) as T
+  return res
 }

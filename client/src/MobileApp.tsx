@@ -5,6 +5,7 @@ import FlashCardsMobile from './mobile/FlashcardsMobile'
 import NoteMobile from './mobile/NoteMobile'
 import NotesMobile from './mobile/NotesMobile'
 import TopNavigation from './mobile/TopNavigation'
+import TimelineMobile from './mobile/TimelineMobile'
 
 const MobileApp: React.FC = () => {
   const location = useLocation()
@@ -18,6 +19,7 @@ const MobileApp: React.FC = () => {
           <Route path="/app/review" element={<NotesMobile review={true} />} />
           <Route path="/app/notes/:sid" element={<NoteMobile />} />
           <Route path="/app/flashcards" element={<FlashCardsMobile />} />
+          <Route path="/app/timeline" element={<TimelineMobile />} />
         </Routes>
       </div>
       <BottomNavigation />

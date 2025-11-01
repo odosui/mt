@@ -1,4 +1,4 @@
-import PubSub from '../uni/src/utils/pub_sub'
+import PubSub from './pub_sub'
 
 const BUS = PubSub<{
   flashCardFromQuestion: (text: string) => void

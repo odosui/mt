@@ -1,22 +1,37 @@
+@import '../reset';
 @import '../breakpoints';
+@import '../vars';
+
+:root {
+  // commons
+  --color-text: #333;
+  --color-scroll-thumb: rgba(0, 0, 0, 0.5);
+  --color-bg: #f5f5f5;
+  --color-bg-hover: #ededed;
+  --accent: #5964ca;
+  --accent-hover: #8a94f3;
+  --lighter: #999;
+  --lightest: #f5f5f5;
+  --subtle: #dadada;
+  --danger: #d45454;
+  --dangerHover: #da7474;
+  --borderColor: #d9dde7;
+  --bgBlack: #222;
+  --bgGray: #f5f7f9;
+  --color-notes-border: #d9dde7;
+}
 
 html {
   scroll-behavior: smooth;
 }
 
-body {
-  --accent: #bf9f33;
-  --accentHover: #cfaf43;
-  --text-color: #030027;
-}
-
 body,
 * {
   font-family: 'Roboto', sans-serif;
-  color: var(--text-color);
+  color: var(--color-text);
   outline: none;
   box-sizing: border-box;
-  font-size: 18px;
+  font-size: $text3;
 }
 
 p {
@@ -28,12 +43,11 @@ h1 {
   line-height: 130%;
   font-family: Roboto Slab;
   color: var(--head-color);
-
   font-size: 36px;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
   @include md {
-    font-size: 42px;
+    font-size: $text7;
     margin-top: 1rem;
     margin-bottom: 2.5rem;
   }
@@ -43,7 +57,6 @@ h2 {
   line-height: 130%;
   font-family: Roboto Slab;
   color: var(--head-color);
-
   font-size: 26px;
   margin-top: 2.2rem;
   margin-bottom: 1rem;
@@ -74,6 +87,7 @@ b {
 
 a {
   color: var(--accent);
+  transition: color 0.1s ease-out;
   &:hover {
     color: var(--accent-hover);
   }
@@ -81,11 +95,33 @@ a {
 
 code {
   font-family: 'Fira Code', monospace;
-  padding: 0.2em 0.4em;
   margin: 0;
-  font-size: 75%;
+  font-size: $text1;
   background-color: rgba(27, 31, 35, 0.05);
-  border-radius: 3px;
+  border-radius: $unit0;
+  padding: $unit0 $unit1;
+  * {
+    font-family: 'Fira Code', monospace;
+    font-size: $text1;
+  }
+}
+
+pre code {
+  line-height: 1.6;
+  color: var(--lightest);
+  * {
+    font-family: 'Fira Code', monospace;
+    font-size: $text1;
+  }
+}
+
+// fir for highlighter
+.hljs-property {
+  color: #da70d6;
+}
+
+.hljs-params {
+  color: var(--lightest);
 }
 
 em {
@@ -149,30 +185,100 @@ blockquote {
   padding-bottom: 1px;
 }
 
+figure {
+  width: 100%;
+  margin: $unit4 0;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: $unit1;
+    border: 1px solid var(--color-notes-border);
+  }
+  figcaption {
+    margin-top: $unit1;
+    font-size: $text0;
+    color: var(--lighter);
+    text-align: center;
+  }
+}
+
 .notes-page {
   padding: 2rem 1rem;
   @include md {
-    padding: 5rem;
+    padding: $unit4;
   }
 
   .note-body {
     width: 100%;
-    max-width: 550px;
+    max-width: $unit14;
     margin: 0 auto;
   }
 
-  .powered {
+  .more {
     text-align: center;
     width: 100%;
     max-width: 550px;
     margin: 3rem auto 0rem;
-    font-size: 14px;
     a {
-      font-size: 14px;
     }
 
     @include md {
       margin: 4rem auto 0rem;
     }
   }
+}
+
+.powered {
+  text-align: center;
+  width: 100%;
+  margin: 3rem auto 0rem;
+  font-size: $text1;
+  a {
+    font-size: $text1;
+  }
+
+  @include md {
+    margin: 4rem auto 0rem;
+  }
+}
+
+.user-page {
+  padding: $unit4;
+
+  @include md {
+    padding: $unit4;
+  }
+
+  .body {
+    width: 100%;
+    max-width: $unit14;
+    margin: 0 auto;
+
+    h1 {
+      margin-top: $unit4;
+      margin-bottom: $unit2;
+      font-size: $text7;
+      font-weight: 500;
+    }
+
+    .notes {
+      .note {
+        h2 {
+          font-size: $text5;
+          margin-bottom: $unit1;
+        }
+        .note-body {
+          color: var(--lighter);
+          line-height: 150%;
+        }
+      }
+    }
+  }
+}
+
+.soundcloud-player {
+  background: var(--bgBlack);
+  padding: $unit2;
+  border-radius: $unit1;
 }

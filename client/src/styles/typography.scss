@@ -65,35 +65,61 @@
     border-bottom: 1px dashed;
   }
 
-  h1 {
-    font-family: Roboto Slab;
-    font-weight: bold;
-    font-size: 1.8rem;
-    line-height: 140%;
-    margin-bottom: $unit4;
-  }
-
-  h2 {
-    font-family: Roboto Slab;
-    font-weight: bold;
-    font-size: 1.5rem;
-    line-height: 140%;
-    margin-top: $unit5;
-    margin-bottom: $unit3;
-  }
-
+  h1,
+  h2,
   h3 {
     font-family: Roboto Slab;
     font-weight: bold;
-    font-size: 1.2rem;
     line-height: 140%;
+    display: flex;
+
+    &::before {
+      margin-right: $unit3;
+      color: var(--subtle);
+      font-weight: 100;
+      transition: color 0.2s;
+    }
+
+    &:hover {
+      &::before {
+        color: var(--accent);
+      }
+    }
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: $unit4;
+    margin-left: calc($unit3 - $unit6);
+    &::before {
+      content: '#';
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-top: $unit5;
+    margin-left: calc($unit0 - $unit6);
+    &::before {
+      content: '##';
+      margin-right: $unit3;
+    }
+  }
+
+  h3 {
+    font-size: 1.2rem;
     margin-bottom: 0.8rem;
+    margin-top: $unit5;
+    margin-left: calc($unit2 - $unit7);
+    &::before {
+      content: '###';
+    }
   }
 
   p {
     white-space: pre-wrap;
     line-height: 150%;
-    margin: 0 0 $unit3 0;
+    margin: $unit3 0 $unit3 0;
   }
 
   strong {
@@ -102,6 +128,7 @@
 
   ul {
     margin: 0 0 0 0;
+    list-style: none;
     li {
       margin-bottom: $unit1;
       line-height: 150%;
@@ -118,7 +145,7 @@
   }
 
   ol {
-    margin: 0 0 0 0;
+    margin: $unit4 0 0 0;
     padding: 0;
     counter-reset: li-counter;
     list-style: none;
@@ -132,8 +159,14 @@
         font-size: $text0;
         position: absolute;
         left: -$unit5;
-        color: #bbb;
+        color: var(--subtle);
         content: counter(li-counter, decimal-leading-zero);
+        transition: color 0.2s;
+      }
+      &:hover {
+        &::before {
+          color: var(--accent);
+        }
       }
       p:last-child {
         margin-bottom: 0;
@@ -151,5 +184,44 @@
     caret-color: var(--accent);
     margin-right: $unit0;
     font-size: 14px;
+  }
+
+  pre {
+    .mermaid {
+      background-color: var(--color-note-area-bg-hover);
+      padding: $unit5 $unit0 $unit2 $unit3;
+      margin: $unit4 auto;
+      border-radius: $unit1;
+      border: 1px solid var(--color-notes-border);
+    }
+  }
+
+  // this is for multiple images in a row
+  table {
+    border-collapse: separate;
+    border-spacing: $unit2; /* adjust value as needed */
+    tr {
+      th {
+        width: 50%;
+        vertical-align: top;
+      }
+    }
+  }
+
+  figure {
+    width: 100%;
+    margin-bottom: $unit4;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $unit1;
+      border: 1px solid var(--color-notes-border);
+    }
+    figcaption {
+      font-size: $text0;
+      color: var(--lighter);
+      text-align: center;
+    }
   }
 }

@@ -1,9 +1,9 @@
-import CloseIcon from '@mui/icons-material/Close'
 import * as React from 'react'
 import { useContext } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { StateContext } from '../state/StateProvider'
 import Spinner from '../ui/Spinner'
+import { XIcon } from '@primer/octicons-react'
 
 const SideMenu: React.FC<{ open: boolean; onHide: () => void }> = ({
   open,
@@ -22,7 +22,9 @@ const SideMenu: React.FC<{ open: boolean; onHide: () => void }> = ({
   return (
     <div className={`side-menu ${open ? 'open' : ''}`}>
       <div className="top">
-        <CloseIcon onClick={onHide} />
+        <div onClick={onHide}>
+          <XIcon />
+        </div>
       </div>
       <div className="content">
         <div className="tags-area">

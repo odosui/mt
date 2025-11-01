@@ -1,7 +1,7 @@
+import { AnimatePresence, motion } from 'motion/react'
 import React, { useEffect, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import api from '../api'
-import Flashcard from '../Flashcard'
+import Flashcard from '../components/Flashcard'
 import { Question } from '../types'
 
 const FlashCardsMobile = () => {
@@ -58,24 +58,24 @@ const FlashCardsMobile = () => {
                 <b>{rest.length}</b> cards left to review
               </div>
             </div>
-            <div className="question-area">
-              <SwitchTransition>
-                <CSSTransition
+            <AnimatePresence initial={false}>
+              <motion.div
+                className="question-area"
+                key={question?.id}
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                style={{ position: 'absolute' }}
+              >
+                <Flashcard
+                  q={question}
+                  onReviewGood={handleGood}
+                  onReviewBad={handleBad}
                   key={question?.id}
-                  addEndListener={(node, done) =>
-                    node.addEventListener('transitionend', done, false)
-                  }
-                  classNames="aleft"
-                >
-                  <Flashcard
-                    q={question}
-                    onReviewGood={handleGood}
-                    onReviewBad={handleBad}
-                    key={question?.id}
-                  />
-                </CSSTransition>
-              </SwitchTransition>
-            </div>
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
         )}
 

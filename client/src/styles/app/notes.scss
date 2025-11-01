@@ -31,7 +31,6 @@
       svg {
         font-size: 16px;
         margin-right: 8px;
-        width: $unit4;
       }
     }
     .newNote {
@@ -40,7 +39,6 @@
         transition: fill 0.1s ease-in;
         fill: #333;
         font-size: 22px;
-        width: $unit3;
       }
       &:hover {
         svg {
@@ -56,41 +54,69 @@
     flex: 1;
 
     .item {
-      padding: $unit3 $unit3;
+      padding: $unit1 $unit3;
+      height: $unit8;
+      gap: $unit0;
       cursor: pointer;
       transition: background-color 0.1s ease-out;
       font-size: 14px;
       border-bottom: 1px solid var(--color-notes-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .icon-button {
+        background: transparent;
+        opacity: 0;
+        transition: opacity 0.1s ease-in;
+        &:hover {
+          svg {
+            fill: var(--color-notes-accent);
+          }
+        }
+      }
+
       .note-head {
         display: flex;
         justify-content: space-between;
-        margin-bottom: $unit1;
-        .sid {
-          font-size: 12px;
+        align-items: center;
+        .left {
+          display: flex;
+          align-items: center;
+          gap: $unit0;
           color: var(--color-notes-text-secondary);
-        }
-        .updated-at {
-          font-size: 12px;
-          color: var(--color-notes-text-secondary);
+          font-size: $text0;
+          .sid {
+            font-size: $text0;
+            color: var(--color-notes-text-secondary);
+          }
+          .updated-at {
+            font-size: $text0;
+            color: var(--color-notes-text-secondary);
+          }
         }
       }
       &:hover {
         background-color: var(--color-notes-bg-hover);
+        .icon-button {
+          opacity: 1;
+        }
       }
+
+      &.pinned {
+        .icon-button {
+          opacity: 1;
+
+          svg {
+            fill: var(--color-notes-accent);
+          }
+        }
+      }
+
       &.active {
         background-color: var(--color-notes-bg-hover);
         border-left: 3px solid var(--color-notes-accent);
-        padding-left: 13px;
-      }
-
-      .note-tags {
-        margin-top: $unit1;
-        span {
-          color: var(--color-notes-text-secondary);
-          margin-right: 10px;
-          font-size: 12px;
-          font-style: italic;
-        }
+        padding-left: calc($unit3 - 3px);
       }
 
       .snippet {

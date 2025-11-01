@@ -1,38 +1,46 @@
 import * as React from 'react'
-import {
-  Navigate,
-  Route,
-  BrowserRouter as Router,
-  Routes,
-} from 'react-router-dom'
-import Sidebar from './Sidebar'
-import FlashCards from './pages/FlashCards'
-import Notes from './pages/Notes'
+import { Suspense, lazy } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import { StateProvider } from './state/StateProvider'
 
+const DesktopApp = lazy(() => import('./DesktopApp'))
+const MobileApp = lazy(() => import('./MobileApp'))
+
 const App: React.FC = () => {
+  const isMobile = checkIfMobile()
+
   return (
-    <Router>
+    <BrowserRouter>
       <StateProvider>
-        <div className="desktop-app">
-          <Sidebar />
-          <Routes>
-            <Route path="/" element={<Navigate replace to="/app/notes" />} />
-            <Route path="/app/notes" element={<Notes mode="all" />} />
-            <Route path="/app/notes/:sid" element={<Notes mode="all" />} />
-            <Route path="/app/fav" element={<Notes mode="fav" />} />
-            <Route path="/app/fav/:sid" element={<Notes mode="fav" />} />
-            <Route path="/app/review" element={<Notes mode="review" />} />
-            <Route path="/app/review/:sid" element={<Notes mode="review" />} />
-            <Route path="/app/quiz" element={<FlashCards />} />
-            {/* by default go to /app/notes */}
-            {/*
-        <Route path="/app/boards" element={<Boards />} />
-        <Route path="/app/boards/:id" element={<Board />} /> */}
-          </Routes>
-        </div>
+        <Suspense fallback={<Fallback />}>
+          {isMobile ? <MobileApp /> : <DesktopApp />}
+        </Suspense>
       </StateProvider>
-    </Router>
+    </BrowserRouter>
+  )
+}
+
+const Fallback = () => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        width: '100vw',
+        fontSize: '1rem',
+      }}
+    >
+      ...
+    </div>
+  )
+}
+
+const checkIfMobile = () => {
+  const ua = navigator.userAgent
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    ua,
   )
 }
 

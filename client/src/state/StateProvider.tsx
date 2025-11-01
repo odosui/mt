@@ -17,7 +17,7 @@ interface IState {
   reviewCount: number | null // notes
   questionsCount: number | null
   focusMode: boolean
-  searchNotes: (
+  search: (
     query: string,
     isReview: boolean,
     isFav: boolean,
@@ -46,7 +46,12 @@ interface IState {
   sid: number | null
   flashcardsVisible: boolean
   toggleFlashcardsVisible: () => void
+  imagesVisible: boolean
+  toggleImagesVisible: () => void
   createNoteAndLinkFromCurrent: (title: string) => Promise<void>
+  timelineCount: number | null
+  pinNote: (sid: number) => Promise<void>
+  unpinNote: (sid: number) => Promise<void>
 }
 
 export const INITIAL_STATE: IState = {
@@ -56,7 +61,7 @@ export const INITIAL_STATE: IState = {
   previewNote: empty(),
   reviewCount: null,
   questionsCount: null,
-  searchNotes: async () => [],
+  search: async () => [],
   addNewNote: async () => 0,
   loadPreviewNote: async () => {},
   saveCurrentNote: async () => {},
@@ -76,8 +81,13 @@ export const INITIAL_STATE: IState = {
   toggleFavCurrentNote: async () => {},
   flashcardsVisible: true,
   toggleFlashcardsVisible: () => {},
+  imagesVisible: true,
+  toggleImagesVisible: () => {},
   totalNoteCount: null,
+  timelineCount: null,
   createNoteAndLinkFromCurrent: async () => {},
+  pinNote: async () => {},
+  unpinNote: async () => {},
 }
 
 export const StateContext = createContext<IState>(INITIAL_STATE)
@@ -90,6 +100,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   const [previewNote, setPreviewNote] = useState<Loadable<INote>>(empty())
   const [focusMode, setFocusMode] = useState(false)
   const [totalNoteCount, setTotalNoteCount] = useState<number | null>(null)
+  const [timelineCount, setTimelineCount] = useState<number | null>(null)
 
   const [sid, setSid] = useState<number | null>(null)
   const [noteLoading, setNoteLoading] = useState(false)
@@ -102,10 +113,16 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   })
 
   // Flashcards
-  const [flashcardsVisible, setFlashcardsVisible] = useState(true)
+  const [flashcardsVisible, setFlashcardsVisible] = useState(false)
 
   const toggleFlashcardsVisible = useCallback(() => {
     setFlashcardsVisible((s) => !s)
+  }, [])
+
+  const [imagesVisible, setImagesVisible] = useState(false)
+
+  const toggleImagesVisible = useCallback(() => {
+    setImagesVisible((s) => !s)
   }, [])
 
   // App cache to store the full notes
@@ -123,7 +140,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     setFocusMode((s) => !s)
   }, [])
 
-  const searchNotes = useCallback(
+  const search = useCallback(
     async (q: string, isReview: boolean, isFav: boolean, tag?: string) => {
       if (
         notes.data !== null &&
@@ -142,7 +159,9 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         isReview,
         isFav,
       )
+
       setNotes({ loading: false, data: n })
+
       setCachedSearchParams({ q, isReview, tag: tag || '' })
       return n
     },
@@ -255,6 +274,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
       sid: newNote.sid,
       snippet: '# New note',
       tags: [],
+      pinned: false,
     }
     setNotes({ loading: false, data: [newSearchNote, ...(notes.data || [])] })
     await loadNoteBySid(newNote.sid)
@@ -319,6 +339,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         seo_description: description,
         seo_url: newNote.seo_url,
       }
+
+      // trigger a re-render
+      setNotes((s) => ({
+        ...s,
+        data: s.data,
+      }))
     },
     [fullNotes, getCurrentNote],
   )
@@ -334,6 +360,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
       ...note,
       published: false,
     }
+
+    // trigger a re-render
+    setNotes((s) => ({
+      ...s,
+      data: s.data,
+    }))
   }, [fullNotes, getCurrentNote])
 
   function setReviewCountWrapper({
@@ -346,7 +378,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     setReviewCount(notes)
     setQuestionsCount(questions)
 
-    const nav = window.navigator as any
+    const nav = window.navigator
     const n = questions + notes
     if (nav.setAppBadge) {
       n > 0 ? nav.setAppBadge(n) : nav.clearAppBadge()
@@ -394,6 +426,38 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     setNotes({ loading: false, data: [newNote, ...(notes.data || [])] })
   }
 
+  async function pinNote(sid: number) {
+    const note = notes.data?.find((n) => n.sid === sid)
+    if (!note) {
+      return
+    }
+
+    await api.notes.pin(sid)
+
+    setNotes((prev) => ({
+      ...prev,
+      data: (prev.data ?? []).map((n) =>
+        n.sid === sid ? { ...n, pinned: true } : n,
+      ),
+    }))
+  }
+
+  async function unpinNote(sid: number) {
+    const note = notes.data?.find((n) => n.sid === sid)
+    if (!note) {
+      return
+    }
+
+    await api.notes.unpin(sid)
+
+    setNotes((prev) => ({
+      ...prev,
+      data: (prev.data ?? []).map((n) =>
+        n.sid === sid ? { ...n, pinned: false } : n,
+      ),
+    }))
+  }
+
   useEffect(() => {
     const initialLoad = async () => {
       // tags
@@ -404,6 +468,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
       // counters
       const counts = await api.notes.counts()
       setTotalNoteCount(counts.total_notes)
+      setTimelineCount(counts.timeline_count)
 
       await reloadCounters()
     }
@@ -424,7 +489,8 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     noteLoading,
     sid,
     flashcardsVisible,
-    searchNotes,
+    imagesVisible,
+    search,
     addNewNote,
     saveCurrentNote,
     deleteCurrentNote,
@@ -438,8 +504,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     switchNote,
     toggleFavCurrentNote,
     toggleFlashcardsVisible,
+    toggleImagesVisible,
     totalNoteCount,
+    timelineCount,
     createNoteAndLinkFromCurrent,
+    pinNote,
+    unpinNote,
   }
 
   return <StateContext.Provider value={value}>{children}</StateContext.Provider>

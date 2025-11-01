@@ -1,17 +1,14 @@
-function debounce<F extends (...args: any[]) => void>(
-  func: F,
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
   wait: number,
-): (...args: Parameters<F>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | undefined
+): (...args: Parameters<T>) => void {
+  let timerId: ReturnType<typeof setTimeout> | undefined = undefined
 
-  return function (this: ThisParameterType<F>, ...args: Parameters<F>): void {
-    if (timeoutId !== undefined) {
-      clearTimeout(timeoutId)
+  return (...args: Parameters<T>): void => {
+    if (timerId !== undefined) {
+      clearTimeout(timerId)
     }
-
-    timeoutId = setTimeout(() => {
-      func.apply(this, args)
-    }, wait)
+    timerId = setTimeout(() => func(...args), wait)
   }
 }
 

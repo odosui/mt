@@ -18,7 +18,8 @@
       flex-direction: column;
       align-items: center;
       .review-card {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        box-shadow:
+          rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
           rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
         border-radius: $unit0;
         background-color: var(--color-flashcards-page-card-bg);
@@ -103,12 +104,80 @@
     }
   }
 
+  .explore-cards-container {
+    display: flex;
+    height: 100%;
+    gap: $unit4;
+
+    .tags-sidebar {
+      width: $unit10;
+      flex-shrink: 0;
+      height: fit-content;
+
+      h3 {
+        margin: 0 0 $unit2 0;
+        font-size: $text3;
+        color: var(--color-flashcards-page-accent);
+        font-weight: 600;
+      }
+
+      .tag-list {
+        .tag-item {
+          display: flex;
+          align-items: center;
+          padding: $unit1 $unit2;
+          border-radius: $unit0;
+          cursor: pointer;
+          font-size: $text2;
+          color: var(--color-flashcards-page-secondary);
+          transition: all 0.1s ease;
+
+          &:hover {
+            color: var(--color-flashcards-page-accent);
+          }
+
+          &.active {
+            color: var(--color-flashcards-page-accent);
+            font-weight: 500;
+          }
+
+          svg {
+            fill: currentColor;
+            margin-right: $unit0;
+          }
+        }
+      }
+    }
+
+    .cards-content {
+      flex: 1;
+      min-width: 0;
+
+      .cards-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $unit3;
+
+        h2 {
+          margin: 0;
+          font-size: $text2;
+          color: var(--color-flashcards-page-accent);
+        }
+
+        .cards-count {
+          font-size: $text4;
+          color: var(--color-flashcards-page-secondary);
+        }
+      }
+    }
+  }
+
   .question-list {
     width: 100%;
     overflow: hidden;
     flex-wrap: wrap;
     max-width: 1080px;
-    margin: 0 auto;
 
     .group {
       margin-bottom: $unit4;

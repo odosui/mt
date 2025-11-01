@@ -66,7 +66,6 @@
         font-size: 14px;
         margin-right: 10px;
         fill: var(--color-menu-text);
-        width: $unit3;
       }
     }
 
@@ -141,7 +140,6 @@
         align-items: center;
         svg {
           margin-right: $unit0;
-          width: $unit2;
           font-size: 14px;
           fill: #bbb;
         }
@@ -153,9 +151,9 @@
       justify-content: space-between;
       padding: 0.2rem 0.2rem 0.5rem;
       background: var(--color-menu-bg-hover-intense);
-      padding: 5px;
+      padding: $unit0 $unit1;
       align-items: center;
-      border-radius: 5px;
+      border-radius: $unit1;
       input {
         border: 0;
         color: var(--color-menu-text);
@@ -167,8 +165,6 @@
       }
       svg {
         fill: var(--color-menu-input-text);
-        font-size: 18px;
-        width: $unit4;
       }
     }
 

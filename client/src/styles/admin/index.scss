@@ -1,0 +1,147 @@
+@import '../reset';
+@import '../breakpoints';
+@import '../vars';
+
+:root {
+  // commons
+  --color-text: #333;
+  --color-scroll-thumb: rgba(0, 0, 0, 0.5);
+  --color-bg: #f5f5f5;
+  --color-bg-hover: #ededed;
+  --accent: #5964ca;
+  --accent-hover: #8a94f3;
+  --lighter: #999;
+  --lightest: #f5f5f5;
+  --subtle: #dadada;
+  --danger: #d45454;
+  --dangerHover: #da7474;
+  --borderColor: #d9dde7;
+  --bgGray: #f5f7f9;
+  --color-notes-border: #d9dde7;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+* {
+  font-family: 'Roboto', sans-serif;
+  color: var(--color-text);
+  outline: none;
+  box-sizing: border-box;
+  font-size: $text3;
+}
+
+p {
+  line-height: 140%;
+  margin: 1em 0;
+}
+
+h1 {
+  line-height: 130%;
+  font-family: Roboto Slab;
+  color: var(--head-color);
+  font-size: 36px;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  @include md {
+    font-size: $text7;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+h2 {
+  line-height: 130%;
+  font-family: Roboto Slab;
+  color: var(--head-color);
+  font-size: 26px;
+  margin-top: 2.2rem;
+  margin-bottom: 1rem;
+  @include md {
+    font-size: 30px;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+h3 {
+  font-family: Roboto Slab;
+  color: var(--head-color);
+  font-size: 24px;
+  margin-bottom: 2rem;
+  line-height: 140%;
+  letter-spacing: 0.25px;
+  text-align: center;
+}
+
+i {
+  font-style: italic;
+}
+
+b {
+  font-weight: bold;
+}
+
+a {
+  color: var(--accent);
+  transition: color 0.1s ease-out;
+  &:hover {
+    color: var(--accent-hover);
+  }
+}
+
+.container {
+  max-width: 100%;
+  width: 100%;
+  padding: 0 0.2rem;
+  @include md {
+    max-width: 1164px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+  }
+}
+
+.admin-users {
+  * {
+    font-size: $text1;
+  }
+  .day {
+    margin-bottom: $unit2;
+    h3 {
+      margin-bottom: $unit2;
+      font-size: $text2;
+      text-align: left;
+      margin: 0;
+    }
+  }
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+
+  th,
+  td {
+    border: 1px solid var(--borderColor);
+    padding: $unit0 $unit1;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--bgGray);
+    font-weight: bold;
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: var(--color-bg);
+    }
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

@@ -1,19 +1,21 @@
-import { Delete } from '@mui/icons-material'
-import PlusIcon from '@mui/icons-material/Add'
-import SaveIcon from '@mui/icons-material/Save'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import MenuIcon from '@mui/icons-material/Menu'
+import {
+  ArrowRightIcon,
+  DatabaseIcon,
+  PlusIcon,
+  ThreeBarsIcon,
+  XIcon,
+} from '@primer/octicons-react'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import OutsideClickHandler from 'react-outside-click-handler'
 import { useParams } from 'react-router-dom'
-import PreviewAndEditor from '../../PreviewAndEditor'
 import api from '../../api'
-import { IBoard, INote } from '../../types'
+import PreviewAndEditor from '../../components/PreviewAndEditor'
+import { IBoard, IImageMetas, INote } from '../../types'
 import Button from '../../ui/Button'
+import ClickOutside from '../../ui/ClickOutside'
+import EditSwitch from '../../ui/EditSwitch'
 import NoteSearch from './NoteSearch'
 import useResizable from './useResizable'
-import EditSwitch from '../../ui/EditSwitch'
 
 const Board: React.FC<{}> = () => {
   const pars = useParams<{ id: string }>()
@@ -189,6 +191,7 @@ const Board: React.FC<{}> = () => {
                 sid={item.sid}
                 key={item.sid}
                 body={notes[item.sid]?.body ?? ''}
+                imageMetas={notes[item.sid]?.image_metas ?? {}}
                 onDelete={() => handleDeleteItem(col.uuid, item.sid)}
                 height={item.height ?? 'full'}
                 onResize={(h: number | 'full') =>
@@ -208,7 +211,7 @@ const Board: React.FC<{}> = () => {
                   variant="danger"
                   className="lite"
                   onClick={() => handleDeleteColumn(col.uuid)}
-                  icon={<Delete />}
+                  icon={<XIcon />}
                 >
                   Delete
                 </Button>
@@ -234,7 +237,16 @@ const BoardItem: React.FC<{
   onDelete: () => void
   onResize: (arg: number | 'full') => void
   saveFn: (body: string) => Promise<void>
-}> = ({ sid, body, onDelete, height: initialHeight, onResize, saveFn }) => {
+  imageMetas: IImageMetas
+}> = ({
+  sid,
+  body,
+  onDelete,
+  height: initialHeight,
+  onResize,
+  saveFn,
+  imageMetas,
+}) => {
   const itemRef = React.useRef<HTMLDivElement>(null)
   const resizeRef = React.useRef<HTMLDivElement>(null)
 
@@ -264,13 +276,15 @@ const BoardItem: React.FC<{
             <EditSwitch value={mode} onChange={handleModeChange} />
           </div>
 
-          <SaveIcon className={`save ${pending ? 'pending' : ''}`} />
+          <DatabaseIcon className={`save ${pending ? 'pending' : ''}`} />
         </div>
 
         <div className={`menu-icon dropdown-menu-icon ${open ? 'open' : ''}`}>
-          <MenuIcon onClick={handleOpen} />
+          <div onClick={handleOpen}>
+            <ThreeBarsIcon />
+          </div>
 
-          <OutsideClickHandler onOutsideClick={() => setOpen(false)}>
+          <ClickOutside onClickOutside={() => setOpen(false)}>
             {open && (
               <div className="dropdown-menu">
                 <div
@@ -280,7 +294,7 @@ const BoardItem: React.FC<{
                     handleGoto()
                   }}
                 >
-                  <ArrowForwardIcon />
+                  <ArrowRightIcon />
                   Go to note
                 </div>
                 <div
@@ -290,12 +304,12 @@ const BoardItem: React.FC<{
                     onDelete()
                   }}
                 >
-                  <Delete />
+                  <XIcon />
                   Delete
                 </div>
               </div>
             )}
-          </OutsideClickHandler>
+          </ClickOutside>
         </div>
       </div>
       <div className="board-item-body">
@@ -307,6 +321,7 @@ const BoardItem: React.FC<{
           saveFn={saveFn}
           onPendingStart={() => setPending(true)}
           onPendingEnd={() => setPending(false)}
+          imageMetas={imageMetas}
         />
       </div>
       <div ref={resizeRef} className="resize-handle"></div>

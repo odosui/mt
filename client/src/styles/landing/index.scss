@@ -385,6 +385,11 @@ body,
   .links {
     text-align: center;
     margin-top: 1rem;
+
+    a {
+      display: inline-block;
+      margin-bottom: 0.4rem;
+    }
   }
 }
 

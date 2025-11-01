@@ -1,8 +1,11 @@
-import AlarmOn from '@mui/icons-material/AlarmOn'
-import HelpOutline from '@mui/icons-material/HelpOutline'
-import HomeIcon from '@mui/icons-material/Home'
-import Logout from '@mui/icons-material/Logout'
-import SettingsIcon from '@mui/icons-material/Settings'
+import {
+  CalendarIcon,
+  GearIcon,
+  HomeIcon,
+  NoteIcon,
+  SignOutIcon,
+  SyncIcon,
+} from '@primer/octicons-react'
 import * as React from 'react'
 import { useContext } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -17,17 +20,18 @@ const MobildBottomNavigation: React.FC = () => {
       <NavItem
         path="/app/review"
         title="Review"
-        icon={<AlarmOn />}
+        icon={<SyncIcon />}
         counter={reviewCount || 0}
       />
       <NavItem
         path="/app/flashcards"
         title="Flashcards"
-        icon={<HelpOutline />}
+        icon={<NoteIcon />}
         counter={questionsCount || 0}
       />
-      <NavItem path="/app/settings" title="Settings" icon={<SettingsIcon />} />
-      <NavItem path="/app/logout" title="Log out" icon={<Logout />} />
+      <NavItem path="/app/timeline" title="Timeline" icon={<CalendarIcon />} />
+      <NavItem path="/app/settings" title="Settings" icon={<GearIcon />} />
+      <NavItem path="/app/logout" title="Log out" icon={<SignOutIcon />} />
     </div>
   )
 }

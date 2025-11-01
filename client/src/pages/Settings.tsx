@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import Api from '../api'
 import { DataExport } from '../types'
 import Button from '../ui/Button'
-import GetAppIcon from '@mui/icons-material/GetApp'
-import dayjs from 'dayjs'
+import { formatIso } from '../utils/dates'
+import { DownloadIcon } from '@primer/octicons-react'
 
 const DataExports: React.FC = () => {
   const [dataExports, setDataExports] = useState<DataExport[]>([])
@@ -34,13 +34,12 @@ const DataExports: React.FC = () => {
         <p>Dowload all your notes as a single ZIP with markdown files</p>
         {dataExports.map((e) => (
           <div className="data-exports-item" key={e.id}>
-            {dayjs(e.created_at).format('YYYY-MM-DD HH:mm:ss')}{' '}
-            <a href={e.export_file_url}>Download</a>
+            {formatIso(e.created_at)} <a href={e.export_file_url}>Download</a>
           </div>
         ))}
         <div className="actions">
           <Button
-            icon={<GetAppIcon />}
+            icon={<DownloadIcon />}
             onClick={handleExport}
             disabled={working}
           >
@@ -65,10 +64,6 @@ export default function () {
   return (
     <div className="page">
       <div className="settings-page">
-        <div className="settings-block">
-          <h2>Personal</h2>
-          <PersonalForm />
-        </div>
         <DataExports />
         <div className="settings-block">
           <h2>Delete account</h2>
@@ -80,49 +75,6 @@ export default function () {
             Remove my account
           </button>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function PersonalForm() {
-  const [saving, setSaving] = useState(false)
-  const [tagsToIgnore, setTagsToIgnore] = useState<string>(
-    initialTagsToIgnore || '',
-  )
-
-  const save: React.MouseEventHandler = async () => {
-    setSaving(true)
-    await Api.users.updateself({ username, ignore_review_tags: tagsToIgnore })
-    setSaving(false)
-  }
-  return (
-    <div>
-      <div className="form-field">
-        <label>
-          Username <br />
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="form-field">
-        <label>
-          Tags to ignore in review (comma separated)
-          <br />
-          <input
-            type="text"
-            value={tagsToIgnore}
-            onChange={(e) => setTagsToIgnore(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="form-field">
-        <button className="btn big" onClick={save}>
-          {saving ? '...' : 'Save'}
-        </button>
       </div>
     </div>
   )

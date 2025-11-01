@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import api from '../../api'
 import { INoteSearch } from '../../types'
 
-import OutsideClickHandler from 'react-outside-click-handler'
 import debounce from '../../utils/debounce'
+import ClickOutside from '../../ui/ClickOutside'
 
 const NoteSearch: React.FC<{
   onSelected: (sid: number) => void
@@ -13,14 +13,14 @@ const NoteSearch: React.FC<{
   const [notes, setNotes] = React.useState<INoteSearch[]>([])
   const [query, setQuery] = React.useState('')
 
-  const search = useCallback(async (q: string) => {
+  async function search(q: string) {
     const res = await api.notes.list(q, 0)
     setNotes(res)
-  }, [])
+  }
 
-  const searchDebounced = useCallback(
+  const searchDebounced = React.useCallback(
     debounce((q: string) => search(q), 500),
-    [search],
+    [],
   )
 
   useEffect(() => {
@@ -39,8 +39,8 @@ const NoteSearch: React.FC<{
   }
 
   return (
-    <OutsideClickHandler
-      onOutsideClick={() => {
+    <ClickOutside
+      onClickOutside={() => {
         reset()
       }}
     >
@@ -74,7 +74,7 @@ const NoteSearch: React.FC<{
           </div>
         )}
       </div>
-    </OutsideClickHandler>
+    </ClickOutside>
   )
 }
 

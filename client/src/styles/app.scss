@@ -5,13 +5,14 @@
 @import './app/elements';
 
 @import './typography';
-// @import './mobile';
+@import './mobile';
 @import './app/sidebar';
 @import './app/notes';
 @import './app/note-area';
 @import './app/flashcards-panel';
 @import './app/hovering-preview';
 @import './app/flashcards-page';
+@import './components/tag-autocomplete';
 
 .desktop-app {
   display: flex;
@@ -185,12 +186,44 @@ body,
   }
 }
 
-.generic-modal-content {
-  max-width: $unit15;
-  width: 100%;
+.generic-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  .generic-modal {
+    position: relative;
+    background-color: white;
+    padding: $unit4;
+    border-radius: $unit1;
+    z-index: 11;
+    box-shadow:
+      0px 5px 5px -3px rgb(0 0 0 / 20%),
+      0px 8px 10px 1px rgb(0 0 0 / 14%),
+      0px 3px 14px 2px rgb(0 0 0 / 12%);
+
+    .generic-modal-content {
+      max-width: $unit14;
+      width: 100%;
+    }
+  }
 }
 
 .publish-form {
+  width: $unit14;
+
+  h2 {
+    font-size: $text5;
+    margin-bottom: $unit4;
+  }
+
   .form-input {
     margin-bottom: 20px;
   }
@@ -227,9 +260,20 @@ body,
   p.link {
     display: flex;
     align-items: center;
+    margin-bottom: $unit4;
     a {
-      margin-left: 10px;
+      margin-left: $unit1;
+      color: var(--accent);
     }
+  }
+
+  p.warning {
+    font-size: $text1;
+    margin-bottom: $unit4;
+    background-color: $bleackOrange;
+    color: white;
+    padding: $unit1;
+    border-radius: $unit0;
   }
 }
 
@@ -517,7 +561,6 @@ body,
       margin-right: 10px;
       fill: #555;
       font-size: 14px;
-      width: $unit3;
     }
     span {
       font-weight: 400;
@@ -577,14 +620,15 @@ body,
     padding: $unit3;
     margin-top: $unit3;
     display: flex;
+    flex-wrap: wrap;
     gap: $unit3;
     a {
       text-decoration: none;
     }
 
     .board-list-item {
-      width: $unit11;
-      height: $unit9;
+      width: $unit10;
+      height: $unit8;
       padding: $unit4 0 $unit3;
       transition: background-color 0.1s ease-in-out;
       cursor: pointer;
@@ -600,7 +644,7 @@ body,
       justify-content: space-between;
 
       h3 {
-        font-size: $text5;
+        font-size: $text4;
         text-align: center;
       }
 
@@ -636,6 +680,203 @@ body,
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+    }
+  }
+}
+
+.dropzone {
+  border: 2px dashed var(--color-notes-border);
+  color: var(--color-notes-accent);
+  border-radius: $unit0;
+  padding: $unit2;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.note-images-list {
+  margin-top: $unit4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $unit3;
+
+  .note-image {
+    /*  grow | shrink | basis  */
+    flex: 0 0 calc(50% - #{$unit3}); // ≤ 50 % minus the horizontal gap
+    /* optional, if you don’t want it to stretch taller than its natural height */
+    align-self: flex-start;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $unit0;
+      border: 1px solid var(--color-notes-border);
+    }
+    p {
+      font-size: $text0;
+      color: var(--color-notes-text-secondary);
+      margin-top: $unit1;
+      text-align: center;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $unit1;
+    }
+  }
+}
+
+.icon-button {
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $unit4;
+  height: $unit4;
+  border-radius: $unit0;
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+
+  &.danger {
+    svg {
+      fill: var(--danger);
+    }
+  }
+
+  &:hover {
+    background-color: var(--color-bg-hover);
+  }
+  svg {
+    width: $unit2;
+    height: $unit2;
+    fill: var(--color-text);
+    transition: fill 0.1s ease-in-out;
+  }
+}
+
+.timeline-page {
+  background-color: var(--color-bg);
+  width: 100%;
+  flex: 1;
+  overflow-x: auto;
+
+  .timeline {
+    display: flex;
+    gap: $unit4;
+
+    width: $unit15;
+    margin: $unit3 auto;
+
+    .timeline-filters {
+      width: $unit8;
+      padding: $unit1;
+      background-color: var(--color-bg-hover);
+      border-radius: $unit1;
+      align-self: flex-start;
+
+      position: sticky;
+      top: $unit3;
+
+      .timeline-filters-years {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $unit1;
+        flex-direction: column;
+
+        button.timeline-filter-year {
+          background-color: transparent;
+          border: 0;
+          color: var(--color-text);
+          padding: $unit0 $unit1;
+          border-radius: $unit0;
+          font-size: $text4;
+          cursor: pointer;
+          transition:
+            background-color 0.1s ease-in-out,
+            color 0.1s ease-in-out;
+
+          &:hover {
+            background-color: var(--color-bg-hover);
+            color: var(--color-accent);
+          }
+
+          &.active {
+            background-color: var(--color-accent);
+            color: var(--accentText);
+          }
+        }
+      }
+    }
+
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: $unit3;
+      max-width: $unit14;
+      flex: 1;
+
+      .timeline-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: $unit5;
+
+        h2 {
+          font-size: $text0;
+          color: var(--color-accent);
+          font-weight: 500;
+          text-transform: uppercase;
+          text-align: center;
+          padding: $unit1;
+          border-radius: $unit1;
+          width: $unit9;
+          margin: 0 auto $unit2 auto;
+        }
+
+        .timeline-item {
+          display: flex;
+          gap: $unit3;
+          align-items: center;
+          margin-bottom: $unit2;
+
+          &:hover {
+            .timeline-item-date {
+              color: var(--color-accent);
+            }
+          }
+
+          .timeline-item-date {
+            font-size: $text1;
+            width: $unit8;
+            color: var(--lighter);
+            text-align: right;
+            transition: color 0.1s ease-in-out;
+          }
+          .timeline-item-content {
+            flex: 1;
+            padding: $unit1;
+            background-color: white;
+            border-radius: $unit1;
+            border: 1px solid var(--color-menu-border);
+            p {
+              margin: 0;
+            }
+            .timeline-item-note {
+              font-size: $text0;
+              border-radius: $unit1;
+              text-align: right;
+              margin-top: $unit1;
+              a {
+                text-decoration: none;
+                color: var(--color-accent);
+                &:hover {
+                  color: var(--accentHover);
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

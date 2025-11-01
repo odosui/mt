@@ -3,7 +3,7 @@ import { visit, Visitor } from 'unist-util-visit'
 export default function HashTagPlugin() {
   const visitor: Visitor = (node, index, parent) => {
     // @ts-expect-error - we know this is a text node
-    const parts = node.value.split(/(#\w+)/)
+    const parts = node.value.split(/(#\w+(?:=[^\s]+)?)/)
 
     if (parts.length === 1) {
       return

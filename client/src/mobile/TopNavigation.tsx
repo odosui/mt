@@ -1,11 +1,13 @@
-import MenuIcon from '@mui/icons-material/Menu'
-import ArrowBack from '@mui/icons-material/ArrowBack'
-import Search from '@mui/icons-material/Search'
 import * as React from 'react'
 import { useContext, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { StateContext } from '../state/StateProvider'
 import SideMenu from './SideMenu'
+import {
+  ArrowLeftIcon,
+  SearchIcon,
+  ThreeBarsIcon,
+} from '@primer/octicons-react'
 
 const TopNav: React.FC = () => {
   const { sid } = useContext(StateContext)
@@ -24,7 +26,7 @@ const TopNav: React.FC = () => {
       <div className="menu-left">
         {showBackLink && (
           <NavLink to="/app/notes" className="back-link">
-            <ArrowBack />
+            <ArrowLeftIcon />
           </NavLink>
         )}
         {!showBackLink && (
@@ -33,7 +35,9 @@ const TopNav: React.FC = () => {
               open={showSideMenu}
               onHide={() => setShowSideMenu(false)}
             />
-            <MenuIcon onClick={() => setShowSideMenu(true)} />
+            <div onClick={() => setShowSideMenu(true)}>
+              <ThreeBarsIcon />
+            </div>
           </>
         )}
       </div>
@@ -44,7 +48,7 @@ const TopNav: React.FC = () => {
         {!isNotePath && tag && <>#{tag}</>}
       </div>
       <div className="menu-right">
-        <Search />
+        <SearchIcon />
       </div>
     </div>
   )

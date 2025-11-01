@@ -32,7 +32,6 @@
     fill: var(--accentText);
     margin-right: 4px;
     font-size: 1.2rem;
-    width: $unit4;
   }
   &.danger {
     background-color: var(--danger);
@@ -65,9 +64,6 @@ a.action-btn {
   border-radius: $unit2;
   &:hover {
     background-color: var(--color-bg-hover);
-  }
-  svg {
-    width: $unit3;
   }
 }
 
@@ -131,5 +127,56 @@ a.action-btn {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: $unit6;
+  height: $unit4;
+  margin-right: $unit2;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--subtle);
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
+    border-radius: $unit4;
+
+    &:before {
+      position: absolute;
+      content: '';
+      height: $unit3;
+      width: $unit3;
+      left: $unit0;
+      bottom: $unit0;
+      background-color: white;
+
+      border-radius: 50%;
+      -webkit-transition: 0.2s;
+      transition: 0.2s;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: var(--accent);
+  }
+
+  input:checked + .slider:before {
+    transform: translateX($unit4);
   }
 }

@@ -1,0 +1,33 @@
+@import '../vars';
+
+.tag-autocomplete {
+  background-color: var(--color-note-area-bg);
+  border: 1px solid var(--borderColor);
+  border-radius: $unit0;
+  box-shadow: 
+    0px 5px 5px -3px rgb(0 0 0 / 20%),
+    0px 8px 10px 1px rgb(0 0 0 / 14%),
+    0px 3px 14px 2px rgb(0 0 0 / 12%);
+  max-height: $unit10;
+  overflow-y: auto;
+  min-width: $unit7;
+}
+
+.tag-autocomplete-item {
+  padding: $unit1 $unit2;
+  cursor: pointer;
+  font-size: $text1;
+  color: var(--color-text);
+  transition: background-color 0.1s ease-in-out;
+  border-bottom: 1px solid var(--borderColor);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover,
+  &.selected {
+    background-color: var(--color-bg-hover);
+    color: var(--color-accent);
+  }
+}
