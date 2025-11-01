@@ -46,12 +46,17 @@ export function bootExpress(app: Express, noteStore: NoteStore) {
   });
 
   app.get("/api/questions", async (_req, res) => {
-    // implement me
+    // stub
     res.status(200).json([]);
   });
 
   app.get("/api/note_images", async (_req, res) => {
-    // implement me
+    // stub
     res.status(200).json([]);
+  });
+
+  app.post("/api/reviews/:id/done", async (req, res) => {
+    const { status, json } = await CoreApi.reviews.done(req.params.id);
+    res.status(status).json(json);
   });
 }

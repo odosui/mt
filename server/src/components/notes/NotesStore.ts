@@ -17,4 +17,9 @@ export interface NoteStore {
   getNotes(tags: string, isReview: boolean): Promise<Note[]>;
   getNote(id: string): Promise<Note | null>;
   createNote(body: string): Promise<Note>;
+  updateNote(
+    id: string,
+    data: Partial<Note>,
+    skipUpdatedAt: boolean,
+  ): Promise<Note>;
 }

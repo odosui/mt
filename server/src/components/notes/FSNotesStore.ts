@@ -7,7 +7,7 @@ import { Note, NoteStore } from "./NotesStore";
 
 // read notes
 const homeDir = os.homedir();
-const notesDir = path.join(homeDir, "mindthis");
+const notesDir = path.join(homeDir, "mindthis", "notes");
 
 export async function createFSNotesStore(): Promise<NoteStore> {
   const notes: Record<string, Note> = await readNotes();
@@ -20,7 +20,6 @@ export async function createFSNotesStore(): Promise<NoteStore> {
     // query, is_review, fav_only, page, per_page
 
     let res = Object.values(notes);
-    console.log("all notes count:", res.length);
 
     // filter by tags
     const ts = tags ? tags.split(",").map((t) => t.trim().toLowerCase()) : "";
@@ -37,13 +36,11 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       res = res.filter(requresReview);
     }
 
-    return res.sort(compareByModifiedDateDesc); // .map(noteListItem);
+    return res.sort(compareByModifiedDateDesc);
   }
 
   async function getNote(id: string) {
-    const n = notes[id];
-    return n ?? null;
-    // return fullView(n);
+    return notes[id] ?? null;
   }
 
   async function createNote(body: string) {
@@ -53,18 +50,44 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       body,
       tags: extractTags(body),
       level: 0,
-      created_at: dayjs().format("YYYY-MM-DD"),
-      updated_at: dayjs().format("YYYY-MM-DD"),
+      created_at: dayjs().toISOString(),
+      updated_at: dayjs().toISOString(),
       last_reviewed_at: "",
     };
 
-    await storeNote(note);
+    await writeToDisk(note);
 
     notes[id] = note;
 
     return note;
+  }
 
-    // return fullView(note);
+  async function updateNote(
+    id: string,
+    data: Partial<Note>,
+    skipUpdatedAt = false,
+  ) {
+    delete data.id; // cannot update id
+    const existingNote = notes[id];
+    if (!existingNote) {
+      throw new Error(`Note with id ${id} not found`);
+    }
+
+    const body = data.body ?? existingNote.body;
+    const n: Note = {
+      ...existingNote,
+      ...data,
+      body,
+      tags: extractTags(body),
+    };
+
+    if (!skipUpdatedAt) {
+      n.updated_at = dayjs().toISOString();
+    }
+
+    await writeToDisk(n);
+    notes[id] = n;
+    return n;
   }
 
   return {
@@ -72,10 +95,12 @@ export async function createFSNotesStore(): Promise<NoteStore> {
     getNotes,
     getNote,
     createNote,
+    updateNote,
   };
 }
 
-async function storeNote(note: Note) {
+// create or update note on disk
+async function writeToDisk(note: Note) {
   await fs.mkdir(notesDir, { recursive: true });
 
   const filePath = path.join(notesDir, `${note.id}.md`);

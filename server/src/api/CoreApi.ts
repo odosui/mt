@@ -64,6 +64,12 @@ export const createCoreApi = (noteStore: NoteStore) => {
           return ok(counts);
         });
       },
+      done: async (id: string) => {
+        return safe(async () => {
+          const note = await reviewService.reviewNote(id);
+          return ok(fullView(note));
+        });
+      },
     },
   };
 
