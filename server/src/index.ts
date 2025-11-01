@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { bootExpress } from "./api/adapters/express";
+import { createFSNotesStore } from "./components/notes/FSNotesStore";
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,7 +17,9 @@ async function main() {
     next();
   });
 
-  bootExpress(app);
+  // init out app
+  const noteStore = await createFSNotesStore();
+  bootExpress(app, noteStore);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

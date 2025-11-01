@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { describe, expect, it } from "vitest";
-import { daysTillNextReview } from "./LocalEngine";
+import { daysTillNextReview } from "./utils";
 
 describe("daysTillNextReview", () => {
   it("should return 7 days for just created", () => {

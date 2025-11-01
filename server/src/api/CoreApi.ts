@@ -1,50 +1,74 @@
+import dayjs from "dayjs";
+import { Note, NoteStore } from "../components/notes/NotesStore";
+import createReviewService from "../components/reviews/ReviewService";
+import { nextReviewPoints, requresReview } from "../components/reviews/utils";
+import { createTagsService } from "../components/tags/TagsService";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
 // the Api class is the server-agnostic entrypoint
 // for the API functionality.
+export const createCoreApi = (noteStore: NoteStore) => {
+  const tagsService = createTagsService(noteStore);
+  const reviewService = createReviewService(noteStore);
 
-import LocalEngine from "../LocalEngine";
+  const api = {
+    health: () => {
+      return ok({ status: "ok" });
+    },
+    tags: {
+      get: async () => {
+        return safe(async () => {
+          const tags = await tagsService.allTags();
+          return ok(tags);
+        });
+      },
+    },
+    notes: {
+      counts: async () => {
+        return safe(async () => {
+          const counts = await noteStore.noteCounts();
+          return ok(counts);
+        });
+      },
+      list: async (tags: string | undefined, is_review: string | undefined) => {
+        return safe(async () => {
+          const res = await noteStore.getNotes(
+            tags ?? "",
+            is_review === "true",
+          );
 
-const CoreApi = {
-  health: () => {
-    return ok({ status: "ok" });
-  },
-  tags: {
-    get: async () => {
-      return withEngine((e) => e.allTags());
+          return ok(res.map(listView));
+        });
+      },
+      get: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          return ok(fullView(note));
+        });
+      },
+      create: async (body: string) => {
+        return safe(async () => {
+          const note = await noteStore.createNote(body);
+          return ok(fullView(note));
+        });
+      },
     },
-  },
-  notes: {
-    counts: async () => {
-      return withEngine((e) => e.noteCounts());
+    reviews: {
+      counts: async () => {
+        return safe(async () => {
+          const counts = reviewService.reviewCounts();
+          return ok(counts);
+        });
+      },
     },
-    list: async (tags: string | undefined, is_review: string | undefined) => {
-      return withEngine((e) =>
-        e.notes({
-          tags: tags ?? "",
-          isReview: is_review === "true",
-        }),
-      );
-    },
-    get: async (id: string) => {
-      return withEngine((e) => {
-        const note = e.note(id);
-        if (!note) {
-          return error(404, "Note not found");
-        }
-        return note;
-      });
-    },
-    create: async (body: string) => {
-      return withEngine((e) => e.createNote(body));
-    },
-  },
-  reviews: {
-    counts: async () => {
-      return withEngine((e) => e.reviewCounts());
-    },
-  },
+  };
+
+  return api;
 };
-
-export default CoreApi;
 
 function ok(json: unknown) {
   return {
@@ -60,16 +84,43 @@ function error(status: number, message: string) {
   };
 }
 
-// Helper function to handle LocalEngine initialization and error handling
-async function withEngine<T>(
-  operation: (engine: LocalEngine) => T | Promise<T>,
-) {
+// Helper function to handle error handling
+async function safe(op: () => Promise<{ status: number; json: unknown }>) {
   try {
-    const engine = new LocalEngine();
-    await engine.init();
-    const result = await operation(engine);
-    return ok(result);
+    return await op();
   } catch (e) {
     return error(500, "Unexpected error occurred");
   }
+}
+
+function listView(n: Note) {
+  return {
+    id: n.id,
+    level: n.level,
+    sid: parseInt(n.id, 10),
+    snippet: n.body.split("\n").slice(0, 3).join("\n"),
+    tags: n.tags,
+    updated_at_in_words: dayjs(n.updated_at).fromNow(),
+  };
+}
+
+function fullView(n: Note) {
+  return {
+    ...listView(n),
+    body: n.body,
+    updated_at: n.updated_at,
+    last_reviewed_at: n.last_reviewed_at,
+    created_at: n.created_at,
+    favorite: false,
+    needs_review: requresReview(n),
+    published: false,
+    question_count: 0,
+    seo_description: null,
+    seo_title: null,
+    seo_url: null,
+    sid: parseInt(n.id, 10),
+    slug: null,
+    snippet: "",
+    upcoming_reviews_in_days: nextReviewPoints(n),
+  };
 }

@@ -1,7 +1,10 @@
 import { Express } from "express";
-import CoreApi from "../CoreApi";
+import { createCoreApi } from "../CoreApi";
+import { NoteStore } from "../../components/notes/NotesStore";
 
-export function bootExpress(app: Express) {
+export function bootExpress(app: Express, noteStore: NoteStore) {
+  const CoreApi = createCoreApi(noteStore);
+
   app.get("/", (_req, res) => {
     const { status, json } = CoreApi.health();
     res.status(status).json(json);
