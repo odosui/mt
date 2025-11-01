@@ -47,7 +47,6 @@ export function bootExpress(app: Express, noteStore: NoteStore) {
   });
 
   app.patch("/api/notes/:id", async (req, res) => {
-    console.log("???");
     const body = req.body.body;
     const id = req.params.id;
     const { status, json } = await CoreApi.notes.update(id, body);

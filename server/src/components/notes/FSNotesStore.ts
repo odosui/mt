@@ -140,6 +140,7 @@ function nextId(notes: Record<string, Note>) {
 async function readNotes() {
   const notes: Record<string, Note> = {};
 
+  await fs.mkdir(notesDir, { recursive: true });
   const files = await fs.readdir(notesDir);
   const mdFiles = files.filter((f) => f.endsWith(".md"));
   for (const file of mdFiles) {
