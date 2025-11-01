@@ -2,7 +2,9 @@
 
 Knowledge management meets spaced repetition.
 
-**mt** helps organize and manage knowledge efficiently.
+**mt** helps organize and manage knowledge efficiently, helps remember and make sense of information over time.
+
+## Getting Started
 
 It is organized around **notes**, which are just pieces of information in plain text or [markdown](https://en.wikipedia.org/wiki/Markdown). These are stored on your machine as plain markdown files.
 
@@ -10,7 +12,7 @@ Notes are popping up for **review** according to a predefined schedule (aka spac
 
 Notes can also include flashcards for active recall practice.
 
-## How to start
+## Getting Started
 
 ```bash
 npm install

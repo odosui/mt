@@ -7,7 +7,7 @@ import { Note, NoteStore } from "./NotesStore";
 
 // read notes
 const homeDir = os.homedir();
-const notesDir = path.join(homeDir, "mindthis", "notes");
+const notesDir = path.join(homeDir, "mt", "notes");
 
 export async function createFSNotesStore(): Promise<NoteStore> {
   const notes: Record<string, Note> = await readNotes();
