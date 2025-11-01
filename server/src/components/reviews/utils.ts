@@ -31,6 +31,11 @@ export function daysTillNextReview(
 export function nextReviewPoints(n: Note) {
   let res = [] as { level: number; days_left: number }[];
 
+  // If already at max level, return empty array
+  if (n.level >= 10) {
+    return res;
+  }
+
   res.push({
     level: n.level + 1,
     days_left: daysTillNextReview(n.level, n.last_reviewed_at, n.created_at),
