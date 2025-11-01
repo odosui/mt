@@ -44,4 +44,14 @@ export function bootExpress(app: Express, noteStore: NoteStore) {
     const { status, json } = await CoreApi.notes.create(req.body.body);
     res.status(status).json(json);
   });
+
+  app.get("/api/questions", async (_req, res) => {
+    // implement me
+    res.status(200).json([]);
+  });
+
+  app.get("/api/note_images", async (_req, res) => {
+    // implement me
+    res.status(200).json([]);
+  });
 }
