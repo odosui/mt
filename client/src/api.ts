@@ -123,10 +123,18 @@ export default {
     },
     listForReview: (): Promise<Question[]> =>
       api('get', '/questions?for_review=true'),
-    reviewGood: (id: number): Promise<void> =>
-      api('post', `/questions/${id}/review_good`, {}),
-    reviewBad: (id: number): Promise<void> =>
-      api('post', `/questions/${id}/review_bad`, {}),
+    reviewGood: (noteId: string, question: string): Promise<void> =>
+      api('post', `/questions/review`, {
+        note_id: noteId,
+        question,
+        op: 'good',
+      }),
+    reviewBad: (noteId: string, question: string): Promise<void> =>
+      api('post', `/questions/review`, {
+        note_id: noteId,
+        question,
+        op: 'bad',
+      }),
     create: (
       noteId: number,
       question: string,

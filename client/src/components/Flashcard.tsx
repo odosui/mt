@@ -1,10 +1,10 @@
+import { CheckIcon, EyeIcon, SyncIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import api from '../api'
 import { StateContext } from '../state/StateProvider'
 import { Question } from '../types'
 import Button from '../ui/Button'
-import { CheckIcon, EyeIcon, SyncIcon } from '@primer/octicons-react'
 
 const Flashcard: React.FC<{
   q: Question
@@ -22,20 +22,21 @@ const Flashcard: React.FC<{
 
   const handleGood: React.MouseEventHandler = async (e) => {
     e.preventDefault()
-    await api.questions.reviewGood(q.id)
+    await api.questions.reviewGood(q.note_id, q.question)
     reloadCounters()
     onReviewGood()
   }
 
   const handleBad: React.MouseEventHandler = async (e) => {
     e.preventDefault()
-    await api.questions.reviewBad(q.id)
+    await api.questions.reviewBad(q.note_id, q.question)
+    reloadCounters()
     onReviewBad()
   }
 
   useEffect(() => {
     setStatus('ask')
-  }, [q?.id])
+  }, [q?.question])
 
   if (!q) return null
 

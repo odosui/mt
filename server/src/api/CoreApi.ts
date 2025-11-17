@@ -161,12 +161,6 @@ export const createCoreApi = (noteStore: NoteStore) => {
     },
     {
       method: "get",
-      path: "/api/questions",
-      handler: async ({ query }) =>
-        await api.questions.list(query.note_id || ""),
-    },
-    {
-      method: "get",
       path: "/api/note_images",
       handler: async () => ok([]),
     },
@@ -175,6 +169,78 @@ export const createCoreApi = (noteStore: NoteStore) => {
       path: "/api/reviews/:id/done",
       handler: async ({ pathParams }) =>
         await api.reviews.done(pathParams.id ?? ""),
+    },
+    {
+      method: "get",
+      path: "/api/questions",
+      handler: async ({ query }) => {
+        const noteId = query.note_id;
+
+        const isReview = query.for_review === "true";
+
+        return safe(async () => {
+          if (noteId) {
+            const qs = await questionsService.getQuestions(noteId);
+            return ok(qs);
+          }
+
+          if (isReview) {
+            const qs = await questionsService.getReviewableQuestions();
+            return ok(qs);
+          } else {
+            const qs = await questionsService.getAllQuestions();
+            return ok(qs);
+          }
+        });
+      },
+    },
+    {
+      method: "post",
+      path: "/api/questions",
+      handler: async ({ body }) => {
+        const question = body.question;
+        const answer = body.answer;
+        const noteId = body.note_id;
+
+        if (!noteId || !question || !answer) {
+          return error(400, "Missing required fields");
+        }
+
+        return safe(async () => {
+          const q = await questionsService.createQuestion(
+            noteId,
+            question,
+            answer,
+          );
+          return ok(q);
+        });
+      },
+    },
+    {
+      method: "post",
+      path: "/api/questions/review",
+      handler: async ({ body }) => {
+        const question = body.question;
+        const noteId = body.note_id;
+        const op = body.op;
+
+        if (!noteId || !question || !op) {
+          return error(400, "Missing required fields");
+        }
+
+        if (op !== "good" && op !== "bad") {
+          return error(400, "Invalid operation: must be 'good' or 'bad'");
+        }
+
+        return safe(async () => {
+          if (op === "good") {
+            await questionsService.reviewGood(noteId, question);
+          } else {
+            await questionsService.reviewBad(noteId, question);
+          }
+          return ok({ success: true });
+        });
+      },
     },
   ];
 
@@ -189,6 +255,7 @@ async function safe(op: () => Promise<{ status: number; json: unknown }>) {
   try {
     return await op();
   } catch (e) {
+    console.error("API error:", e);
     return error(500, "Unexpected error occurred");
   }
 }

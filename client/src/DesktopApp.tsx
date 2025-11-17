@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
+import FlashCards from './pages/FlashCards'
 import Notes from './pages/Notes'
 import Settings from './pages/Settings'
 
@@ -16,8 +17,8 @@ const DesktopApp: React.FC = () => {
         <Route path="/app/review" element={<Notes mode="review" />} />
         <Route path="/app/review/:sid" element={<Notes mode="review" />} />
         <Route path="/app/settings" element={<Settings />} />
-        {/* 
         <Route path="/app/quiz" element={<FlashCards />} />
+        {/* 
         <Route path="/app/boards" element={<Boards />} />
         <Route path="/app/boards/:id" element={<Board />} />
         <Route path="/app/timeline" element={<Timeline />} />*/}

@@ -1,8 +1,9 @@
 export type Flashcard = {
+  note_id: string;
   question: string;
   answer: string;
   level: number;
-  reviewed_at: string;
+  reviewed_at: string | null;
 };
 
 export type Note = {

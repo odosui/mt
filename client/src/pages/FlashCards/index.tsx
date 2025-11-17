@@ -51,7 +51,7 @@ const FlashCards: React.FC = () => {
           <div className="review-mode">
             <motion.div
               className="question-area"
-              key={question?.id}
+              key={question?.question}
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -100 }}

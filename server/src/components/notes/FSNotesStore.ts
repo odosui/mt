@@ -122,7 +122,14 @@ async function writeToDisk(note: Note) {
 
   // Add flashcards to metadata
   for (const flashcard of note.flashcards) {
-    metadataLines.push(`Q: ${JSON.stringify(flashcard)}`);
+    metadataLines.push(
+      `Q: ${JSON.stringify({
+        question: flashcard.question,
+        answer: flashcard.answer,
+        level: flashcard.level,
+        reviewed_at: flashcard.reviewed_at,
+      })}`,
+    );
   }
 
   metadataLines.push(`---`);
@@ -180,10 +187,13 @@ function readNote(id: string, content: string): Note {
       if (line.trim().startsWith("Q: ")) {
         try {
           const jsonStr = line.trim().substring(3); // Remove "Q: " prefix
-          const flashcard = JSON.parse(jsonStr);
+          const flashcard = {
+            ...JSON.parse(jsonStr),
+            note_id: id,
+          };
           flashcards.push(flashcard);
         } catch (e) {
-          console.error(`Failed to parse flashcard: ${line}`, e);
+          console.error(`Failed to parse a flashcard: ${line}`, e);
         }
       } else {
         const [key, value] = line.split(":");
@@ -197,7 +207,7 @@ function readNote(id: string, content: string): Note {
     id,
     body: (body ?? "").trim(),
     tags: extractTags(body ?? ""),
-    flashcards,
+    flashcards: flashcards,
     level: parseInt(mt.level ?? "0", 10),
     created_at: mt.created_at ?? "",
     updated_at: mt.updated_at ?? "",

@@ -60,6 +60,7 @@ export interface Question {
   days_till_review_after_current: number
   days_till_next_review: number
   tags: string[]
+  note_id: string
 }
 
 type Col = {
