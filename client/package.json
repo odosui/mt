@@ -15,11 +15,11 @@
     "highlight.js": "^11.11.1",
     "mermaid": "^11.12.0",
     "motion": "^12.4.3",
+    "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.3",
     "react-router-dom": "^6.2.1",
     "react-syntax-highlighter": "^15.5.0",
-    "react": "^18.2.0",
     "remark-gfm": "^3.0.1",
     "unist-util-visit": "^4.1.1"
   },
@@ -28,13 +28,12 @@
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "prettier": "^3.4.2",
     "sass": "^1.77.5",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.4"
+    "typescript": "^5.9.3"
   }
 }
