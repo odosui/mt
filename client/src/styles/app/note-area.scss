@@ -109,7 +109,7 @@
             }
           }
 
-          .review-btn {
+          .lite-btn {
             background-color: transparent;
             color: var(--color-note-area-accent);
             display: inline-flex;
@@ -125,23 +125,20 @@
             &:hover {
               background-color: var(--color-note-area-bg-hover-intense);
             }
-          }
 
-          .edit-btn {
-            background-color: transparent;
-            color: var(--color-note-area-accent);
-            display: inline-flex;
-            width: auto;
-            padding: $unit0 $unit1;
-            letter-spacing: 0.7px;
-            margin-right: $unit0;
-            border-radius: $unit1;
-            transition: background-color 0.2s ease-in-out;
-            svg {
-              fill: var(--color-note-area-accent);
-            }
-            &:hover {
+            &.pending {
               background-color: var(--color-note-area-bg-hover-intense);
+              &:hover {
+                background-color: var(--color-note-area-bg-hover-intense-2);
+              }
+            }
+
+            // disabled state
+            &[disabled] {
+              color: var(--color-note-area-text-secondary-darker);
+              svg {
+                fill: var(--color-note-area-text-secondary-darker);
+              }
             }
           }
         }

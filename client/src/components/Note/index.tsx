@@ -297,7 +297,7 @@ const Note: React.FC<{
                     <Button
                       icon={<CheckIcon />}
                       onClick={handleReview}
-                      className="review-btn"
+                      className="lite-btn review-btn pending"
                     >
                       mark as reviewed
                     </Button>

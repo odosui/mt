@@ -18,22 +18,26 @@ const EditSwitch: React.FC<{
   }
 
   if (saving) {
-    return (
-      <Button className="edit-btn" disabled={true}>
-        Saving...
-      </Button>
-    )
+    return <Button className="lite-btn edit-btn">Saving...</Button>
   }
 
   if (value === 'edit') {
     return (
-      <Button className="edit-btn" icon={<PencilIcon />} onClick={handleSave}>
+      <Button
+        className="lite-btn edit-btn pending"
+        icon={<PencilIcon />}
+        onClick={handleSave}
+      >
         Save
       </Button>
     )
   } else {
     return (
-      <Button className="edit-btn" icon={<PencilIcon />} onClick={handleEdit}>
+      <Button
+        className="lite-btn edit-btn"
+        icon={<PencilIcon />}
+        onClick={handleEdit}
+      >
         Edit
       </Button>
     )
