@@ -2,7 +2,7 @@ import { CheckIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import PreviewAndEditor from '../components/PreviewAndEditor'
+import Preview from '../components/Preview'
 import { StateContext } from '../state/StateProvider'
 import Button from '../ui/Button'
 import Spinner from '../ui/Spinner'
@@ -12,13 +12,8 @@ const Note: React.FC = () => {
 
   const previewRef = React.useRef<HTMLDivElement>(null)
 
-  const {
-    currentNote,
-    noteLoading,
-    saveCurrentNote,
-    markReviewedCurrentNote,
-    switchNote,
-  } = useContext(StateContext)
+  const { currentNote, noteLoading, markReviewedCurrentNote, switchNote } =
+    useContext(StateContext)
 
   const handleReview: React.MouseEventHandler = async () => {
     markReviewedCurrentNote()
@@ -48,16 +43,12 @@ const Note: React.FC = () => {
           </div>
           <div className="note-section">
             <div className="editor-place">
-              <PreviewAndEditor
-                sid={currentNote.sid}
-                body={currentNote.body}
-                mode="view"
-                previewRef={previewRef}
-                onPendingStart={noop}
-                onPendingEnd={noop}
-                saveFn={saveCurrentNote}
-                imageMetas={currentNote.image_metas}
-              />
+              <div className="note-editor-body" ref={previewRef}>
+                <Preview
+                  markdown={currentNote.body}
+                  imageMetas={currentNote.image_metas}
+                />
+              </div>
             </div>
           </div>
         </>
@@ -65,7 +56,5 @@ const Note: React.FC = () => {
     </div>
   )
 }
-
-const noop = () => {}
 
 export default Note

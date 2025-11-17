@@ -1,23 +1,43 @@
+import { PencilIcon } from '@primer/octicons-react'
 import React from 'react'
-
-type Mode = 'edit' | 'view'
+import Button from './Button'
 
 const EditSwitch: React.FC<{
-  value: Mode
-  onChange: (m: Mode) => void
-}> = ({ value, onChange }) => {
-  return (
-    <label className="switch" title="Edit mode">
-      <input
-        type="checkbox"
-        value={value === 'edit' ? 'checked' : ''}
-        onChange={(e) => {
-          onChange(e.target.checked ? 'edit' : 'view')
-        }}
-      />
-      <span className="slider"></span>
-    </label>
-  )
+  value: 'edit' | 'view'
+  onChange: (m: 'edit' | 'view') => void
+  saving: boolean
+}> = ({ value, onChange, saving }) => {
+  const handleEdit: React.MouseEventHandler = (e) => {
+    e.preventDefault()
+    onChange('edit')
+  }
+
+  const handleSave: React.MouseEventHandler = (e) => {
+    e.preventDefault()
+    onChange('view')
+  }
+
+  if (saving) {
+    return (
+      <Button className="edit-btn" disabled={true}>
+        Saving...
+      </Button>
+    )
+  }
+
+  if (value === 'edit') {
+    return (
+      <Button className="edit-btn" icon={<PencilIcon />} onClick={handleSave}>
+        Save
+      </Button>
+    )
+  } else {
+    return (
+      <Button className="edit-btn" icon={<PencilIcon />} onClick={handleEdit}>
+        Edit
+      </Button>
+    )
+  }
 }
 
 export default EditSwitch

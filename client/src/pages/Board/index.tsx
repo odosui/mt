@@ -5,11 +5,13 @@ import {
   ThreeBarsIcon,
   XIcon,
 } from '@primer/octicons-react'
+import { noop } from 'motion'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../../api'
-import PreviewAndEditor from '../../components/PreviewAndEditor'
+import Editor from '../../components/Editor'
+import Preview from '../../components/Preview'
 import { IBoard, IImageMetas, INote } from '../../types'
 import Button from '../../ui/Button'
 import ClickOutside from '../../ui/ClickOutside'
@@ -254,6 +256,8 @@ const BoardItem: React.FC<{
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(false)
 
+  console.log('setPending', setPending, saveFn)
+
   const handleModeChange = (mode: 'view' | 'edit') => {
     setMode(mode)
   }
@@ -273,7 +277,11 @@ const BoardItem: React.FC<{
       <div className="board-item-menu">
         <div className="left">
           <div className="edit-toggle">
-            <EditSwitch value={mode} onChange={handleModeChange} />
+            <EditSwitch
+              value={mode}
+              onChange={handleModeChange}
+              saving={false}
+            />
           </div>
 
           <DatabaseIcon className={`save ${pending ? 'pending' : ''}`} />
@@ -313,16 +321,14 @@ const BoardItem: React.FC<{
         </div>
       </div>
       <div className="board-item-body">
-        <PreviewAndEditor
-          sid={sid}
-          body={body}
-          mode={mode}
-          previewRef={itemRef}
-          saveFn={saveFn}
-          onPendingStart={() => setPending(true)}
-          onPendingEnd={() => setPending(false)}
-          imageMetas={imageMetas}
-        />
+        <div className="note-editor-body" ref={itemRef}>
+          {mode === 'view' && (
+            <Preview markdown={body} imageMetas={imageMetas} />
+          )}
+          {mode === 'edit' && (
+            <Editor initialText={body} onChange={noop} key={sid} />
+          )}
+        </div>
       </div>
       <div ref={resizeRef} className="resize-handle"></div>
     </div>

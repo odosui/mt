@@ -126,6 +126,24 @@
               background-color: var(--color-note-area-bg-hover-intense);
             }
           }
+
+          .edit-btn {
+            background-color: transparent;
+            color: var(--color-note-area-accent);
+            display: inline-flex;
+            width: auto;
+            padding: $unit0 $unit1;
+            letter-spacing: 0.7px;
+            margin-right: $unit0;
+            border-radius: $unit1;
+            transition: background-color 0.2s ease-in-out;
+            svg {
+              fill: var(--color-note-area-accent);
+            }
+            &:hover {
+              background-color: var(--color-note-area-bg-hover-intense);
+            }
+          }
         }
 
         .side-toggler {

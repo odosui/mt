@@ -1,24 +1,9 @@
-import * as React from 'react'
-import { useCallback, useContext, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { StateContext } from '../../state/StateProvider'
-import Button from '../../ui/Button'
-import DropdownMenu from '../../ui/DropdownMenu'
-import EditSwitch from '../../ui/EditSwitch'
-import pubsub from '../../utils/pubsub'
-import PreviewAndEditor from '../PreviewAndEditor'
-import ChangelogsModal from './ChangelogsModal'
-import Flashcards from './Flashcards'
-import HelpModal from './HelpModal'
-import PublishSettingsModal from './PublishSettingsModal'
-import ReviewMenu from './ReviewMenu'
-import { SelectionMenu } from './SelectionMenu'
 import {
   CheckIcon,
   CopyIcon,
-  DatabaseIcon,
   DownloadIcon,
   EyeIcon,
+  FileMediaIcon,
   GoalIcon,
   NoteIcon,
   QuestionIcon,
@@ -26,9 +11,24 @@ import {
   ThreeBarsIcon,
   VersionsIcon,
   XIcon,
-  FileMediaIcon,
 } from '@primer/octicons-react'
+import * as React from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { StateContext } from '../../state/StateProvider'
+import Button from '../../ui/Button'
+import DropdownMenu from '../../ui/DropdownMenu'
+import EditSwitch from '../../ui/EditSwitch'
+import pubsub from '../../utils/pubsub'
+import Editor from '../Editor'
+import Preview from '../Preview'
+import ChangelogsModal from './ChangelogsModal'
+import Flashcards from './Flashcards'
+import HelpModal from './HelpModal'
 import Images from './Images'
+import PublishSettingsModal from './PublishSettingsModal'
+import ReviewMenu from './ReviewMenu'
+import { SelectionMenu } from './SelectionMenu'
 
 function useQuery() {
   const { search } = useLocation()
@@ -39,13 +39,18 @@ const Note: React.FC<{
   onReview?: () => void
   onDelete?: () => void
 }> = ({ onReview, onDelete }) => {
-  const [pending, setPending] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [reviewMenuOpen, setReviewMenuOpen] = useState(false)
   const [isPublishModalOpen, setIsPublishMenuOpen] = useState(false)
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false)
   const [isChangelogsModalOpen, setIsChangelogsModalOpen] = useState(false)
   const [mode, setMode] = useState<'view' | 'edit'>('view')
+
+  const [updatedBody, setUpdatedBody] = useState<string>('')
+
+  const handleChange = (changed: string) => {
+    setUpdatedBody(changed)
+  }
 
   const query = useQuery()
   const edit = query.get('edit')
@@ -66,7 +71,11 @@ const Note: React.FC<{
     saveCurrentNote,
   } = useContext(StateContext)
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setUpdatedBody(currentNote?.body || '')
+  }, [currentNote])
+
+  useEffect(() => {
     setMode(edit ? 'edit' : 'view')
   }, [edit])
 
@@ -147,8 +156,11 @@ const Note: React.FC<{
     toggleFavCurrentNote()
   }
 
-  const handleModeChange = (m: 'edit' | 'view') => {
+  const handleModeChange = async (m: 'edit' | 'view') => {
     setMode(m)
+    if (m === 'view') {
+      await saveCurrentNote(updatedBody)
+    }
   }
 
   const handleAnswerCard = (text: string) => {
@@ -273,14 +285,12 @@ const Note: React.FC<{
               <div className="inside">
                 <div className="left">
                   <div className="edit-toggle">
-                    <EditSwitch value={mode} onChange={handleModeChange} />
+                    <EditSwitch
+                      value={mode}
+                      onChange={handleModeChange}
+                      saving={noteSaving}
+                    />
                   </div>
-
-                  <DatabaseIcon
-                    className={`save ${pending ? 'pending' : ''} ${
-                      noteSaving ? 'saving' : ''
-                    }`}
-                  />
                 </div>
                 <div className="right">
                   {currentNote.needs_review && (
@@ -347,16 +357,21 @@ const Note: React.FC<{
             </div>
           </div>
 
-          <PreviewAndEditor
-            sid={currentNote.sid}
-            body={currentNote.body}
-            imageMetas={currentNote.image_metas}
-            mode={mode}
-            previewRef={previewRef}
-            onPendingStart={() => setPending(true)}
-            onPendingEnd={() => setPending(false)}
-            saveFn={saveCurrentNote}
-          />
+          <div className="note-editor-body" ref={previewRef}>
+            {mode === 'view' && (
+              <Preview
+                markdown={currentNote.body}
+                imageMetas={currentNote.image_metas}
+              />
+            )}
+            {mode === 'edit' && (
+              <Editor
+                initialText={currentNote.body}
+                onChange={handleChange}
+                key={currentNote.sid}
+              />
+            )}
+          </div>
         </div>
         {!focusMode && <Flashcards noteId={currentNote.id} />}
         {!focusMode && <Images noteSid={currentNote.sid} />}
