@@ -7,11 +7,12 @@ import TagAutocomplete from '../TagAutocomplete'
 type Props = {
   initialText: string
   onChange: (changed: string) => void
+  onSave: () => void
 }
 
 const DEFAULT_TEXT = '# New note'
 
-const Editor: React.FC<Props> = ({ initialText, onChange }) => {
+const Editor: React.FC<Props> = ({ initialText, onChange, onSave }) => {
   const [value, setValue] = useState(initialText)
   const [selectionStart, setSelectionStart] = useState(0)
   const [selectionEnd, setSelectionEnd] = useState(0)
@@ -138,6 +139,13 @@ const Editor: React.FC<Props> = ({ initialText, onChange }) => {
         setValue(newText)
         onChange(newText)
         setSelectionRange(newStart, newEnd)
+      }
+
+      // on cmd/ctrl + enter save the note
+
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        event.preventDefault()
+        onSave()
       }
     },
     [value, selectionStart, selectionEnd],

@@ -326,7 +326,14 @@ const BoardItem: React.FC<{
             <Preview markdown={body} imageMetas={imageMetas} />
           )}
           {mode === 'edit' && (
-            <Editor initialText={body} onChange={noop} key={sid} />
+            <Editor
+              initialText={body}
+              onChange={noop}
+              key={sid}
+              onSave={() => {
+                // implement me
+              }}
+            />
           )}
         </div>
       </div>

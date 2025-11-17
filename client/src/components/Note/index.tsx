@@ -156,10 +156,15 @@ const Note: React.FC<{
     toggleFavCurrentNote()
   }
 
+  async function doSaveCurrentNote() {
+    setMode('view')
+    await saveCurrentNote(updatedBody)
+  }
+
   const handleModeChange = async (m: 'edit' | 'view') => {
     setMode(m)
     if (m === 'view') {
-      await saveCurrentNote(updatedBody)
+      doSaveCurrentNote()
     }
   }
 
@@ -369,6 +374,7 @@ const Note: React.FC<{
                 initialText={currentNote.body}
                 onChange={handleChange}
                 key={currentNote.sid}
+                onSave={doSaveCurrentNote}
               />
             )}
           </div>
