@@ -1,8 +1,16 @@
+export type Flashcard = {
+  question: string;
+  answer: string;
+  level: number;
+  reviewed_at: string;
+};
+
 export type Note = {
   id: string;
   body: string;
   tags: string[];
   favorite: boolean;
+  flashcards: Flashcard[];
 
   // spaced repetition
   level: number;

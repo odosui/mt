@@ -1,16 +1,29 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Note, NoteStore } from "../components/notes/NotesStore";
+import createQuestionsService from "../components/questions/QuestionService";
 import createReviewService from "../components/reviews/ReviewService";
 import { nextReviewPoints, requresReview } from "../components/reviews/utils";
 import { createTagsService } from "../components/tags/TagsService";
-import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
+
+// Route configuration type
+export type RouteConfig = {
+  method: "get" | "post" | "patch" | "delete";
+  path: string;
+  handler: (params: {
+    pathParams: Record<string, string>;
+    query: Record<string, string>;
+    body: any;
+  }) => Promise<{ status: number; json: unknown }>;
+};
 
 // the Api class is the server-agnostic entrypoint
 // for the API functionality.
 export const createCoreApi = (noteStore: NoteStore) => {
   const tagsService = createTagsService(noteStore);
   const reviewService = createReviewService(noteStore);
+  const questionsService = createQuestionsService(noteStore);
 
   const api = {
     health: () => {
@@ -75,8 +88,13 @@ export const createCoreApi = (noteStore: NoteStore) => {
     reviews: {
       counts: async () => {
         return safe(async () => {
-          const counts = await reviewService.reviewCounts();
-          return ok(counts);
+          const notes = await noteStore.getNotes("", false, false);
+          const reviewCount = Object.values(notes).filter(requresReview).length;
+
+          const qCount = (await questionsService.getReviewableQuestions())
+            .length;
+
+          return ok({ counts: { notes: reviewCount, questions: qCount } });
         });
       },
       done: async (id: string) => {
@@ -86,9 +104,84 @@ export const createCoreApi = (noteStore: NoteStore) => {
         });
       },
     },
+    questions: {
+      list: async (noteId: string) => {
+        return safe(async () => {
+          const res = await questionsService.getQuestions(noteId);
+          // stub
+          return ok(res);
+        });
+      },
+    },
   };
 
-  return api;
+  const routes: RouteConfig[] = [
+    {
+      method: "get",
+      path: "/",
+      handler: async () => api.health(),
+    },
+    {
+      method: "get",
+      path: "/api/tags",
+      handler: async () => await api.tags.get(),
+    },
+    {
+      method: "get",
+      path: "/api/notes/counts",
+      handler: async () => await api.notes.counts(),
+    },
+    {
+      method: "get",
+      path: "/api/reviews",
+      handler: async () => await api.reviews.counts(),
+    },
+    {
+      method: "get",
+      path: "/api/notes",
+      handler: async ({ query }) =>
+        await api.notes.list(query.tags, query.is_review, query.fav_only),
+    },
+    {
+      method: "get",
+      path: "/api/notes/:id",
+      handler: async ({ pathParams }) =>
+        await api.notes.get(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes",
+      handler: async ({ body }) => await api.notes.create(body.body),
+    },
+    {
+      method: "patch",
+      path: "/api/notes/:id",
+      handler: async ({ pathParams, body }) =>
+        await api.notes.update(pathParams.id ?? "", body.body),
+    },
+    {
+      method: "get",
+      path: "/api/questions",
+      handler: async ({ query }) =>
+        await api.questions.list(query.note_id || ""),
+    },
+    {
+      method: "get",
+      path: "/api/note_images",
+      handler: async () => ok([]),
+    },
+    {
+      method: "post",
+      path: "/api/reviews/:id/done",
+      handler: async ({ pathParams }) =>
+        await api.reviews.done(pathParams.id ?? ""),
+    },
+  ];
+
+  return {
+    ...api,
+    routes,
+  };
 };
 
 // Helper function to handle error handling

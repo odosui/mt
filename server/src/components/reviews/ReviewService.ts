@@ -1,14 +1,7 @@
 import dayjs from "dayjs";
 import { NoteStore } from "../notes/NotesStore";
-import { requresReview } from "./utils";
 
 const createReviewService = (noteStore: NoteStore) => {
-  async function reviewCounts() {
-    const notes = await noteStore.getNotes("", false, false);
-    const reviewCount = Object.values(notes).filter(requresReview).length;
-    return { counts: { notes: reviewCount, questions: 0 } };
-  }
-
   async function reviewNote(id: string) {
     const note = await noteStore.getNote(id);
     if (!note) {
@@ -26,7 +19,6 @@ const createReviewService = (noteStore: NoteStore) => {
   }
 
   return {
-    reviewCounts,
     reviewNote,
   };
 };

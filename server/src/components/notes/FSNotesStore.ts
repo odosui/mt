@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { requresReview } from "../reviews/utils";
-import { Note, NoteStore } from "./NotesStore";
+import { Flashcard, Note, NoteStore } from "./NotesStore";
 
 // read notes
 const homeDir = os.homedir();
@@ -53,6 +53,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       id,
       body,
       tags: extractTags(body),
+      flashcards: [],
       level: 0,
       created_at: dayjs().toISOString(),
       updated_at: dayjs().toISOString(),
@@ -109,16 +110,25 @@ async function writeToDisk(note: Note) {
   await fs.mkdir(notesDir, { recursive: true });
 
   const filePath = path.join(notesDir, `${note.id}.md`);
-  const content = [
+
+  const metadataLines = [
     `---`,
     `level: ${note.level}`,
     `created_at: ${note.created_at}`,
     `updated_at: ${note.updated_at}`,
     `last_reviewed_at: ${note.last_reviewed_at}`,
     `favorite: ${note.favorite}`,
-    `---`,
-    note.body,
-  ].join("\n");
+  ];
+
+  // Add flashcards to metadata
+  for (const flashcard of note.flashcards) {
+    metadataLines.push(`Q: ${JSON.stringify(flashcard)}`);
+  }
+
+  metadataLines.push(`---`);
+  metadataLines.push(note.body);
+
+  const content = metadataLines.join("\n");
 
   // save file
   await fs.writeFile(filePath, content, "utf-8");
@@ -160,13 +170,26 @@ async function readNotes() {
 function readNote(id: string, content: string): Note {
   const [, metadata, body] = content.split("---");
   const mt: Record<string, string> = {};
+  const flashcards: Flashcard[] = [];
+
   (metadata ?? "")
     .trim()
     .split("\n")
     .forEach((line) => {
-      const [key, value] = line.split(":");
-      if (key && value) {
-        mt[key.trim()] = value.trim();
+      // Check if line is a flashcard
+      if (line.trim().startsWith("Q: ")) {
+        try {
+          const jsonStr = line.trim().substring(3); // Remove "Q: " prefix
+          const flashcard = JSON.parse(jsonStr);
+          flashcards.push(flashcard);
+        } catch (e) {
+          console.error(`Failed to parse flashcard: ${line}`, e);
+        }
+      } else {
+        const [key, value] = line.split(":");
+        if (key && value) {
+          mt[key.trim()] = value.trim();
+        }
       }
     });
 
@@ -174,6 +197,7 @@ function readNote(id: string, content: string): Note {
     id,
     body: (body ?? "").trim(),
     tags: extractTags(body ?? ""),
+    flashcards,
     level: parseInt(mt.level ?? "0", 10),
     created_at: mt.created_at ?? "",
     updated_at: mt.updated_at ?? "",

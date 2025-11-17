@@ -55,7 +55,6 @@ export interface ReviewLog {
 }
 
 export interface Question {
-  id: number
   question: string
   answer: string
   days_till_review_after_current: number
