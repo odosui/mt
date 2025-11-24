@@ -4,13 +4,15 @@ Knowledge management meets spaced repetition.
 
 **mt** helps organize and manage knowledge efficiently, helps remember and make sense of information over time.
 
+![mt showcase](media/main.png)
+
 ## Features
 
 - Unbeatable UX that just works.
 - Markdown-based notes (extensible with plugins) with support for syntax highlighting, [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagrams, and more.
-- Spaced repetition system for notes.
-- Anki-like flashcards for active recall practice.
-- Local storage of notes in plain markdown files.
+- [Spaced repetition](https://en.wikipedia.org/wiki/Spaced_repetition) techniques for entire notes
+- ... and flashcards (like [Anki](https://apps.ankiweb.net/)).
+- Notes are just md files stored locally
 - Git integration for version control and syncing.
 - Cross-linking between notes for building a knowledge graph.
 - Full-text search and tagging for easy organization and retrieval.
@@ -26,7 +28,12 @@ Notes can also include flashcards for active recall practice.
 ## Getting Started
 
 ```bash
+# npm modules
 npm install
+npm run install-client
+npm run install-server
+
+# start
 npm run dev
 ```
 
