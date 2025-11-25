@@ -2,7 +2,7 @@
 
 Knowledge management meets spaced repetition.
 
-**mt** helps organize and manage knowledge efficiently, helps remember and make sense of information over time.
+**mt** helps organize and manage knowledge efficiently, helping you remember and make sense of information over time.
 
 ![mt showcase](media/main.png)
 
@@ -12,7 +12,7 @@ Knowledge management meets spaced repetition.
 - Markdown-based notes (extensible with plugins) with support for syntax highlighting, [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagrams, and more.
 - [Spaced repetition](https://en.wikipedia.org/wiki/Spaced_repetition) techniques for entire notes
 - ... and flashcards (like [Anki](https://apps.ankiweb.net/)).
-- Notes are just md files stored locally
+- Notes are stored as markdown files locally on your machine
 - Git integration for version control and syncing.
 - Cross-linking between notes for building a knowledge graph.
 - Full-text search and tagging for easy organization and retrieval.
@@ -21,11 +21,11 @@ Knowledge management meets spaced repetition.
 
 It is organized around **notes**, which are just pieces of information in plain text or [markdown](https://en.wikipedia.org/wiki/Markdown). These are stored on your machine as plain markdown files.
 
-Notes are popping up for **review** according to a predefined schedule (aka spaced repetition). Reviewing your notes helps you remember them better, gives a chance to improve them, and update with new information.
+Notes pop up for **review** according to a predefined schedule (aka spaced repetition). Reviewing your notes helps you remember them better, gives you a chance to improve them, and update them with new information.
 
 Notes can also include flashcards for active recall practice.
 
-## Getting Started
+## Installation
 
 ```bash
 # npm modules
@@ -37,7 +37,7 @@ npm run install-server
 npm run dev
 ```
 
-This will both server (port 3000) and client (port 5173). The default directory for notes is `~/mt` ( or `C:\Users\YourName\mt` on Windows).
+This will start both the server (port 3000) and client (port 5173). The default directory for notes is `~/mt` (or `C:\Users\YourName\mt` on Windows).
 
 ## How to use
 
@@ -47,9 +47,9 @@ Notes are plain markdown files. Markdown is great - it provides simple means to 
 
 ### Reviewing
 
-Notes you write popup for a review first time in 7 days, than in 15 days, in 30, and so on. Press "Mark as Reviewed" button to review it.
+Notes you write pop up for review for the first time in 7 days, then in 15 days, in 30, and so on. Press the "Mark as Reviewed" button to review it.
 
-The note will ascend to the next level. There are 10 levels in total. After reaching the last level, the note will not popup for review anymore.
+The note will ascend to the next level. There are 10 levels in total. After reaching the last level, the note will not pop up for review anymore.
 
 If you click on the current level in the note toolbar, you can see the whole schedule.
 
@@ -57,11 +57,11 @@ If you click on the current level in the note toolbar, you can see the whole sch
 
 It is crucial for any knowledge management system to build a **web of knowledge**. Markdown makes it easy with links.
 
-Notes can link to each other using `[text](id)` syntax where id is just a numeric identifier of the note. You can find the id in the note toolbar. Also when stored on disk, the note filename starts with its id.
+Notes can link to each other using `[text](id)` syntax, where `id` is the numeric identifier of the note. You can find the id in the note toolbar. When stored on disk, the note filename starts with its id.
 
 ### Tags and full-text search
 
-A note might have tags (which are just words prefixed with `#` in the note body, they can be anywhere in the text). Tags then appear in the sidebar, clicking on a tag shows all notes with that tag.
+A note can have tags (which are just words prefixed with `#` in the note body—they can be anywhere in the text). Tags appear in the sidebar; clicking on a tag shows all notes with that tag.
 
 ### Mermaid
 
@@ -81,7 +81,7 @@ By clicking on the focus icon in the note toolbar, you can enter focus mode, whi
 
 ### Storage
 
-All your notes are stored in a single folder on your computer. It is your task to back them up, or sync between devices. I usually create a git repo, and sync it with a private GitHub repo.
+All your notes are stored in a single folder on your computer. You'll need to back them up or sync them between devices yourself. I usually create a git repo and sync it with a private GitHub repository.
 
 ### PWA
 
