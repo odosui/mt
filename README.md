@@ -43,7 +43,7 @@ This will both server (port 3000) and client (port 5173). The default directory 
 
 ### Markdown
 
-tbd
+Notes are plain markdown files. Markdown is great - it provides simple means to format text, create lists, tables, links, and more. And at the same time it remains readable in plain text.
 
 ### Reviewing
 
@@ -53,30 +53,36 @@ The note will ascend to the next level. There are 10 levels in total. After reac
 
 If you click on the current level in the note toolbar, you can see the whole schedule.
 
-### Tags and full-text search
-
-TBD
-
 ### Cross-linking notes and preview
 
-tbd
+It is crucial for any knowledge management system to build a **web of knowledge**. Markdown makes it easy with links.
+
+Notes can link to each other using `[text](id)` syntax where id is just a numeric identifier of the note. You can find the id in the note toolbar. Also when stored on disk, the note filename starts with its id.
+
+### Tags and full-text search
+
+A note might have tags (which are just words prefixed with `#` in the note body, they can be anywhere in the text). Tags then appear in the sidebar, clicking on a tag shows all notes with that tag.
 
 ### Mermaid
 
-tbd
+Since markdown is extensible, you can use [Mermaid](https://mermaid.js.org/) diagrams in your notes (similar to GitHub markdown):
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
 
 ### Focus mode
 
-tbd
+By clicking on the focus icon in the note toolbar, you can enter focus mode, which hides all other UI elements, leaving only the note content visible. This is useful for distraction-free writing.
 
-## Data/platform independence principle
-
-tbd
-
-## Storage
+### Storage
 
 All your notes are stored in a single folder on your computer. It is your task to back them up, or sync between devices. I usually create a git repo, and sync it with a private GitHub repo.
 
-## Media
+### PWA
 
-tbd
+mt is a Progressive Web App (PWA). You can install it on your device like a native app. Just click the install icon in the address bar of your browser.
