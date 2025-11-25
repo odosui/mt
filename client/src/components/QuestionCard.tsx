@@ -11,7 +11,7 @@ const SHOW_ANSWER_FOR = 3000
 const QuestionCard: React.FC<{
   q: Question
   onDelete: () => void
-  onUpdate: (updated: Question) => void
+  onUpdate: (oldQuestion: string, updated: Question) => void
 }> = ({ q, onDelete, onUpdate }) => {
   const [showAnswer, setShowAnswer] = useState(false)
   const [editMode, setEditMode] = useState(false)
@@ -32,7 +32,7 @@ const QuestionCard: React.FC<{
       return
     }
     e.preventDefault()
-    await api.questions.del(q.id)
+    await api.questions.del(q.note_id, q.question)
     reloadCounters()
     onDelete()
   }
@@ -48,8 +48,13 @@ const QuestionCard: React.FC<{
       return
     }
 
-    const upd = await api.questions.update(q.id, questionToEdit, answerToEdit)
-    onUpdate(upd)
+    const upd = await api.questions.update(
+      q.note_id,
+      q.question,
+      questionToEdit,
+      answerToEdit,
+    )
+    onUpdate(q.question, upd)
   }
 
   useEffect(() => {

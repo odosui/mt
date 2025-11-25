@@ -7,8 +7,8 @@ import { Question } from '../../../types'
 import Spinner from '../../../ui/Spinner'
 import pubsub from '../../../utils/pubsub'
 import QuestionCard from '../../QuestionCard'
-import FlashcardForm from './FlashcardForm'
 import SidePanel from '../../SidePanel'
+import FlashcardForm from './FlashcardForm'
 
 const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
   const [questions, setQuestions] = useState<Question[]>([])
@@ -35,17 +35,21 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
   }, [noteId])
 
   const handleSubmit = async (question: string, answer: string) => {
-    const q = await api.questions.create(noteId, question, answer)
+    const q = await api.questions.create(String(noteId), question, answer)
     setQuestions([q, ...questions])
     reloadCounters()
   }
 
-  const onDelete = (id: number) => {
-    setQuestions(questions.filter((qq) => qq.id !== id))
+  const onDelete = (question: string) => {
+    setQuestions(questions.filter((qq) => qq.question !== question))
   }
 
-  const handleUpdate = (newQ: Question) => {
-    setQuestions(questions.map((q) => (q.id === newQ.id ? newQ : q)))
+  const handleUpdate = (oldQuestion: string, newQ: Question) => {
+    setQuestions(
+      questions.map((q) =>
+        q.note_id === newQ.note_id && q.question === oldQuestion ? newQ : q,
+      ),
+    )
   }
 
   const handleCloseForm = (e: React.MouseEvent) => {
@@ -61,7 +65,11 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
       return
     }
 
-    const q = await api.questions.create(noteId, aiq.question, aiq.answer)
+    const q = await api.questions.create(
+      String(noteId),
+      aiq.question,
+      aiq.answer,
+    )
     setQuestions([q, ...questions])
 
     setAiQs(aiQs.filter((q) => q.id !== id))
@@ -132,9 +140,9 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
       <div className="quiz-menu-list">
         {questions.map((q) => (
           <QuestionCard
-            key={q.id}
+            key={`${q.note_id}-${q.question}`}
             q={q}
-            onDelete={() => onDelete(q.id)}
+            onDelete={() => onDelete(q.question)}
             onUpdate={handleUpdate}
           />
         ))}

@@ -91,6 +91,48 @@ const createQuestionsService = (noteStore: NoteStore) => {
     return note.flashcards.map(asJson);
   }
 
+  async function updateQuestion(
+    noteId: string,
+    oldQuestion: string,
+    newQuestion: string,
+    newAnswer: string,
+  ) {
+    const note = await noteStore.getNote(noteId);
+    if (!note) {
+      throw new Error(`Note with id ${noteId} not found`);
+    }
+
+    const fc = note.flashcards.find((fc) => fc.question === oldQuestion);
+    if (!fc) {
+      throw new Error(
+        `Flashcard with question "${oldQuestion}" not found in note ${noteId}`,
+      );
+    }
+
+    fc.question = newQuestion;
+    fc.answer = newAnswer;
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+
+    return asJson(fc);
+  }
+
+  async function deleteQuestion(noteId: string, question: string) {
+    const note = await noteStore.getNote(noteId);
+    if (!note) {
+      throw new Error(`Note with id ${noteId} not found`);
+    }
+
+    const index = note.flashcards.findIndex((fc) => fc.question === question);
+    if (index === -1) {
+      throw new Error(
+        `Flashcard with question "${question}" not found in note ${noteId}`,
+      );
+    }
+
+    note.flashcards.splice(index, 1);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+  }
+
   return {
     getQuestions,
     getReviewableQuestions,
@@ -98,6 +140,8 @@ const createQuestionsService = (noteStore: NoteStore) => {
     reviewGood,
     reviewBad,
     getAllQuestions,
+    updateQuestion,
+    deleteQuestion,
   };
 };
 

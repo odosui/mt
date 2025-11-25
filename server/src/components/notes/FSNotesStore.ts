@@ -113,11 +113,11 @@ async function writeToDisk(note: Note) {
 
   const metadataLines = [
     `---`,
-    `level: ${note.level}`,
     `created_at: ${note.created_at}`,
     `updated_at: ${note.updated_at}`,
-    `last_reviewed_at: ${note.last_reviewed_at}`,
     `favorite: ${note.favorite}`,
+    `last_reviewed_at: ${note.last_reviewed_at}`,
+    `level: ${note.level}`,
   ];
 
   // Add flashcards to metadata

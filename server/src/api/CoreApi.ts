@@ -242,6 +242,47 @@ export const createCoreApi = (noteStore: NoteStore) => {
         });
       },
     },
+    {
+      method: "post",
+      path: "/api/questions/edit",
+      handler: async ({ body }) => {
+        const noteId = body.note_id;
+        const oldQuestion = body.old_question;
+        const question = body.question;
+        const answer = body.answer;
+
+        if (!noteId || !oldQuestion || !question || !answer) {
+          return error(400, "Missing required fields");
+        }
+
+        return safe(async () => {
+          const q = await questionsService.updateQuestion(
+            noteId,
+            oldQuestion,
+            question,
+            answer,
+          );
+          return ok(q);
+        });
+      },
+    },
+    {
+      method: "post",
+      path: "/api/questions/del",
+      handler: async ({ body }) => {
+        const noteId = body.note_id;
+        const question = body.question;
+
+        if (!noteId || !question) {
+          return error(400, "Missing required fields");
+        }
+
+        return safe(async () => {
+          await questionsService.deleteQuestion(noteId, question);
+          return ok({ success: true });
+        });
+      },
+    },
   ];
 
   return {

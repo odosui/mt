@@ -136,15 +136,25 @@ export default {
         op: 'bad',
       }),
     create: (
-      noteId: number,
+      noteId: string,
       question: string,
       answer: string,
     ): Promise<Question> =>
       api('post', `/questions/`, { note_id: `${noteId}`, question, answer }),
-    update: (id: number, question: string, answer: string): Promise<Question> =>
-      api('PATCH', `/questions/${id}`, { question, answer }),
-    del: (id: number): Promise<{ success: boolean }> =>
-      api('delete', `/questions/${id}`),
+    update: (
+      noteId: string,
+      oldQuestion: string,
+      question: string,
+      answer: string,
+    ): Promise<Question> =>
+      api('post', `/questions/edit`, {
+        note_id: `${noteId}`,
+        old_question: oldQuestion,
+        question,
+        answer,
+      }),
+    del: (noteId: string, question: string): Promise<{ success: boolean }> =>
+      api('post', `/questions/del`, { note_id: `${noteId}`, question }),
     ai: (text: string): Promise<Array<{ question: string; answer: string }>> =>
       api('post', `/questions/ai`, { text }),
   },
