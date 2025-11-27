@@ -1,20 +1,26 @@
-import { PencilIcon } from '@primer/octicons-react'
+import { PencilIcon, XIcon, CheckIcon } from '@primer/octicons-react'
 import React from 'react'
 import Button from './Button'
 
 const EditSwitch: React.FC<{
   value: 'edit' | 'view'
-  onChange: (m: 'edit' | 'view') => void
+  onChange: (m: 'edit' | 'view', shouldSave: boolean) => void
   saving: boolean
-}> = ({ value, onChange, saving }) => {
+  hasChanges: boolean
+}> = ({ value, onChange, saving, hasChanges }) => {
   const handleEdit: React.MouseEventHandler = (e) => {
     e.preventDefault()
-    onChange('edit')
+    onChange('edit', false)
   }
 
   const handleSave: React.MouseEventHandler = (e) => {
     e.preventDefault()
-    onChange('view')
+    onChange('view', true)
+  }
+
+  const handleClose: React.MouseEventHandler = (e) => {
+    e.preventDefault()
+    onChange('view', false)
   }
 
   if (saving) {
@@ -23,13 +29,23 @@ const EditSwitch: React.FC<{
 
   if (value === 'edit') {
     return (
-      <Button
-        className="lite-btn edit-btn pending"
-        icon={<PencilIcon />}
-        onClick={handleSave}
-      >
-        Save
-      </Button>
+      <>
+        <Button
+          className={`lite-btn edit-btn${hasChanges ? ' pending' : ''}`}
+          icon={<CheckIcon />}
+          onClick={handleSave}
+          disabled={!hasChanges}
+        >
+          Save <kbd>⌘↵</kbd>
+        </Button>
+        <Button
+          className="lite-btn edit-btn"
+          icon={<XIcon />}
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+      </>
     )
   } else {
     return (

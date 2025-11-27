@@ -50,11 +50,22 @@
     padding: 8px 16px;
   }
 
-  button:disabled,
-  button[disabled] {
-    border: 1px solid #999999;
+  kbd {
+    font-size: $text0;
+    opacity: 0.5;
+    margin-left: $unit1;
+    font-weight: normal;
+    font-family: inherit;
+  }
+
+  &:disabled,
+  &[disabled] {
     background-color: #cccccc;
     color: #666666;
+
+    kbd {
+      opacity: 0.5;
+    }
   }
 }
 

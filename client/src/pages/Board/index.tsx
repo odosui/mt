@@ -258,8 +258,9 @@ const BoardItem: React.FC<{
 
   console.log('setPending', setPending, saveFn)
 
-  const handleModeChange = (mode: 'view' | 'edit') => {
+  const handleModeChange = (mode: 'view' | 'edit', shouldSave: boolean) => {
     setMode(mode)
+    console.log('shouldSave', shouldSave)
   }
 
   const handleOpen = () => {
@@ -281,6 +282,7 @@ const BoardItem: React.FC<{
               value={mode}
               onChange={handleModeChange}
               saving={false}
+              hasChanges={false}
             />
           </div>
 

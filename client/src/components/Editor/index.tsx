@@ -8,11 +8,13 @@ type Props = {
   initialText: string
   onChange: (changed: string) => void
   onSave: () => void
+  onCancel: () => void
+  hasChanges: boolean
 }
 
 const DEFAULT_TEXT = '# New note'
 
-const Editor: React.FC<Props> = ({ initialText, onChange, onSave }) => {
+const Editor: React.FC<Props> = ({ initialText, onChange, onSave, onCancel, hasChanges }) => {
   const [value, setValue] = useState(initialText)
   const [selectionStart, setSelectionStart] = useState(0)
   const [selectionEnd, setSelectionEnd] = useState(0)
@@ -142,13 +144,24 @@ const Editor: React.FC<Props> = ({ initialText, onChange, onSave }) => {
       }
 
       // on cmd/ctrl + enter save the note
-
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         event.preventDefault()
         onSave()
       }
+
+      // on esc, cancel editing
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        if (hasChanges) {
+          if (confirm('You have unsaved changes. Are you sure you want to discard them?')) {
+            onCancel()
+          }
+        } else {
+          onCancel()
+        }
+      }
     },
-    [value, selectionStart, selectionEnd],
+    [value, selectionStart, selectionEnd, hasChanges, onSave, onCancel],
   )
 
   useLayoutEffect(() => {

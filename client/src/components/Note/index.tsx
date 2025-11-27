@@ -157,14 +157,25 @@ const Note: React.FC<{
   }
 
   async function doSaveCurrentNote() {
+    if (hasChanges) {
+      await saveCurrentNote(updatedBody)
+    }
     setMode('view')
-    await saveCurrentNote(updatedBody)
   }
 
-  const handleModeChange = async (m: 'edit' | 'view') => {
+  const doCancelEdit = () => {
+    handleModeChange('view', false)
+  }
+
+  const hasChanges = updatedBody !== currentNote?.body
+
+  const handleModeChange = async (m: 'edit' | 'view', shouldSave: boolean) => {
     setMode(m)
-    if (m === 'view') {
+    if (m === 'view' && shouldSave) {
       doSaveCurrentNote()
+    } else if (m === 'view' && !shouldSave) {
+      // Reset updatedBody to original when canceling
+      setUpdatedBody(currentNote?.body || '')
     }
   }
 
@@ -294,6 +305,7 @@ const Note: React.FC<{
                       value={mode}
                       onChange={handleModeChange}
                       saving={noteSaving}
+                      hasChanges={hasChanges}
                     />
                   </div>
                 </div>
@@ -375,6 +387,8 @@ const Note: React.FC<{
                 onChange={handleChange}
                 key={currentNote.sid}
                 onSave={doSaveCurrentNote}
+                onCancel={doCancelEdit}
+                hasChanges={hasChanges}
               />
             )}
           </div>
