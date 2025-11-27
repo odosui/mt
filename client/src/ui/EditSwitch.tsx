@@ -31,19 +31,19 @@ const EditSwitch: React.FC<{
     return (
       <>
         <Button
+          className="lite-btn edit-btn"
+          icon={<XIcon />}
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <Button
           className={`lite-btn edit-btn${hasChanges ? ' pending' : ''}`}
           icon={<CheckIcon />}
           onClick={handleSave}
           disabled={!hasChanges}
         >
           Save <kbd>⌘↵</kbd>
-        </Button>
-        <Button
-          className="lite-btn edit-btn"
-          icon={<XIcon />}
-          onClick={handleClose}
-        >
-          Cancel
         </Button>
       </>
     )

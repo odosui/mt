@@ -335,6 +335,10 @@ const BoardItem: React.FC<{
               onSave={() => {
                 // implement me
               }}
+              onCancel={function (): void {
+                // implement me
+              }}
+              hasChanges={false}
             />
           )}
         </div>
