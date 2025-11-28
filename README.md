@@ -67,6 +67,7 @@ A note can have tags (which are just words prefixed with `#` in the note body—
 
 Since markdown is extensible, you can use [Mermaid](https://mermaid.js.org/) diagrams in your notes (similar to GitHub markdown):
 
+````
 ```mermaid
 graph TD;
     A-->B;
@@ -74,6 +75,7 @@ graph TD;
     B-->D;
     C-->D;
 ```
+````
 
 ### Focus mode
 
@@ -85,4 +87,8 @@ All your notes are stored in a single folder on your computer. You'll need to ba
 
 ### PWA
 
-mt is a Progressive Web App (PWA). You can install it on your device like a native app. Just click the install icon in the address bar of your browser.
+mt is a Progressive Web App (PWA). You can install it on your device like a native app.
+
+## Contributing
+
+Contributions are welcome! Please open issues and pull requests, and follow the code of conduct.
