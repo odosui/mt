@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Suspense, lazy } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'slim-react-router'
 import { StateProvider } from './state/StateProvider'
 
 const DesktopApp = lazy(() => import('./DesktopApp'))

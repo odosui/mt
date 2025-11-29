@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'slim-react-router'
 import { StateContext } from '../state/StateProvider'
 import Preview from './Preview'
 import { XIcon } from '@primer/octicons-react'

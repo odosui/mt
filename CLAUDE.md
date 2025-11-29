@@ -9,18 +9,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### Starting the application
+
 ```bash
 npm run dev
 ```
+
 This starts both the server (port 3000) and client (port 5173) concurrently.
 
 ### Building
+
 ```bash
 # Client build
 npm run build --prefix client
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 npm run test --prefix client
@@ -32,6 +36,7 @@ npx vitest run <path-to-test-file> --prefix server
 ```
 
 ### Linting
+
 ```bash
 npm run lint --prefix client
 ```
@@ -41,6 +46,7 @@ npm run lint --prefix client
 ### Monorepo Structure
 
 The project is organized as a monorepo with three main parts:
+
 - **Root**: Contains `package.json` with the main dev script and `config.json` for API server URL
 - **Client** (`client/`): React + TypeScript + Vite frontend
 - **Server** (`server/`): Express + TypeScript backend
@@ -50,28 +56,33 @@ The project is organized as a monorepo with three main parts:
 The server follows a layered architecture with clear separation of concerns:
 
 **Storage Layer** (`server/src/components/notes/FSNotesStore.ts`):
+
 - Notes are stored as markdown files in `~/mt/notes/` (or `C:\Users\YourName\mt` on Windows)
 - Each note is a `.md` file with frontmatter containing metadata (level, created_at, updated_at, last_reviewed_at, favorite)
 - The `FSNotesStore` provides the `NoteStore` interface for CRUD operations
 - Tags are extracted from the note body by parsing `#tag` syntax (excluding `##` markdown headers)
 
 **Business Logic Layer** (`server/src/api/CoreApi.ts`):
+
 - `CoreApi` is the server-agnostic entrypoint for all API functionality
 - Coordinates between different services (tags, reviews, notes)
 - Returns standardized response objects with `{ status, json }` format
 - All async operations are wrapped in a `safe()` helper for error handling
 
 **Adapter Layer** (`server/src/api/adapters/express.ts`):
+
 - `bootExpress()` function maps Express routes to CoreApi methods
 - Keeps the core API independent of the HTTP framework
 
 **Domain Services**:
+
 - `ReviewService` (`server/src/components/reviews/`): Manages spaced repetition logic
 - `TagsService` (`server/src/components/tags/`): Handles tag aggregation and queries
 
 ### Spaced Repetition System
 
 The review system (`server/src/components/reviews/utils.ts`) implements a 10-level progression:
+
 - **Levels 0-9**: Each level has a specific review period (7, 15, 30, 30, 45, 45, 60, 60, 90, 180 days)
 - **Level 10**: Maximum level, no further reviews required
 - `daysTillNextReview()`: Calculates days remaining until next review (negative = overdue)
@@ -83,19 +94,23 @@ When a note is reviewed (`reviewNote()`), its level increments and `last_reviewe
 ### Client Architecture
 
 **Entry Points** (`client/src/entrypoints/`):
+
 - Different entry points for desktop vs mobile rendering
 - `startApp()` bootstraps the React application
 
 **State Management**:
+
 - Uses React state and context (not Redux/MobX)
 - API calls centralized in `client/src/api.ts`
 
 **API Client** (`client/src/api.ts`):
+
 - All backend communication goes through this module
 - Uses global `window.API_SERVER_URL` set via Vite config from `config.json`
 - Handles CSRF tokens and request formatting
 
 **Pages** (`client/src/pages/`):
+
 - Timeline: Chronological view of notes
 - Notes: Note listing and filtering
 - Board: Canvas-like board for organizing notes
@@ -103,6 +118,7 @@ When a note is reviewed (`reviewNote()`), its level increments and `last_reviewe
 - Settings: Application configuration
 
 **Components** (`client/src/components/`):
+
 - Editor: Markdown editing functionality
 - Preview: Markdown rendering with support for Mermaid diagrams, code highlighting (highlight.js), and GFM (GitHub Flavored Markdown)
 - Note: Note display and metadata components
@@ -121,7 +137,8 @@ When a note is reviewed (`reviewNote()`), its level increments and `last_reviewe
 ### Key Dependencies
 
 **Client**:
-- React 18 with react-router-dom for routing
+
+- React 18
 - react-markdown with remark-gfm for markdown rendering
 - Mermaid for diagram rendering
 - highlight.js for code syntax highlighting
@@ -129,9 +146,11 @@ When a note is reviewed (`reviewNote()`), its level increments and `last_reviewe
 - motion for animations
 
 **Server**:
+
 - Express 5 for HTTP server
 - dayjs for date manipulation
 - ts-node + nodemon for development
 
 **Testing**:
+
 - vitest for both client and server tests

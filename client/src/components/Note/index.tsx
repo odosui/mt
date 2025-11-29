@@ -14,7 +14,7 @@ import {
 } from '@primer/octicons-react'
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'slim-react-router'
 import { StateContext } from '../../state/StateProvider'
 import Button from '../../ui/Button'
 import DropdownMenu from '../../ui/DropdownMenu'

@@ -8,7 +8,7 @@ import {
 import { noop } from 'motion'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'slim-react-router'
 import api from '../../api'
 import Editor from '../../components/Editor'
 import Preview from '../../components/Preview'

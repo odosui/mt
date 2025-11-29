@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { StateContext } from '../state/StateProvider'
 import { title } from '../utils/notes'
 
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'slim-react-router'
 import Spinner from '../ui/Spinner'
 
 const NotesMobile: React.FC<{ review: boolean }> = ({ review = false }) => {

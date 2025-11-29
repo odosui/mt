@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'slim-react-router'
 import Sidebar from './components/Sidebar'
 import FlashCards from './pages/FlashCards'
 import Notes from './pages/Notes'

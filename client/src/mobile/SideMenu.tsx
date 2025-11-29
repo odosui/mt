@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'slim-react-router'
 import { StateContext } from '../state/StateProvider'
 import Spinner from '../ui/Spinner'
 import { XIcon } from '@primer/octicons-react'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'slim-react-router'
 import BottomNavigation from './mobile/BottomNavigation'
 import FlashCardsMobile from './mobile/FlashcardsMobile'
 import NoteMobile from './mobile/NoteMobile'

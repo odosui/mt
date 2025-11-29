@@ -1,7 +1,7 @@
 import { CheckIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useContext, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'slim-react-router'
 import Preview from '../components/Preview'
 import { StateContext } from '../state/StateProvider'
 import Button from '../ui/Button'

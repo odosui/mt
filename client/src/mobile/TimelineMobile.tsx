@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { TimelineItem } from '../types'
 import api from '../api'
 import Preview from '../components/Preview'
-import { Link } from 'react-router-dom'
+import { Link } from 'slim-react-router'
 import Spinner from '../ui/Spinner'
 import {
   sorted,

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IBoardSearch } from '../types'
 import api from '../api'
-import { Link } from 'react-router-dom'
+import { Link } from 'slim-react-router'
 import Button from '../ui/Button'
 
 const Boards: React.FC<{}> = () => {

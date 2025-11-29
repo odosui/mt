@@ -1,7 +1,7 @@
 import { PencilIcon, PinIcon, SearchIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'slim-react-router'
 import HoveringPreview from '../../components/HoveringPreview'
 import Note from '../../components/Note'
 import { StateContext } from '../../state/StateProvider'
@@ -99,7 +99,9 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
 
       const str = new URLSearchParams(pars).toString()
 
-      navigate(`${pathname}?${str}`)
+      const pathnameFinal = str ? `${pathname}?${str}` : pathname
+
+      navigate(pathnameFinal)
     },
     [mode, navigate, tag],
   )
