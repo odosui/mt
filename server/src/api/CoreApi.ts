@@ -5,6 +5,7 @@ import createQuestionsService from "../components/questions/QuestionService";
 import createReviewService from "../components/reviews/ReviewService";
 import { nextReviewPoints, requresReview } from "../components/reviews/utils";
 import { createTagsService } from "../components/tags/TagsService";
+import createTimelineService from "../components/timeline/TimelineService";
 dayjs.extend(relativeTime);
 
 // Route configuration type
@@ -24,6 +25,7 @@ export const createCoreApi = (noteStore: NoteStore) => {
   const tagsService = createTagsService(noteStore);
   const reviewService = createReviewService(noteStore);
   const questionsService = createQuestionsService(noteStore);
+  const timelineService = createTimelineService(noteStore);
 
   const api = {
     health: () => {
@@ -41,7 +43,12 @@ export const createCoreApi = (noteStore: NoteStore) => {
       counts: async () => {
         return safe(async () => {
           const counts = await noteStore.noteCounts();
-          return ok(counts);
+          const tlCount = await timelineService.getTimeline();
+          const c = {
+            ...counts,
+            timeline_count: tlCount.length,
+          };
+          return ok(c);
         });
       },
       list: async (
@@ -82,6 +89,12 @@ export const createCoreApi = (noteStore: NoteStore) => {
           }
           const updated = await noteStore.updateNote(id, { body }, false);
           return ok(fullView(updated));
+        });
+      },
+      timeline: async () => {
+        return safe(async () => {
+          const items = await timelineService.getTimeline();
+          return ok(items);
         });
       },
     },
@@ -130,6 +143,11 @@ export const createCoreApi = (noteStore: NoteStore) => {
       method: "get",
       path: "/api/notes/counts",
       handler: async () => await api.notes.counts(),
+    },
+    {
+      method: "get",
+      path: "/api/notes/timeline",
+      handler: async () => await api.notes.timeline(),
     },
     {
       method: "get",

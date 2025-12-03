@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar'
 import FlashCards from './pages/FlashCards'
 import Notes from './pages/Notes'
 import Settings from './pages/Settings'
+import Timeline from './pages/Timeline'
 
 const DesktopApp: React.FC = () => {
   return (
@@ -18,10 +19,7 @@ const DesktopApp: React.FC = () => {
         <Route path="/app/review/:sid" element={<Notes mode="review" />} />
         <Route path="/app/settings" element={<Settings />} />
         <Route path="/app/quiz" element={<FlashCards />} />
-        {/* 
-        <Route path="/app/boards" element={<Boards />} />
-        <Route path="/app/boards/:id" element={<Board />} />
-        <Route path="/app/timeline" element={<Timeline />} />*/}
+        <Route path="/app/timeline" element={<Timeline />} />
       </Routes>
     </div>
   )

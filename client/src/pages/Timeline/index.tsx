@@ -1,15 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { TimelineItem } from '../types'
-import api from '../api'
-import Preview from '../components/Preview'
-import { Link } from 'slim-react-router'
-import {
-  sorted,
-  extractYears,
-  group,
-  humanDays,
-  takeYear,
-} from '../utils/timeline'
+import { useEffect, useState } from 'react'
+import api from '../../api'
+import { extractYears, group, sorted, takeYear } from '../../utils/timeline'
+import { TimelineItem } from '../../types'
+import TimelineGroup from './TimelineGroup'
 
 const ALL_YEARS = 'ALL'
 
@@ -77,45 +70,45 @@ const Timeline = () => {
           )}
 
           {passedEvents && passedEvents.length > 0 && (
-            <ItemGroup events={passedEvents} title="Passed Events" />
+            <TimelineGroup events={passedEvents} title="Passed Events" />
           )}
 
           {todaysEvents && todaysEvents.length > 0 && (
-            <ItemGroup events={todaysEvents} title="Today" />
+            <TimelineGroup events={todaysEvents} title="Today" />
           )}
 
           {tomorrowsEvents && tomorrowsEvents.length > 0 && (
-            <ItemGroup events={tomorrowsEvents} title="Tomorrow" />
+            <TimelineGroup events={tomorrowsEvents} title="Tomorrow" />
           )}
 
           {thisWeeksEvents && thisWeeksEvents.length > 0 && (
-            <ItemGroup events={thisWeeksEvents} title="This Week" />
+            <TimelineGroup events={thisWeeksEvents} title="This Week" />
           )}
 
           {thisMonthsEvents && thisMonthsEvents.length > 0 && (
-            <ItemGroup events={thisMonthsEvents} title="This Month" />
+            <TimelineGroup events={thisMonthsEvents} title="This Month" />
           )}
 
           {nextMonthsEvents && nextMonthsEvents.length > 0 && (
-            <ItemGroup events={nextMonthsEvents} title="Next Month" />
+            <TimelineGroup events={nextMonthsEvents} title="Next Month" />
           )}
 
           {thisYearsEvents && thisYearsEvents.length > 0 && (
-            <ItemGroup
+            <TimelineGroup
               events={thisYearsEvents}
               title={`This Year (${takeYear(thisYearsEvents[0]?.date ?? '')})`}
             />
           )}
 
           {nextYearsEvents && nextYearsEvents.length > 0 && (
-            <ItemGroup
+            <TimelineGroup
               events={nextYearsEvents}
               title={`Next Year (${takeYear(nextYearsEvents[0]?.date ?? '')})`}
             />
           )}
 
           {futureEvents && futureEvents.length > 0 && (
-            <ItemGroup events={futureEvents} title="Future Events" />
+            <TimelineGroup events={futureEvents} title="Future Events" />
           )}
         </div>
       </div>
@@ -124,37 +117,3 @@ const Timeline = () => {
 }
 
 export default Timeline
-
-function ItemGroup({
-  events,
-  title,
-}: {
-  events: TimelineItem[]
-  title: string
-}) {
-  return (
-    <div className="timeline-group">
-      <h2>{title}</h2>
-      {events.map((item) => (
-        <div className="timeline-item" key={item.date + item.content}>
-          <span className="timeline-item-date" title={humanDays(item.date)}>
-            {item.date}
-          </span>
-          <div
-            className="timeline-item-content"
-            style={{
-              borderLeft: item.color
-                ? `4px solid ${item.color}`
-                : '4px solid #e0e0e0',
-            }}
-          >
-            <Preview markdown={item.content} imageMetas={{}} />
-            <div className="timeline-item-note">
-              <Link to={`/app/notes/${item.note_sid}`}>{item.note_title}</Link>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
