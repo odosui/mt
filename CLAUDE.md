@@ -113,7 +113,6 @@ When a note is reviewed (`reviewNote()`), its level increments and `last_reviewe
 
 - Timeline: Chronological view of notes
 - Notes: Note listing and filtering
-- Board: Canvas-like board for organizing notes
 - FlashCards: Active recall practice interface
 - Settings: Application configuration
 

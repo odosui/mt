@@ -63,23 +63,6 @@ export interface Question {
   note_id: string
 }
 
-type Col = {
-  uuid: string
-  items: { sid: number; height?: number | 'full' }[]
-}
-
-export interface IBoardSearch {
-  id: number
-  title: string
-  updated_at: string
-  created_at: string
-  updated_at_in_words: string
-}
-
-export type IBoard = IBoardSearch & {
-  config: { cols: Col[] }
-}
-
 export type INoteImage = {
   id: number
   name: string

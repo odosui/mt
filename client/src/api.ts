@@ -1,7 +1,5 @@
 import {
   DataExport,
-  IBoard,
-  IBoardSearch,
   INote,
   INoteImage,
   INoteSearch,
@@ -66,16 +64,6 @@ export default {
   },
   tags: {
     list: (): Promise<Array<ITag>> => api('get', '/tags'),
-  },
-  boards: {
-    list: (): Promise<Array<IBoardSearch>> => api('get', '/boards'),
-    fetch: (id: string | number): Promise<IBoard> =>
-      api('get', '/boards/' + id),
-    update: (id: string | number, config: any): Promise<IBoard> => {
-      return api('PATCH', '/boards/' + id, { config: JSON.stringify(config) })
-    },
-    create: (title: string): Promise<IBoard> =>
-      api('post', '/boards', { title }),
   },
   reviews: {
     list: (): Promise<{ counts: { notes: number; questions: number } }> =>

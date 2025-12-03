@@ -105,19 +105,6 @@ const Sidebar: React.FC = () => {
       </div>
       <div className="menu-item">
         <NavLink
-          to={`/app/boards`}
-          className={({ isActive }) => (isActive ? 'active' : '')}
-          style={{ justifyContent: 'space-between' }}
-        >
-          <div>
-            <ProjectRoadmapIcon />
-            Boards
-          </div>
-          <div className="menu-item-count"></div>
-        </NavLink>
-      </div>
-      <div className="menu-item">
-        <NavLink
           to={`/app/timeline`}
           className={({ isActive }) => (isActive ? 'active' : '')}
           style={{ justifyContent: 'space-between' }}
