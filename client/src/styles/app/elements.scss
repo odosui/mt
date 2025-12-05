@@ -60,8 +60,8 @@
 
   &:disabled,
   &[disabled] {
-    background-color: #cccccc;
-    color: #666666;
+    background-color: var(--subtle);
+    color: var(--lighter);
 
     kbd {
       opacity: 0.5;
@@ -175,7 +175,7 @@ a.action-btn {
       width: $unit3;
       left: $unit0;
       bottom: $unit0;
-      background-color: white;
+      background-color: var(--color-note-area-bg);
 
       border-radius: 50%;
       -webkit-transition: 0.2s;

@@ -2,12 +2,16 @@ import * as React from 'react'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter } from 'slim-react-router'
 import { StateProvider } from './state/StateProvider'
+import { useTheme } from './hooks/useTheme'
 
 const DesktopApp = lazy(() => import('./DesktopApp'))
 const MobileApp = lazy(() => import('./MobileApp'))
 
 const App: React.FC = () => {
   const isMobile = checkIfMobile()
+
+  // Initialize theme on app startup
+  useTheme()
 
   return (
     <BrowserRouter>

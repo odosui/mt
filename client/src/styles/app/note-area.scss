@@ -233,18 +233,16 @@
 
   textarea {
     width: 100%;
+    max-width: $unit14;
     border: 0;
     resize: none;
     line-height: 140%;
     font-size: $text2;
     padding: 0;
     overflow-y: hidden;
-  }
-
-  textarea {
-    width: 100%;
-    max-width: $unit14;
     font-family: 'Fira Code', monospace;
+    background-color: transparent;
+    color: var(--color-text);
   }
 }
 
