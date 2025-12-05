@@ -1,20 +1,18 @@
 import React from 'react'
-import { Route, Routes, useLocation } from 'slim-react-router'
+import { Route, Routes } from 'slim-react-router'
 import BottomNavigation from './mobile/BottomNavigation'
 import FlashCardsMobile from './mobile/FlashcardsMobile'
 import NoteMobile from './mobile/NoteMobile'
 import NotesMobile from './mobile/NotesMobile'
-import TopNavigation from './mobile/TopNavigation'
 import TimelineMobile from './mobile/TimelineMobile'
+import TopNavigation from './mobile/TopNavigation'
 
 const MobileApp: React.FC = () => {
-  const location = useLocation()
-
   return (
     <div className="mobile-app">
       <TopNavigation />
       <div className="mobile-content">
-        <Routes location={location}>
+        <Routes>
           <Route path="/app/notes" element={<NotesMobile review={false} />} />
           <Route path="/app/review" element={<NotesMobile review={true} />} />
           <Route path="/app/notes/:sid" element={<NoteMobile />} />

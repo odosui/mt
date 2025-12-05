@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { TimelineItem } from '../types'
+import { useEffect, useState } from 'react'
+import { Link } from 'slim-react-router'
 import api from '../api'
 import Preview from '../components/Preview'
-import { Link } from 'slim-react-router'
+import { TimelineItem } from '../types'
 import Spinner from '../ui/Spinner'
 import {
-  sorted,
   extractYears,
   group,
   humanDays,
+  sorted,
   takeYear,
 } from '../utils/timeline'
 

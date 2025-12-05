@@ -14,8 +14,10 @@ const ExploreCards: React.FC = () => {
     setQuestions(dd)
   }
 
-  const onCardDeleted = (id: number) => {
-    setQuestions(questions.filter((q) => q.id !== id))
+  const onCardDeleted = (nid: string, qest: string) => {
+    setQuestions(
+      questions.filter((q) => !(q.note_id === nid && q.question === qest)),
+    )
   }
 
   useEffect(() => {
@@ -79,8 +81,8 @@ const ExploreCards: React.FC = () => {
           {filteredQuestions.map((q) => (
             <QuestionCard
               q={q}
-              key={q.id}
-              onDelete={() => onCardDeleted(q.id)}
+              key={q.note_id + q.question}
+              onDelete={() => onCardDeleted(q.note_id, q.question)}
               onUpdate={() => {}}
             />
           ))}

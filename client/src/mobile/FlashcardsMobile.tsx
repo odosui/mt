@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import api from '../api'
 import Flashcard from '../components/Flashcard'
 import { Question } from '../types'
@@ -61,7 +61,7 @@ const FlashCardsMobile = () => {
             <AnimatePresence initial={false}>
               <motion.div
                 className="question-area"
-                key={question?.id}
+                key={question?.note_id + question?.question}
                 initial={{ x: 300, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -300, opacity: 0 }}
@@ -72,7 +72,7 @@ const FlashCardsMobile = () => {
                   q={question}
                   onReviewGood={handleGood}
                   onReviewBad={handleBad}
-                  key={question?.id}
+                  key={question?.note_id + question?.question}
                 />
               </motion.div>
             </AnimatePresence>
