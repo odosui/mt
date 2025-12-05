@@ -12,6 +12,7 @@ import * as React from 'react'
 import { useContext, useState } from 'react'
 import { NavLink, useLocation } from 'slim-react-router'
 import { StateContext } from '../state/StateProvider'
+import ThemeToggle from './ThemeToggle'
 
 const Sidebar: React.FC = () => {
   const [tagTerm, setTagTerm] = useState('')
@@ -41,6 +42,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside className={`menu ${focusMode ? 'meditation' : ''}`}>
+      <ThemeToggle />
       <h3 className="section">KNOWLEDGE BASE</h3>
       <div className="menu-item">
         <NavLink

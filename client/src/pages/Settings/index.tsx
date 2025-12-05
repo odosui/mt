@@ -5,7 +5,6 @@ import Api from '../../api'
 import { DataExport } from '../../types'
 import Button from '../../ui/Button'
 import { formatIso } from '../../utils/dates'
-import ThemeSettings from './ThemeSettings'
 
 const DataExports: React.FC = () => {
   const [dataExports, setDataExports] = useState<DataExport[]>([])
@@ -65,7 +64,6 @@ export default function () {
   return (
     <div className="page">
       <div className="settings-page">
-        <ThemeSettings />
         <DataExports />
         <div className="settings-block">
           <h2>Delete account</h2>

@@ -27,6 +27,8 @@
         width: 100%;
         border: 0;
         font-size: 14px;
+        background-color: transparent;
+        color: var(--color-notes-text);
       }
       svg {
         font-size: 16px;
@@ -56,11 +58,11 @@
     .item {
       padding: $unit1 $unit3;
       height: $unit8;
-      gap: $unit0;
       cursor: pointer;
       transition: background-color 0.1s ease-out;
       font-size: 14px;
       border-bottom: 1px solid var(--color-notes-border);
+
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -120,14 +122,22 @@
       }
 
       .snippet {
+        flex: 1;
+        display: flex;
         line-height: 140%;
         font-size: 12px;
         overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        // white-space: pre-line;
+        flex-direction: column;
+        justify-content: center;
+
+        > * {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+        }
+
         i {
           background: var(--color-notes-accent);
           color: white;

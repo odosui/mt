@@ -4,6 +4,7 @@ import { NavLink, useLocation } from 'slim-react-router'
 import { StateContext } from '../state/StateProvider'
 import Spinner from '../ui/Spinner'
 import { XIcon } from '@primer/octicons-react'
+import ThemeToggle from '../components/ThemeToggle'
 
 const SideMenu: React.FC<{ open: boolean; onHide: () => void }> = ({
   open,
@@ -47,7 +48,9 @@ const SideMenu: React.FC<{ open: boolean; onHide: () => void }> = ({
           </div>
         </div>
       </div>
-      <div className="bottom"></div>
+      <div className="bottom">
+        <ThemeToggle />
+      </div>
     </div>
   )
 }

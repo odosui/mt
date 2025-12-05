@@ -83,7 +83,7 @@
     border-top: 1px solid #ccc;
     display: flex;
     align-items: center;
-    background-color: white;
+    background-color: var(--color-note-area-bg);
     padding: 0 $unit3;
     align-items: center;
     .item {
@@ -193,7 +193,7 @@
   left: 0;
   bottom: 0;
   z-index: 3;
-  background-color: white;
+  background-color: var(--color-menu-bg);
   transform: translateX(-$unit11);
   transition: transform 0.2s ease-in-out;
   &.open {
@@ -211,6 +211,10 @@
   }
   .bottom {
     height: $unit5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--borderColor);
   }
   .content {
     padding: $unit3;

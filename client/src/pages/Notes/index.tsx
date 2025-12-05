@@ -214,10 +214,12 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
                   </button>
                 </div>
               </div>
-              <div
-                className="snippet"
-                dangerouslySetInnerHTML={{ __html: title(note.snippet) }}
-              />
+              <div className="snippet">
+                <div
+                  className="snippet-body"
+                  dangerouslySetInnerHTML={{ __html: title(note.snippet) }}
+                ></div>
+              </div>
             </div>
           ))}
         </div>

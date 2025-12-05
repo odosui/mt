@@ -1,0 +1,102 @@
+.theme-toggle {
+  padding: 0 $unit2 0 $unit4;
+  margin-bottom: $unit3;
+  display: flex;
+  justify-content: flex-start;
+
+  .theme-toggle-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-toggle-track {
+    position: relative;
+    width: $unit6;
+    height: $unit4;
+    background-color: var(--color-menu-bg-hover-intense);
+    border-radius: $unit2;
+    transition: background-color 0.3s ease;
+    border: 1px solid var(--color-menu-border);
+    display: flex;
+    align-items: center;
+    padding: 0 $unit0;
+
+    &:hover {
+      background-color: var(--color-menu-bg-hover);
+    }
+  }
+
+  .theme-toggle-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $unit1;
+    pointer-events: none;
+    z-index: 1;
+
+    .theme-icon {
+      width: $unit2;
+      height: $unit2;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: $unit2;
+        height: $unit2;
+      }
+    }
+
+    .sun-icon {
+      fill: var(--color-menu-text-secondary);
+    }
+
+    .moon-icon {
+      fill: var(--color-menu-text-secondary);
+    }
+  }
+
+  .theme-toggle-thumb {
+    position: relative;
+    width: $unit3;
+    height: $unit3;
+    background-color: var(--color-menu-accent);
+    border-radius: $unit1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .theme-toggle-track.dark {
+    .theme-toggle-thumb {
+      transform: translateX($unit4);
+    }
+
+    .sun-icon {
+      fill: var(--color-menu-text-secondary);
+    }
+
+    .moon-icon {
+      fill: var(--color-menu-text);
+    }
+  }
+
+  .theme-toggle-track.light {
+    .sun-icon {
+      fill: var(--color-menu-text);
+    }
+
+    .moon-icon {
+      fill: var(--color-menu-text-secondary);
+    }
+  }
+}
