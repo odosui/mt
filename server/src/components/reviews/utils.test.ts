@@ -51,6 +51,8 @@ describe("nextReviewPoints", () => {
     last_reviewed_at: lastReviewedAt || createdAt,
     created_at: createdAt,
     updated_at: createdAt,
+    favorite: false,
+    flashcards: [],
   });
 
   it("should return array with levels 1 through 10 for level 0", () => {
@@ -93,6 +95,8 @@ describe("requresReview", () => {
     last_reviewed_at: lastReviewedAt || createdAt,
     created_at: createdAt,
     updated_at: createdAt,
+    favorite: false,
+    flashcards: [],
   });
 
   it("should return true when exactly at review time", () => {

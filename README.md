@@ -1,5 +1,7 @@
 # mt 💡
 
+[![CI](https://github.com/odosui/mt/actions/workflows/ci.yml/badge.svg)](https://github.com/odosui/mt/actions/workflows/ci.yml)
+
 Knowledge management meets spaced repetition.
 
 **mt** helps organize and manage knowledge efficiently, helping you remember and make sense of information over time.

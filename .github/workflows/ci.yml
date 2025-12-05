@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install --prefix client
+        npm install --prefix server
+
+    - name: Check types - Client
+      run: npm run check-types --prefix client
+
+    - name: Check types - Server
+      run: npm run check-types --prefix server
+
+    - name: Run tests - Client
+      run: npm run test --prefix client
+
+    - name: Run tests - Server
+      run: npm run test --prefix server

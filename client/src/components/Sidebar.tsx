@@ -4,7 +4,6 @@ import {
   HashIcon,
   HomeIcon,
   NoteIcon,
-  ProjectRoadmapIcon,
   SearchIcon,
   StarIcon,
   SyncIcon,
