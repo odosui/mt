@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 export type Theme = 'light' | 'dark'
 
-export function useTheme() {
+interface ThemeContextValue {
+  theme: Theme
+  setTheme: (theme: Theme) => void
+  toggleTheme: () => void
+}
+
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
   // Initialize theme from localStorage, system preference, or default to 'light'
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem('theme') as Theme | null
@@ -31,13 +39,12 @@ export function useTheme() {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
-  // Apply theme on mount and when theme changes
+  // Single useEffect that handles both theme application and system preference listening
   useEffect(() => {
+    // Apply theme on mount and when theme changes
     document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
 
-  // Listen for system preference changes
-  useEffect(() => {
+    // Listen for system preference changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
     const handleChange = (e: MediaQueryListEvent) => {
@@ -49,7 +56,19 @@ export function useTheme() {
 
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
+  }, [theme])
 
-  return { theme, setTheme, toggleTheme }
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export function useTheme() {
+  const context = useContext(ThemeContext)
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider')
+  }
+  return context
 }

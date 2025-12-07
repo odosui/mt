@@ -1,6 +1,6 @@
 import { MoonIcon, SunIcon } from '@primer/octicons-react'
 import * as React from 'react'
-import { useTheme } from '../hooks/useTheme'
+import { useTheme } from '../contexts/ThemeContext'
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme()

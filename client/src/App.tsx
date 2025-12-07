@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter } from 'slim-react-router'
 import { StateProvider } from './state/StateProvider'
-import { useTheme } from './hooks/useTheme'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 const DesktopApp = lazy(() => import('./DesktopApp'))
 const MobileApp = lazy(() => import('./MobileApp'))
@@ -10,16 +10,15 @@ const MobileApp = lazy(() => import('./MobileApp'))
 const App: React.FC = () => {
   const isMobile = checkIfMobile()
 
-  // Initialize theme on app startup
-  useTheme()
-
   return (
     <BrowserRouter>
-      <StateProvider>
-        <Suspense fallback={<Fallback />}>
-          {isMobile ? <MobileApp /> : <DesktopApp />}
-        </Suspense>
-      </StateProvider>
+      <ThemeProvider>
+        <StateProvider>
+          <Suspense fallback={<Fallback />}>
+            {isMobile ? <MobileApp /> : <DesktopApp />}
+          </Suspense>
+        </StateProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }
