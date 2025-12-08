@@ -1,9 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mt:
-    build: .
-    container_name: mt-app
+    image: hiquest/mt:latest
     ports:
       - "3000:3000"
     volumes:

@@ -2,6 +2,9 @@
 
 # Stage 1: Build client
 FROM node:20-alpine AS client-builder
+WORKDIR /app
+# Copy config.json for vite.config.ts
+COPY config.json ./
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
