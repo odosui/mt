@@ -5,9 +5,13 @@ import path from "path";
 import { requresReview } from "../reviews/utils";
 import { Flashcard, Note, NoteStore } from "./NotesStore";
 
-// read notes
-const homeDir = os.homedir();
-const notesDir = path.join(homeDir, "mt", "notes");
+function getDefaultMTHome() {
+  const homeDir = os.homedir();
+  return path.join(homeDir, "mt");
+}
+
+const mtHome = process.env.MT_HOME || getDefaultMTHome();
+const notesDir = path.join(mtHome, "notes");
 
 export async function createFSNotesStore(): Promise<NoteStore> {
   const notes: Record<string, Note> = await readNotes();

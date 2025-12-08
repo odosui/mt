@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+.env
+.env.local
+.vscode
+.idea
+*.log
+client/node_modules
+client/dist
+server/node_modules
+server/dist
+mt-data

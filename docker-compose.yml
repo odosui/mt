@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mt:
+    build: .
+    container_name: mt-app
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount your local mt directory to the container
+      # Change the path on the left side to your desired location
+      - ./mt-data:/data/mt
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MT_HOME=/data/mt
+    restart: unless-stopped
