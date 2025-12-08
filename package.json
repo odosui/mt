@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "scripts": {
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
