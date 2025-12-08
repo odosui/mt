@@ -49,7 +49,7 @@ async function main() {
     app.use(express.static(clientBuildPath));
 
     // handle SPA routing - all non-API routes return index.html
-    app.get("*", (_req, res) => {
+    app.get("/*", (_req, res) => {
       res.sendFile(path.join(clientBuildPath, "index.html"));
     });
   }
