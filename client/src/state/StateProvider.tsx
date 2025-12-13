@@ -381,7 +381,11 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const nav = window.navigator
     const n = questions + notes
     if (nav.setAppBadge) {
-      n > 0 ? nav.setAppBadge(n) : nav.clearAppBadge()
+      if (n > 0) {
+        nav.setAppBadge(n)
+      } else {
+        nav.clearAppBadge()
+      }
     }
   }
 

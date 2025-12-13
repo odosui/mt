@@ -5,7 +5,7 @@ type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 }
 
 const AutoresizableTextarea = (
-  { minHeight, ...props }: Props,
+  { minHeight: _mh, ...props }: Props,
   ref: React.HTMLProps<HTMLTextAreaElement>['ref'],
 ) => {
   const initialStyles = useRef<CSSStyleDeclaration | null>(null)

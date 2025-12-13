@@ -28,6 +28,9 @@ jobs:
       - name: Check types - Client
         run: npm run check-types --prefix client
 
+      - name: Lint - Client
+        run: npm run lint --prefix client
+
       - name: Check types - Server
         run: npm run check-types --prefix server
 

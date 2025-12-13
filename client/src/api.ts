@@ -195,33 +195,32 @@ function toQuery(data: { [k: string]: string }) {
   )
 }
 
-async function multipart<T>(
-  url: string,
-  data?: { [key: string]: string | Blob },
-  method: 'POST' | 'PATCH' = 'POST',
-): Promise<T | { error: string }> {
+function toFormData(data: { [k: string]: string | Blob }) {
   const formData = new FormData()
-
   for (const name in data) {
     const val = data[name]
     if (val) {
       formData.append(name, val)
     }
   }
+  return formData
+}
 
-  // csrf
-  const meta = document.querySelectorAll<HTMLMetaElement>(
-    "[name='csrf-token']",
-  )[0]
-
-  const response = await fetch(`/api${url}`, {
+async function multipart<T>(
+  url: string,
+  data?: { [key: string]: string | Blob },
+  method: 'POST' | 'PATCH' = 'POST',
+): Promise<T | { error: string }> {
+  const params: FetchParams = {
     method,
-    body: formData,
     credentials: 'include',
-    headers: {
-      'X-CSRF-Token': meta ? meta.content : '',
-    },
-  })
+  }
+
+  if (method === 'POST' || method === 'PATCH' || method === 'PUT') {
+    params.body = toFormData(data || {})
+  }
+
+  const response = await fetch(`/api${url}`, params)
 
   if (response.status === 400) {
     const e = await response.json()

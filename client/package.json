@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "check-types": "tsc --project tsconfig.json --noEmit",
     "test:watch": "vitest",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "oxlint src"
   },
   "dependencies": {
     "@primer/octicons-react": "^19.15.1",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^18.2.19",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^5.1.1",
+    "oxlint": "^1.32.0",
     "prettier": "^3.4.2",
     "sass": "^1.94.2",
     "typescript": "^5.9.3",

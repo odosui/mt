@@ -15,7 +15,7 @@ const Button: React.FC<
 
   return (
     <button className={cl.join(' ')} {...rest}>
-      {icon && icon}
+      {icon}
       {props.children}
     </button>
   )
