@@ -1,5 +1,5 @@
 import { TimelineItem } from '../types'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 
 export function sorted(items: TimelineItem[]): TimelineItem[] {
   return items.sort((a, b) => {
@@ -33,9 +33,13 @@ export function extractYears(items: TimelineItem[]): string[] {
 // - this week's events
 // - this month's events
 // - next month's events
+// - second next month's events
+// - third next month's events
 // - this year's events
 // - future events
-export function group(items: TimelineItem[]): Record<string, TimelineItem[]> {
+export function groupTimeline(
+  items: TimelineItem[],
+): Record<string, TimelineItem[]> {
   const today = new Date()
 
   const passedEvents: TimelineItem[] = []
@@ -44,6 +48,8 @@ export function group(items: TimelineItem[]): Record<string, TimelineItem[]> {
   const thisWeeksEvents: TimelineItem[] = []
   const thisMonthsEvents: TimelineItem[] = []
   const nextMonthsEvents: TimelineItem[] = []
+  const secondNextMonthsEvents: TimelineItem[] = []
+  const thirdNextMonthsEvents: TimelineItem[] = []
   const thisYearsEvents: TimelineItem[] = []
   const nextYearsEvents: TimelineItem[] = []
   const futureEvents: TimelineItem[] = []
@@ -103,6 +109,16 @@ export function group(items: TimelineItem[]): Record<string, TimelineItem[]> {
     ) {
       nextMonthsEvents.push(item)
     } else if (
+      itemDate >= new Date(today.getFullYear(), today.getMonth() + 2, 1) &&
+      itemDate < new Date(today.getFullYear(), today.getMonth() + 3, 1)
+    ) {
+      secondNextMonthsEvents.push(item)
+    } else if (
+      itemDate >= new Date(today.getFullYear(), today.getMonth() + 3, 1) &&
+      itemDate < new Date(today.getFullYear(), today.getMonth() + 4, 1)
+    ) {
+      thirdNextMonthsEvents.push(item)
+    } else if (
       itemDate >= new Date(today.getFullYear(), 0, 1) &&
       itemDate < new Date(today.getFullYear() + 1, 0, 1)
     ) {
@@ -124,6 +140,8 @@ export function group(items: TimelineItem[]): Record<string, TimelineItem[]> {
     thisWeeksEvents,
     thisMonthsEvents,
     nextMonthsEvents,
+    secondNextMonthsEvents,
+    thirdNextMonthsEvents,
     thisYearsEvents,
     nextYearsEvents,
     futureEvents,
@@ -145,4 +163,11 @@ export function humanDays(date: string): string {
 export function takeYear(date: string): string {
   const year = date.split('-')[0]
   return year ? year : 'Unknown Year'
+}
+
+export function formatMonthYear(date: string): string {
+  const [year, month] = date.split('-').map((d) => parseInt(d, 10))
+  if (!year || !month) return ''
+  const itemDate = new Date(year, month - 1, 1)
+  return format(itemDate, 'MMMM yyyy')
 }

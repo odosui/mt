@@ -6,7 +6,7 @@ import { TimelineItem } from '../types'
 import Spinner from '../ui/Spinner'
 import {
   extractYears,
-  group,
+  groupTimeline,
   humanDays,
   sorted,
   takeYear,
@@ -51,7 +51,7 @@ const TimelineMobile = () => {
     thisYearsEvents,
     nextYearsEvents,
     futureEvents,
-  } = group(filteredItems)
+  } = groupTimeline(filteredItems)
 
   if (loading) {
     return (

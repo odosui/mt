@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
 import api from '../../api'
-import { extractYears, group, sorted, takeYear } from '../../utils/timeline'
 import { TimelineItem } from '../../types'
+import {
+  extractYears,
+  formatMonthYear,
+  groupTimeline,
+  sorted,
+  takeYear,
+} from '../../utils/timeline'
 import TimelineGroup from './TimelineGroup'
 
 const ALL_YEARS = 'ALL'
@@ -33,10 +39,12 @@ const Timeline = () => {
     thisWeeksEvents,
     thisMonthsEvents,
     nextMonthsEvents,
+    secondNextMonthsEvents,
+    thirdNextMonthsEvents,
     thisYearsEvents,
     nextYearsEvents,
     futureEvents,
-  } = group(filteredItems)
+  } = groupTimeline(filteredItems)
 
   return (
     <div className="timeline-page">
@@ -91,6 +99,20 @@ const Timeline = () => {
 
           {nextMonthsEvents && nextMonthsEvents.length > 0 && (
             <TimelineGroup events={nextMonthsEvents} title="Next Month" />
+          )}
+
+          {secondNextMonthsEvents && secondNextMonthsEvents.length > 0 && (
+            <TimelineGroup
+              events={secondNextMonthsEvents}
+              title={formatMonthYear(secondNextMonthsEvents[0]?.date ?? '')}
+            />
+          )}
+
+          {thirdNextMonthsEvents && thirdNextMonthsEvents.length > 0 && (
+            <TimelineGroup
+              events={thirdNextMonthsEvents}
+              title={formatMonthYear(thirdNextMonthsEvents[0]?.date ?? '')}
+            />
           )}
 
           {thisYearsEvents && thisYearsEvents.length > 0 && (

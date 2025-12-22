@@ -828,6 +828,30 @@ body,
         display: flex;
         flex-direction: column;
         margin-bottom: $unit5;
+        transition: margin-bottom 0.2s ease-in-out;
+
+        &.collapsed {
+          margin-bottom: $unit1;
+          h2 {
+            background-color: var(--color-bg-hover);
+            margin-bottom: 0;
+          }
+
+          .timeline-items-container {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+          }
+        }
+
+        .timeline-items-container {
+          max-height: 10000px;
+          opacity: 1;
+          overflow: hidden;
+          transition:
+            max-height 0.2s ease-in-out,
+            opacity 0.25s ease-in-out;
+        }
 
         h2 {
           font-size: $text0;
@@ -837,8 +861,42 @@ body,
           text-align: center;
           padding: $unit1;
           border-radius: $unit1;
-          width: $unit9;
+          width: $unit10;
           margin: 0 auto $unit2 auto;
+          cursor: pointer;
+          transition:
+            background-color 0.2s ease-in-out,
+            margin-bottom 0.2s ease-in-out;
+          user-select: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: $unit1;
+
+          svg {
+            color: var(--color-accent);
+            fill: var(--color-accent);
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+          }
+
+          &:hover {
+            background-color: var(--color-bg-hover);
+            svg {
+              opacity: 1;
+            }
+          }
+
+          .timeline-group-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+              width: 14px;
+              height: 14px;
+            }
+          }
         }
 
         .timeline-item {
