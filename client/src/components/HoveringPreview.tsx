@@ -14,12 +14,19 @@ const HoveringPreview: React.FC = () => {
   } = useContext(StateContext)
 
   useEffect(() => {
-    if (note) {
-      setVisible(true)
-    } else {
-      setVisible(false)
-    }
+    setVisible(!!note)
   }, [note])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && visible) {
+        setVisible(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [visible])
 
   const navigate = useNavigate()
 
@@ -37,30 +44,36 @@ const HoveringPreview: React.FC = () => {
   }
 
   return (
-    <div
-      className={`with-note-elements hovering-preview ${
-        visible ? 'visible' : ''
-      }`}
-    >
-      <div className="bar">
-        <div className="left">
-          <div onClick={handleClose}>
-            <XIcon />
+    <>
+      <div
+        className={`hovering-preview-backdrop ${visible ? 'visible' : ''}`}
+        onClick={handleClose}
+      />
+      <div
+        className={`with-note-elements hovering-preview ${
+          visible ? 'visible' : ''
+        }`}
+      >
+        <div className="bar">
+          <div className="left">
+            <div onClick={handleClose} className="close-button">
+              <XIcon />
+            </div>
+          </div>
+          <div className="right">
+            <a href="#" onClick={handleEdit}>
+              {' '}
+              Edit {`#${note?.sid} →`}
+            </a>
           </div>
         </div>
-        <div className="right">
-          <a href="#" onClick={handleEdit}>
-            {' '}
-            Edit {`#${note?.sid} →`}
-          </a>
-        </div>
+        {note && (
+          <div className="body">
+            <Preview markdown={note.body} imageMetas={note.image_metas} />
+          </div>
+        )}
       </div>
-      {note && (
-        <div className="body">
-          <Preview markdown={note.body} imageMetas={note.image_metas} />
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 
