@@ -346,7 +346,7 @@ function listView(n: Note) {
     id: n.id,
     level: n.level,
     sid: parseInt(n.id, 10),
-    snippet: n.body.split("\n").slice(0, 3).join("\n"),
+    snippet: n.body ? n.body.split("\n").slice(0, 3).join("\n") : "",
     tags: n.tags,
     updated_at_in_words: dayjs(n.updated_at).fromNow(),
     favorite: n.favorite,
@@ -369,7 +369,6 @@ function fullView(n: Note) {
     seo_url: null,
     sid: parseInt(n.id, 10),
     slug: null,
-    snippet: "",
     upcoming_reviews_in_days: nextReviewPoints(n),
   };
 }

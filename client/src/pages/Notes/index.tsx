@@ -160,11 +160,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
     switchNote(parseInt(sidLoc))
   }, [sidLoc, switchNote])
 
-  const pinnedFirst = (notes.data ?? []).sort((a, b) => {
-    if (a.pinned && !b.pinned) return -1
-    if (!a.pinned && b.pinned) return 1
-    return 0
-  })
+  const pinnedFirst = (notes.data ?? []).sort(sortPinnedFirst)
 
   return (
     <div className="page">
@@ -256,3 +252,9 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
 }
 
 export default Notes
+
+function sortPinnedFirst(a: { pinned: boolean }, b: { pinned: boolean }) {
+  if (a.pinned && !b.pinned) return -1
+  if (!a.pinned && b.pinned) return 1
+  return 0
+}
