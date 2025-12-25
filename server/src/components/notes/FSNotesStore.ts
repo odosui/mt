@@ -10,11 +10,13 @@ function getDefaultMTHome() {
   return path.join(homeDir, "mt");
 }
 
-const mtHome = process.env.MT_HOME || getDefaultMTHome();
-const notesDir = path.join(mtHome, "notes");
+export async function createFSNotesStore(
+  mtHomeArg: string,
+): Promise<NoteStore> {
+  const mtHome = mtHomeArg || getDefaultMTHome();
+  const notesDir = path.join(mtHome, "notes");
 
-export async function createFSNotesStore(): Promise<NoteStore> {
-  const notes: Record<string, Note> = await readNotes();
+  const notes: Record<string, Note> = await readNotes(notesDir);
 
   async function noteCounts() {
     return { total_notes: Object.keys(notes).length };
@@ -65,7 +67,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       favorite: false,
     };
 
-    await writeToDisk(note);
+    await writeToDisk(notesDir, note);
 
     notes[id] = note;
 
@@ -95,7 +97,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
       n.updated_at = dayjs().toISOString();
     }
 
-    await writeToDisk(n);
+    await writeToDisk(notesDir, n);
     notes[id] = n;
     return n;
   }
@@ -110,7 +112,7 @@ export async function createFSNotesStore(): Promise<NoteStore> {
 }
 
 // create or update note on disk
-async function writeToDisk(note: Note) {
+async function writeToDisk(notesDir: string, note: Note) {
   await fs.mkdir(notesDir, { recursive: true });
 
   const filePath = path.join(notesDir, `${note.id}.md`);
@@ -158,7 +160,7 @@ function nextId(notes: Record<string, Note>) {
   return (maxId + 1).toString();
 }
 
-async function readNotes() {
+async function readNotes(notesDir: string) {
   const notes: Record<string, Note> = {};
 
   await fs.mkdir(notesDir, { recursive: true });

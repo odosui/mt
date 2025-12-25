@@ -3,30 +3,45 @@ import express, { Express } from "express";
 import path from "path";
 import { createCoreApi } from "./api/CoreApi";
 import { createFSNotesStore } from "./components/notes/FSNotesStore";
+import { parseArgs } from "./utils/cmd";
 
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
+const BUILD_FLAG = "build-static-site";
+const MT_HOME_GLAF = "mt-home";
+
 async function main() {
+  const parsed = parseArgs(process.argv.slice(2));
+
+  const mtHome: string = parsed[MT_HOME_GLAF] || process.env.MT_HOME;
+
+  if (parsed[BUILD_FLAG]) {
+    build();
+  } else {
+    startServer(mtHome);
+  }
+}
+
+main();
+
+async function build() {
+  console.log("Building static site...");
+  // TODO: implement me
+}
+
+async function startServer(mtHome: string) {
   const app = express();
 
   app.use(bodyParser.json());
 
   // allow CORS (only in development)
   if (NODE_ENV === "development") {
-    app.use((_req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-      res.header("Access-Control-Allow-Headers", "Content-Type");
-      res.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PATCH, PUT, OPTIONS",
-      );
-      next();
-    });
+    applyDevCors(app);
   }
 
   // init out app
-  const noteStore = await createFSNotesStore();
+  const noteStore = await createFSNotesStore(mtHome);
   const coreApi = createCoreApi(noteStore);
 
   // mapping apis
@@ -60,4 +75,14 @@ async function main() {
   });
 }
 
-main();
+function applyDevCors(app: Express) {
+  app.use((_req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, PUT, OPTIONS",
+    );
+    next();
+  });
+}
