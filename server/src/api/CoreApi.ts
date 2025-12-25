@@ -131,7 +131,7 @@ export const createCoreApi = (noteStore: NoteStore) => {
   const routes: RouteConfig[] = [
     {
       method: "get",
-      path: "/",
+      path: "/api/health",
       handler: async () => api.health(),
     },
     {

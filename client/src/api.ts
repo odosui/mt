@@ -181,7 +181,7 @@ async function api(
   }
 
   // @ts-ignore
-  const base = window.API_SERVER_URL
+  const base = window.API_SERVER_URL || ''
   return fetch(`${base}/api${url}`, attrs).then((x) => x.json())
 }
 
