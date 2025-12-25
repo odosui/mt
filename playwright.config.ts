@@ -1,16 +1,19 @@
 import { defineConfig, devices } from "@playwright/test";
+import { randomUUID } from "crypto";
 
 export default defineConfig({
   testDir: "./e2e/tests",
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: process.env.CI ? "github" : "html",
+  timeout: 10 * 1000,
   use: {
     baseURL: "http://localhost:3310",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    headless: false,
   },
   projects: [
     {
@@ -20,12 +23,12 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run build && npm run start",
+    command: "npm run start",
     port: 3310,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
     env: {
-      MT_HOME: "/tmp/mt-e2e-test-notes",
+      MT_HOME: `/tmp/mt-e2e-test-${randomUUID()}`,
       PORT: "3310",
       NODE_ENV: "production",
     },

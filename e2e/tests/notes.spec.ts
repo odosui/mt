@@ -19,162 +19,111 @@ test.describe("Notes", () => {
     ).toBeVisible();
   });
 
-  // test("should create a new note", async ({ page }) => {
-  //   await page.goto("/");
+  test("should create a new note", async ({ page }) => {
+    await page.goto("/app/notes");
 
-  //   // Wait for page to load
-  //   await page.waitForLoadState("networkidle");
+    await page.locator(".newNote").first().click();
 
-  //   // Look for "New Note" or "+" button - adjust selector based on your UI
-  //   const newNoteButton = page
-  //     .locator(
-  //       'button:has-text("New"), button:has-text("+"), [data-testid="new-note-button"]',
-  //     )
-  //     .first();
-  //   await newNoteButton.click();
+    // in edit mode now
 
-  //   // Wait for editor to appear
-  //   await page.waitForSelector('textarea, [contenteditable="true"], .editor', {
-  //     timeout: 5000,
-  //   });
+    const saveBtn = page.locator('button:has-text("Save")').first();
+    await expect(saveBtn).toBeDisabled();
 
-  //   // Type note content
-  //   const editor = page
-  //     .locator('textarea, [contenteditable="true"], .editor')
-  //     .first();
-  //   await editor.fill(
-  //     "# My First Test Note\n\nThis is a test note created by Playwright #test-tag",
-  //   );
+    const cancelBtn = page.locator('button:has-text("Cancel")').first();
+    await expect(cancelBtn).toBeEnabled();
 
-  //   // Save the note - look for Save button
-  //   const saveButton = page
-  //     .locator('button:has-text("Save"), [data-testid="save-button"]')
-  //     .first();
-  //   await saveButton.click();
+    const editor = page.locator("textarea").first();
+    await editor.fill(
+      "# My First Test Note\n\nThis is a test note created by Playwright \n\n #e2e",
+    );
 
-  //   // Wait for navigation back to list or confirmation
-  //   await page.waitForLoadState("networkidle");
+    await page.locator('button:has-text("Save")').first().click();
 
-  //   // Verify note appears in the list
-  //   await expect(page.locator("text=My First Test Note")).toBeVisible({
-  //     timeout: 5000,
-  //   });
-  // });
+    // Verify note appears in the list
+    await expect(page.locator("text=My First Test Note")).toBeVisible({
+      timeout: 5000,
+    });
 
-  // test("should display existing notes", async ({ page }) => {
-  //   // Create a test note directly in the filesystem
-  //   createTestNote(
-  //     "test-note.md",
-  //     "# Test Note\n\nThis is a pre-existing note #existing",
-  //   );
+    const editBtn = page.locator('button:has-text("Edit")').first();
+    await expect(editBtn).toBeEnabled();
 
-  //   await page.goto("/");
-  //   await page.waitForLoadState("networkidle");
+    // tags are updated
+    await expect(
+      page.locator(".menu-tags div", { hasText: "e2e1" }), // = e2e tag has 1 note
+    ).toBeVisible();
+  });
 
-  //   // Verify the note is displayed
-  //   await expect(page.locator("text=Test Note")).toBeVisible({ timeout: 5000 });
-  // });
+  test("should cancel editing without saving changes", async ({ page }) => {
+    await page.goto("/app/notes");
 
-  // test("should filter notes by tag", async ({ page }) => {
-  //   // Create multiple notes with different tags
-  //   createTestNote("note1.md", "# Note One\n\nContent with #tag1");
-  //   createTestNote("note2.md", "# Note Two\n\nContent with #tag2");
-  //   createTestNote("note3.md", "# Note Three\n\nContent with #tag1 and #tag2");
+    // Create a note first
+    await page.locator(".newNote").first().click();
+    const editor = page.locator("textarea").first();
+    await editor.fill("# Original Content\n\nThis is the original text");
+    await page.locator('button:has-text("Save")').first().click();
+    await expect(page.locator("text=Original Content")).toBeVisible({
+      timeout: 5000,
+    });
 
-  //   await page.goto("/");
-  //   await page.waitForLoadState("networkidle");
+    // Enter edit mode
+    await page.locator('button:has-text("Edit")').first().click();
 
-  //   // Click on a tag to filter (adjust selector based on your UI)
-  //   const tag1 = page.locator('text=#tag1, [data-tag="tag1"]').first();
-  //   await tag1.click();
+    // Make changes
+    const editorAgain = page.locator("textarea").first();
+    await editorAgain.fill("# Modified Content\n\nThis should not be saved");
 
-  //   // Verify filtered results
-  //   await expect(page.locator("text=Note One")).toBeVisible();
-  //   await expect(page.locator("text=Note Three")).toBeVisible();
-  // });
+    // Click Cancel
+    await page.locator('button:has-text("Cancel")').first().click();
 
-  // test("should edit an existing note", async ({ page }) => {
-  //   createTestNote("editable-note.md", "# Original Title\n\nOriginal content");
+    // Verify original content is still there
+    await expect(page.locator("text=Original Content")).toBeVisible();
+    await expect(page.locator("text=Modified Content")).not.toBeVisible();
+  });
 
-  //   await page.goto("/");
-  //   await page.waitForLoadState("networkidle");
+  test("should delete a note", async ({ page }) => {
+    await page.goto("/app/notes");
 
-  //   // Click on the note to open it
-  //   await page.locator("text=Original Title").click();
+    // Create a note first
+    await page.locator(".newNote").first().click();
+    const editor = page.locator("textarea").first();
+    await editor.fill(
+      "# Note to Delete\n\nThis note will be deleted \n\n #temp",
+    );
+    await page.locator('button:has-text("Save")').first().click();
 
-  //   // Wait for editor
-  //   await page.waitForSelector('textarea, [contenteditable="true"], .editor', {
-  //     timeout: 5000,
-  //   });
+    // Wait for note to appear
+    await expect(page.locator("text=Note to Delete")).toBeVisible({
+      timeout: 5000,
+    });
 
-  //   // Edit the content
-  //   const editor = page
-  //     .locator('textarea, [contenteditable="true"], .editor')
-  //     .first();
-  //   await editor.fill("# Updated Title\n\nUpdated content");
+    await expect(
+      page.locator(".menu-tags div", { hasText: "temp1" }),
+    ).toBeVisible();
 
-  //   // Save
-  //   const saveButton = page.locator('button:has-text("Save")').first();
-  //   await saveButton.click();
+    await page.locator('.menu-action-more[title="More menu items"]').click();
 
-  //   await page.waitForLoadState("networkidle");
+    // confirm deletion
+    page.once("dialog", async (d) => {
+      expect(d.message()).toContain("Are you sure want to delete this note?");
+      await d.accept();
+    });
+    await page.locator(':has-text("Delete note")').first().click();
 
-  //   // Verify the update
-  //   await expect(page.locator("text=Updated Title")).toBeVisible();
-  // });
+    // Verify note is deleted
+    await expect(page.locator("text=Note to Delete")).not.toBeVisible({
+      timeout: 5000,
+    });
 
-  // test("should delete a note", async ({ page }) => {
-  //   createTestNote(
-  //     "deletable-note.md",
-  //     "# Note to Delete\n\nThis will be deleted",
-  //   );
+    await expect(
+      page.locator(".menu-tags div", { hasText: "temp1" }),
+    ).not.toBeVisible();
+  });
 
-  //   await page.goto("/");
-  //   await page.waitForLoadState("networkidle");
+  test("should filter by tag", async ({ page }) => {
+    // todo
+  });
 
-  //   // Click on the note
-  //   await page.locator("text=Note to Delete").click();
-
-  //   // Look for delete button (adjust selector based on your UI)
-  //   const deleteButton = page
-  //     .locator('button:has-text("Delete"), [data-testid="delete-button"]')
-  //     .first();
-  //   await deleteButton.click();
-
-  //   // Confirm deletion if there's a confirmation dialog
-  //   const confirmButton = page
-  //     .locator(
-  //       'button:has-text("Confirm"), button:has-text("Yes"), button:has-text("Delete")',
-  //     )
-  //     .first();
-  //   if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-  //     await confirmButton.click();
-  //   }
-
-  //   await page.waitForLoadState("networkidle");
-
-  //   // Verify note is gone
-  //   await expect(page.locator("text=Note to Delete")).not.toBeVisible();
-  // });
-
-  // test("should toggle favorite status", async ({ page }) => {
-  //   createTestNote("favorite-note.md", "# Favorite Test\n\nTest favoriting");
-
-  //   await page.goto("/");
-  //   await page.waitForLoadState("networkidle");
-
-  //   // Click on the note
-  //   await page.locator("text=Favorite Test").click();
-
-  //   // Look for favorite/star button
-  //   const favoriteButton = page
-  //     .locator(
-  //       'button:has-text("★"), button:has-text("☆"), [data-testid="favorite-button"]',
-  //     )
-  //     .first();
-  //   await favoriteButton.click();
-
-  //   // Verify the favorite status changed (visual indicator)
-  //   // This will depend on your UI implementation
-  // });
+  test("should filter by text", async ({ page }) => {
+    // todo
+  });
 });
