@@ -5,9 +5,11 @@
     "install-server": "npm install --prefix server",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
     "build": "npm run build --prefix client && npm run build --prefix server",
-    "start": "NODE_ENV=production npm run start --prefix server"
+    "start": "NODE_ENV=production npm run start --prefix server",
+    "e2e": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "concurrently": "^9.2.1"
   }
 }
