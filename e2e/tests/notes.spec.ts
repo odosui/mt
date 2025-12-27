@@ -1,10 +1,17 @@
 import { expect, test } from "@playwright/test";
+import {
+  clickTag,
+  expectNoNoteItem,
+  expectNoteItem,
+  expectTag,
+  saveBtn,
+  cancelBtn,
+  newNoteBtn,
+  noteTA,
+  editBtn,
+} from "./helpers";
 
 test.describe("Notes", () => {
-  // test.beforeEach(async ({ cleanNotesDir }) => {
-  //   // cleanNotesDir fixture automatically cleans the directory
-  // });
-
   test("should display empty state when no notes exist", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("aside")).toContainText("KNOWLEDGE BASE");
@@ -19,67 +26,46 @@ test.describe("Notes", () => {
     ).toBeVisible();
   });
 
-  test("should create a new note", async ({ page }) => {
-    await page.goto("/app/notes");
+  test("should create a new note", async ({ page: p }) => {
+    await p.goto("/app/notes");
 
-    await page.locator(".newNote").first().click();
+    await newNoteBtn(p).click();
 
     // in edit mode now
+    await expect(saveBtn(p)).toBeDisabled();
+    await expect(cancelBtn(p)).toBeEnabled();
 
-    const saveBtn = page.locator('button:has-text("Save")').first();
-    await expect(saveBtn).toBeDisabled();
-
-    const cancelBtn = page.locator('button:has-text("Cancel")').first();
-    await expect(cancelBtn).toBeEnabled();
-
-    const editor = page.locator("textarea").first();
-    await editor.fill(
+    await noteTA(p).fill(
       "# My First Test Note\n\nThis is a test note created by Playwright \n\n #e2e",
     );
-
-    await page.locator('button:has-text("Save")').first().click();
-
-    await expect(
-      page.locator(".notes-items").locator("text=My First Test Note"),
-    ).toBeVisible();
-
-    const editBtn = page.locator('button:has-text("Edit")').first();
-    await expect(editBtn).toBeEnabled();
+    await saveBtn(p).click();
+    await expectNoteItem(p, "My First Test Note");
+    await expect(editBtn(p)).toBeEnabled();
 
     // tags are updated
-    await expect(
-      page.locator(".menu-tags div", { hasText: "e2e1" }), // = e2e tag has 1 note
-    ).toBeVisible();
+    await expectTag(p, "e2e", 1);
   });
 
-  test("should cancel editing without saving changes", async ({ page }) => {
-    await page.goto("/app/notes");
+  test("should cancel editing without saving changes", async ({ page: p }) => {
+    await p.goto("/app/notes");
 
     // Create a note first
-    await page.locator(".newNote").first().click();
-    const editor = page.locator("textarea").first();
-    await editor.fill("# Original Content\n\nThis is the original text");
-    await page.locator('button:has-text("Save")').first().click();
-    await expect(
-      page.locator(".notes-items").locator("text=Original Content"),
-    ).toBeVisible();
+    await newNoteBtn(p).click();
+    await noteTA(p).fill("# Original Content\n\nThis is the original text");
+    await saveBtn(p).click();
+    await expectNoteItem(p, "Original Content");
 
     // Enter edit mode
-    await page.locator('button:has-text("Edit")').first().click();
+    await editBtn(p).click();
 
     // Make changes
-    const editorAgain = page.locator("textarea").first();
-    await editorAgain.fill("# Modified Content\n\nThis should not be saved");
+    await noteTA(p).fill("# Modified Content\n\nThis should not be saved");
 
     // Click Cancel
-    await page.locator('button:has-text("Cancel")').first().click();
+    await p.locator('button:has-text("Cancel")').first().click();
 
-    await expect(
-      page.locator(".notes-items").locator("text=Original Content"),
-    ).toBeVisible();
-    await expect(
-      page.locator(".notes-items").locator("text=Modified Content"),
-    ).not.toBeVisible();
+    await expectNoteItem(p, "Original Content");
+    await expectNoNoteItem(p, "Modified Content");
   });
 
   // test("should delete a note", async ({ page }) => {
@@ -119,8 +105,45 @@ test.describe("Notes", () => {
   //   ).not.toBeVisible();
   // });
 
-  test("should filter by tag", async ({ page }) => {
-    // todo
+  test("should filter by tag", async ({ page: p }) => {
+    await p.goto("/app/notes");
+
+    // Create first note with #javascript tag
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# JavaScript Basics\n\nLearn about variables and functions \n\n #javascript",
+    );
+    await saveBtn(p).click();
+    await expectNoteItem(p, "JavaScript Basics");
+
+    // Create second note with #python tag
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# Python Tutorial\n\nPython is a great language \n\n #python",
+    );
+    await saveBtn(p).click();
+    await expectNoteItem(p, "Python Tutorial");
+
+    // Create third note with #javascript tag
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# Advanced JavaScript\n\nAsync/await and promises \n\n #javascript",
+    );
+    await saveBtn(p).click();
+    await expectNoteItem(p, "Advanced JavaScript");
+
+    await expectTag(p, "javascript", 2);
+    await expectTag(p, "python", 1);
+
+    await clickTag(p, "javascript");
+    await expectNoteItem(p, "JavaScript Basics");
+    await expectNoteItem(p, "Advanced JavaScript");
+    await expectNoNoteItem(p, "Python Tutorial");
+
+    await clickTag(p, "python");
+    await expectNoteItem(p, "Python Tutorial");
+    await expectNoNoteItem(p, "JavaScript Basics");
+    await expectNoNoteItem(p, "Advanced JavaScript");
   });
 
   test("should filter by text", async ({ page }) => {
