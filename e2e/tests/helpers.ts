@@ -22,26 +22,26 @@ export function noteTA(p: Page) {
   return p.locator("textarea").first();
 }
 
+export function noteItem(p: Page, title: string) {
+  return p.locator(".notes-items").locator(`text=${title}`);
+}
+
+export function tagItem(p: Page, tag: string) {
+  return p.locator(".menu-tags .tag-name", { hasText: tag });
+}
+
+export function moreMenuBtn(p: Page) {
+  return p.locator('.menu-action-more[title="More menu items"]').first();
+}
+
+export function delBtn(p: Page) {
+  return p.locator(':has-text("Delete note")').first();
+}
+
 // Helpers
-
-export async function expectNoteItem(page: Page, title: string) {
-  await expect(
-    page.locator(".notes-items").locator(`text=${title}`),
-  ).toBeVisible();
-}
-
-export async function expectNoNoteItem(page: Page, title: string) {
-  await expect(
-    page.locator(".notes-items").locator(`text=${title}`),
-  ).not.toBeVisible();
-}
 
 export async function expectTag(page: Page, tag: string, count: number) {
   await expect(
     page.locator(".menu-tags div", { hasText: [tag, count].join("") }),
   ).toBeVisible();
-}
-
-export async function clickTag(page: Page, tag: string) {
-  await page.locator(".menu-tags .tag-name", { hasText: tag }).click();
 }

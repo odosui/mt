@@ -1,14 +1,15 @@
 import { expect, test } from "@playwright/test";
 import {
-  clickTag,
-  expectNoNoteItem,
-  expectNoteItem,
   expectTag,
   saveBtn,
   cancelBtn,
   newNoteBtn,
   noteTA,
   editBtn,
+  noteItem,
+  moreMenuBtn,
+  delBtn,
+  tagItem,
 } from "./helpers";
 
 test.describe("Notes", () => {
@@ -39,7 +40,7 @@ test.describe("Notes", () => {
       "# My First Test Note\n\nThis is a test note created by Playwright \n\n #e2e",
     );
     await saveBtn(p).click();
-    await expectNoteItem(p, "My First Test Note");
+    await expect(noteItem(p, "My First Test Note")).toBeVisible();
     await expect(editBtn(p)).toBeEnabled();
 
     // tags are updated
@@ -53,7 +54,7 @@ test.describe("Notes", () => {
     await newNoteBtn(p).click();
     await noteTA(p).fill("# Original Content\n\nThis is the original text");
     await saveBtn(p).click();
-    await expectNoteItem(p, "Original Content");
+    await expect(noteItem(p, "Original Content")).toBeVisible();
 
     // Enter edit mode
     await editBtn(p).click();
@@ -64,46 +65,34 @@ test.describe("Notes", () => {
     // Click Cancel
     await p.locator('button:has-text("Cancel")').first().click();
 
-    await expectNoteItem(p, "Original Content");
-    await expectNoNoteItem(p, "Modified Content");
+    await expect(noteItem(p, "Original Content")).toBeVisible();
+    await expect(noteItem(p, "Modified Content")).not.toBeVisible();
   });
 
-  // test("should delete a note", async ({ page }) => {
-  //   await page.goto("/app/notes");
+  test("should delete a note", async ({ page: p }) => {
+    await p.goto("/app/notes");
 
-  //   // Create a note first
-  //   await page.locator(".newNote").first().click();
-  //   const editor = page.locator("textarea").first();
-  //   await editor.fill(
-  //     "# Note to Delete\n\nThis note will be deleted \n\n #temp",
-  //   );
-  //   await page.locator('button:has-text("Save")').first().click();
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# Note to Delete\n\nThis note will be deleted \n\n #temp",
+    );
+    await saveBtn(p).click();
+    await expect(noteItem(p, "Note to Delete")).toBeVisible();
+    await expectTag(p, "temp", 1);
 
-  //   // Wait for note to appear
-  //   await expect(page.locator("text=Note to Delete")).toBeVisible({
-  //   });
+    await moreMenuBtn(p).click();
 
-  //   await expect(
-  //     page.locator(".menu-tags div", { hasText: "temp1" }),
-  //   ).toBeVisible();
+    // // confirm deletion
+    // p.once("dialog", async (d) => {
+    //   expect(d.message()).toContain("Are you sure want to delete this note?");
+    //   await d.accept();
+    // });
+    // await delBtn(p).click();
 
-  //   await page.locator('.menu-action-more[title="More menu items"]').click();
-
-  //   // confirm deletion
-  //   page.once("dialog", async (d) => {
-  //     expect(d.message()).toContain("Are you sure want to delete this note?");
-  //     await d.accept();
-  //   });
-  //   await page.locator(':has-text("Delete note")').first().click();
-
-  //   // Verify note is deleted
-  //   await expect(page.locator("text=Note to Delete")).not.toBeVisible({
-  //   });
-
-  //   await expect(
-  //     page.locator(".menu-tags div", { hasText: "temp1" }),
-  //   ).not.toBeVisible();
-  // });
+    // // Verify note is deleted
+    // await expect(noteItem(p, "Note to Delete")).not.toBeVisible();
+    // await expect(tagItem(p, "temp")).not.toBeVisible();
+  });
 
   test("should filter by tag", async ({ page: p }) => {
     await p.goto("/app/notes");
@@ -114,7 +103,7 @@ test.describe("Notes", () => {
       "# JavaScript Basics\n\nLearn about variables and functions \n\n #javascript",
     );
     await saveBtn(p).click();
-    await expectNoteItem(p, "JavaScript Basics");
+    await expect(noteItem(p, "JavaScript Basics")).toBeVisible();
 
     // Create second note with #python tag
     await newNoteBtn(p).click();
@@ -122,7 +111,7 @@ test.describe("Notes", () => {
       "# Python Tutorial\n\nPython is a great language \n\n #python",
     );
     await saveBtn(p).click();
-    await expectNoteItem(p, "Python Tutorial");
+    await expect(noteItem(p, "Python Tutorial")).toBeVisible();
 
     // Create third note with #javascript tag
     await newNoteBtn(p).click();
@@ -130,23 +119,23 @@ test.describe("Notes", () => {
       "# Advanced JavaScript\n\nAsync/await and promises \n\n #javascript",
     );
     await saveBtn(p).click();
-    await expectNoteItem(p, "Advanced JavaScript");
+    await expect(noteItem(p, "Advanced JavaScript")).toBeVisible();
 
     await expectTag(p, "javascript", 2);
     await expectTag(p, "python", 1);
 
-    await clickTag(p, "javascript");
-    await expectNoteItem(p, "JavaScript Basics");
-    await expectNoteItem(p, "Advanced JavaScript");
-    await expectNoNoteItem(p, "Python Tutorial");
+    await tagItem(p, "javascript").click();
+    await expect(noteItem(p, "JavaScript Basics")).toBeVisible();
+    await expect(noteItem(p, "Advanced JavaScript")).toBeVisible();
+    await expect(noteItem(p, "Python Tutorial")).not.toBeVisible();
 
-    await clickTag(p, "python");
-    await expectNoteItem(p, "Python Tutorial");
-    await expectNoNoteItem(p, "JavaScript Basics");
-    await expectNoNoteItem(p, "Advanced JavaScript");
+    await tagItem(p, "python").click();
+    await expect(noteItem(p, "Python Tutorial")).toBeVisible();
+    await expect(noteItem(p, "JavaScript Basics")).not.toBeVisible();
+    await expect(noteItem(p, "Advanced JavaScript")).not.toBeVisible();
   });
 
-  test("should filter by text", async ({ page }) => {
+  test("should filter by text", async ({ page: p }) => {
     // todo
   });
 });
