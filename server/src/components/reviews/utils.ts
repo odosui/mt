@@ -53,6 +53,5 @@ export function nextReviewPoints(n: Note) {
 
 export function requresReview(n: Note) {
   const days = daysTillNextReview(n.level, n.last_reviewed_at, n.created_at);
-
   return days <= 0;
 }

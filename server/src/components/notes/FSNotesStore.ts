@@ -6,6 +6,8 @@ import { requresReview } from "../reviews/utils";
 import { Flashcard, Note, NoteStore } from "./NotesStore";
 import { extractTitle, noteFilename } from "./utils";
 
+const NO_REVIEW_TAGS = ["noreview", "no-review", "skipreview", "skip-review"];
+
 function getDefaultMTHome() {
   const homeDir = os.homedir();
   return path.join(homeDir, "mt");
@@ -38,7 +40,7 @@ export async function createFSNotesStore(
 
     // review
     if (isReview) {
-      res = res.filter(requresReview);
+      res = res.filter(requresReview).filter(noSkipReviewByTag);
     }
 
     if (favOnly) {
@@ -184,8 +186,6 @@ async function readNotes(notesDir: string) {
     notes[id] = readNote(id, content);
   }
 
-  console.log(notes);
-
   return notes;
 }
 
@@ -253,4 +253,8 @@ function extractTags(body: string): string[] {
 
 function compareByModifiedDateDesc(a: Note, b: Note) {
   return b.updated_at.localeCompare(a.updated_at);
+}
+
+function noSkipReviewByTag(n: Note) {
+  return !n.tags.some((t) => NO_REVIEW_TAGS.includes(t.toLowerCase()));
 }
