@@ -4,6 +4,7 @@ import os from "os";
 import path from "path";
 import { requresReview } from "../reviews/utils";
 import { Flashcard, Note, NoteStore } from "./NotesStore";
+import { extractTitle, noteFilename } from "./utils";
 
 function getDefaultMTHome() {
   const homeDir = os.homedir();
@@ -115,7 +116,10 @@ export async function createFSNotesStore(
 async function writeToDisk(notesDir: string, note: Note) {
   await fs.mkdir(notesDir, { recursive: true });
 
-  const filePath = path.join(notesDir, `${note.id}.md`);
+  const filePath = path.join(
+    notesDir,
+    noteFilename(note.id, extractTitle(note.body)),
+  );
 
   const metadataLines = [
     `---`,

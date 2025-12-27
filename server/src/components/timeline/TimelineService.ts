@@ -1,4 +1,5 @@
 import { NoteStore } from "../notes/NotesStore";
+import { extractTitle } from "../notes/utils";
 
 export type TimelineItem = {
   date: string;
@@ -50,13 +51,5 @@ const createTimelineService = (noteStore: NoteStore) => {
     getTimeline,
   };
 };
-
-function extractTitle(body: string): string {
-  const lines = body.split("\n");
-
-  return (
-    lines.find((l) => l.trim().length > 0)?.replace(/^#+\s*/, "") || "Untitled"
-  );
-}
 
 export default createTimelineService;
