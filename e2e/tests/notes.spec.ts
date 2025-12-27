@@ -82,15 +82,15 @@ test.describe("Notes", () => {
 
     await moreMenuBtn(p).click();
 
-    // // confirm deletion
-    // p.once("dialog", async (d) => {
-    //   expect(d.message()).toContain("Are you sure want to delete this note?");
-    //   await d.accept();
-    // });
-    // await delBtn(p).click();
+    // confirm deletion
+    p.once("dialog", async (d) => {
+      expect(d.message()).toContain("Are you sure want to delete this note?");
+      await d.accept();
+    });
+    await delBtn(p).click();
 
-    // // Verify note is deleted
-    // await expect(noteItem(p, "Note to Delete")).not.toBeVisible();
+    // Verify note is deleted
+    await expect(noteItem(p, "Note to Delete")).not.toBeVisible();
     // await expect(tagItem(p, "temp")).not.toBeVisible();
   });
 

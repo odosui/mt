@@ -35,7 +35,7 @@ export function moreMenuBtn(p: Page) {
 }
 
 export function delBtn(p: Page) {
-  return p.locator(':has-text("Delete note")').first();
+  return p.locator('.dropdown-menu .menu-item:has-text("Delete note")');
 }
 
 // Helpers
