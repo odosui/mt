@@ -24,8 +24,6 @@ export async function createFSNotesStore(
   }
 
   async function getNotes(tags: string, isReview: boolean, favOnly: boolean) {
-    // query, is_review, fav_only, page, per_page
-
     let res = Object.values(notes);
 
     // filter by tags
@@ -171,7 +169,12 @@ async function readNotes(notesDir: string) {
   const files = await fs.readdir(notesDir);
   const mdFiles = files.filter((f) => f.endsWith(".md"));
   for (const file of mdFiles) {
-    const id = file.split(".")[0];
+    const m = file.match(/^\d+/);
+    if (!m) {
+      console.warn(`Skipping file with invalid name: ${file}`);
+      continue;
+    }
+    const id = m[0];
     if (!id) {
       throw new Error("Invalid note id");
     }
@@ -180,6 +183,8 @@ async function readNotes(notesDir: string) {
     const content = await fs.readFile(filePath, "utf-8");
     notes[id] = readNote(id, content);
   }
+
+  console.log(notes);
 
   return notes;
 }
