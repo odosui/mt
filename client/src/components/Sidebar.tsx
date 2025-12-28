@@ -42,8 +42,10 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside className={`menu ${focusMode ? 'meditation' : ''}`}>
-      <ThemeToggle />
-      <h3 className="section">KNOWLEDGE BASE</h3>
+      <h3 className="section with-toggle">
+        KNOWLEDGE BASE
+        <ThemeToggle />
+      </h3>
       <div className="menu-item">
         <NavLink
           to="/app/notes"

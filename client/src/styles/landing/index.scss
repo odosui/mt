@@ -316,6 +316,12 @@ body,
         line-height: 130%;
       }
     }
+
+    &.with-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   b {
