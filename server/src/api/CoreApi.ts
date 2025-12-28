@@ -366,8 +366,10 @@ function fullView(n: Note) {
     updated_at: n.updated_at,
     last_reviewed_at: n.last_reviewed_at,
     created_at: n.created_at,
-    favorite: false,
-    needs_review: requresReview(n),
+    needs_review: requresReview(n) && noSkipReviewByTag(n),
+    upcoming_reviews_in_days: nextReviewPoints(n),
+
+    // TODO: implement these
     published: false,
     question_count: 0,
     seo_description: null,
@@ -375,6 +377,5 @@ function fullView(n: Note) {
     seo_url: null,
     sid: parseInt(n.id, 10),
     slug: null,
-    upcoming_reviews_in_days: nextReviewPoints(n),
   };
 }
