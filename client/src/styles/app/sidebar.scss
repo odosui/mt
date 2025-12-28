@@ -23,6 +23,12 @@
     &.section-tags {
       margin-top: $unit4;
     }
+
+    &.with-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   .menu-item {
