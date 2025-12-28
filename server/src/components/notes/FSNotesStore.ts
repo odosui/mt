@@ -2,11 +2,9 @@ import dayjs from "dayjs";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import { requresReview } from "../reviews/utils";
+import { noSkipReviewByTag, requresReview } from "../reviews/utils";
 import { Flashcard, Note, NoteStore } from "./NotesStore";
 import { extractTitle, noteFilename } from "./utils";
-
-const NO_REVIEW_TAGS = ["noreview", "no-review", "skipreview", "skip-review"];
 
 function getDefaultMTHome() {
   const homeDir = os.homedir();
@@ -253,8 +251,4 @@ function extractTags(body: string): string[] {
 
 function compareByModifiedDateDesc(a: Note, b: Note) {
   return b.updated_at.localeCompare(a.updated_at);
-}
-
-function noSkipReviewByTag(n: Note) {
-  return !n.tags.some((t) => NO_REVIEW_TAGS.includes(t.toLowerCase()));
 }

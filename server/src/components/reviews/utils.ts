@@ -55,3 +55,9 @@ export function requresReview(n: Note) {
   const days = daysTillNextReview(n.level, n.last_reviewed_at, n.created_at);
   return days <= 0;
 }
+
+const NO_REVIEW_TAGS = ["noreview", "no-review", "skipreview", "skip-review"];
+
+export function noSkipReviewByTag(n: Note) {
+  return !n.tags.some((t) => NO_REVIEW_TAGS.includes(t.toLowerCase()));
+}

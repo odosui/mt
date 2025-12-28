@@ -3,7 +3,11 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Note, NoteStore } from "../components/notes/NotesStore";
 import createQuestionsService from "../components/questions/QuestionService";
 import createReviewService from "../components/reviews/ReviewService";
-import { nextReviewPoints, requresReview } from "../components/reviews/utils";
+import {
+  nextReviewPoints,
+  noSkipReviewByTag,
+  requresReview,
+} from "../components/reviews/utils";
 import { createTagsService } from "../components/tags/TagsService";
 import createTimelineService from "../components/timeline/TimelineService";
 dayjs.extend(relativeTime);
@@ -102,7 +106,9 @@ export const createCoreApi = (noteStore: NoteStore) => {
       counts: async () => {
         return safe(async () => {
           const notes = await noteStore.getNotes("", false, false);
-          const reviewCount = Object.values(notes).filter(requresReview).length;
+          const reviewCount = Object.values(notes)
+            .filter(requresReview)
+            .filter(noSkipReviewByTag).length;
 
           const qCount = (await questionsService.getReviewableQuestions())
             .length;
