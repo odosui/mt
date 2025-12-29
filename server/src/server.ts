@@ -47,7 +47,12 @@ export async function startServer(mtHome: string) {
   }
 
   // start the server
-  app.listen(PORT, () => {
+  app.listen(PORT, (err) => {
+    if (err) {
+      console.error("Failed to start server:", err);
+      return;
+    }
+
     console.log(`Server is running on port ${PORT} (${NODE_ENV} mode)`);
   });
 }
