@@ -25,3 +25,4 @@ dist-ssr
 server/config.json
 playwright-report
 test-results
+mt.pid

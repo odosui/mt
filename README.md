@@ -19,15 +19,7 @@ Knowledge management meets spaced repetition.
 - Cross-linking between notes for building a knowledge graph.
 - Full-text search and tagging for easy organization and retrieval.
 
-## Getting Started
-
-It is organized around **notes**, which are just pieces of information in plain text or [markdown](https://en.wikipedia.org/wiki/Markdown). These are stored on your machine as plain markdown files.
-
-Notes pop up for **review** according to a predefined schedule (aka spaced repetition). Reviewing your notes helps you remember them better, gives you a chance to improve them, and update them with new information.
-
-Notes can also include flashcards for active recall practice.
-
-## Installation
+## Quick start
 
 ```bash
 # npm modules
@@ -35,13 +27,31 @@ npm install
 npm run install-client
 npm run install-server
 
+# build it
+npm run build
+
 # start
-npm run dev
+node server/dist/index.js
 ```
 
-This will start both the server (port 3000) and client (port 5173). The default directory for notes is `~/mt` (or `C:\Users\YourName\mt` on Windows).
+Now open your browser and go to `http://localhost:3000`. Your notes are going be stored in `~/mt` (or `C:\Users\YourName\mt` on Windows) by default.
+
+## Using start up script (MacOS/Linux only)
+
+You can use the provided startup script to launch the application as a daemon easily (works on Unix-like systems).
+
+```bash
+# start|stop|restart|status
+./scripts/mt.sh start
+```
 
 ## How to use
+
+mt is built around **notes**, which are just pieces of information in plain text or [markdown](https://en.wikipedia.org/wiki/Markdown). These are stored on your machine as plain markdown files.
+
+Notes pop up for **review** according to a predefined schedule (aka spaced repetition). Reviewing your notes helps you remember them better, gives you a chance to improve them, and update them with new information.
+
+Notes can also include flashcards for active recall practice.
 
 ### Markdown
 
