@@ -54,7 +54,9 @@ const ExploreCards: React.FC = () => {
             All ({questions.length})
           </div>
           {allTags.map((tag) => {
-            const count = questions.filter((q) => q.tags.includes(tag)).length
+            const count = (questions ?? []).filter((q) =>
+              (q.tags ?? []).includes(tag),
+            ).length
             return (
               <div
                 key={tag}
@@ -65,12 +67,13 @@ const ExploreCards: React.FC = () => {
               </div>
             )
           })}
-          {questions.some((q) => q.tags.length === 0) && (
+          {(questions ?? []).some((q) => (q.tags ?? []).length === 0) && (
             <div
               className={`tag-item ${selectedTag === 'untagged' ? 'active' : ''}`}
               onClick={() => setSelectedTag('untagged')}
             >
-              untagged ({questions.filter((q) => q.tags.length === 0).length})
+              untagged (
+              {questions.filter((q) => (q.tags ?? []).length === 0).length})
             </div>
           )}
         </div>
