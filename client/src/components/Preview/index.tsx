@@ -23,7 +23,7 @@ const Preview: React.FC<{
         return null
       }
 
-      const meta = imageMetas[src]
+      const meta = imageMetas?.[src]
       if (!meta) {
         return (
           <div>
