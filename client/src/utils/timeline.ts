@@ -4,15 +4,21 @@ import { formatDistanceToNow, format } from 'date-fns'
 export function sorted(items: TimelineItem[]): TimelineItem[] {
   return items.sort((a, b) => {
     // if one of the date is just YYYY, then treat it as the end of the year
-    // if one of the date is just YYYY-NN, then treat it as the end of the month
+    // if one of the date is just YYYY-MM, then treat it as the end of the month
+    const [yearA, monthA = '12', dayA = '31'] = a.date.split('-')
+    const [yearB, monthB = '12', dayB = '31'] = b.date.split('-')
 
     const dateA = new Date(
-      a.date.replace(/(\d{4})(-\d{1,2})?(-\d{1,2})?/, '$1-12-31'),
+      parseInt(yearA, 10),
+      parseInt(monthA, 10) - 1,
+      parseInt(dayA, 10),
     )
     const dateB = new Date(
-      b.date.replace(/(\d{4})(-\d{1,2})?(-\d{1,2})?/, '$1-12-31'),
+      parseInt(yearB, 10),
+      parseInt(monthB, 10) - 1,
+      parseInt(dayB, 10),
     )
-    return -dateB.getTime() + dateA.getTime()
+    return dateA.getTime() - dateB.getTime()
   })
 }
 
