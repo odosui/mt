@@ -22,7 +22,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
     fc.level += 1;
     fc.reviewed_at = dayjs().toISOString();
-    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
   }
 
   async function reviewBad(noteId: string, question: string) {
@@ -40,7 +40,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
     fc.level = 0;
     fc.reviewed_at = dayjs().toISOString();
-    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
   }
 
   async function createQuestion(
@@ -63,7 +63,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
     note.flashcards.push(fc);
 
-    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
 
     return asJson(fc);
   }
@@ -111,7 +111,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
     fc.question = newQuestion;
     fc.answer = newAnswer;
-    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
 
     return asJson(fc);
   }
@@ -130,7 +130,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
     }
 
     note.flashcards.splice(index, 1);
-    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, false);
+    await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
   }
 
   return {
