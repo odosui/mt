@@ -95,6 +95,16 @@ export const createCoreApi = (noteStore: NoteStore) => {
           return ok(fullView(updated));
         });
       },
+      delete: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          await noteStore.deleteNote(id);
+          return ok({ success: true });
+        });
+      },
       timeline: async () => {
         return safe(async () => {
           const items = await timelineService.getTimeline();
@@ -182,6 +192,12 @@ export const createCoreApi = (noteStore: NoteStore) => {
       path: "/api/notes/:id",
       handler: async ({ pathParams, body }) =>
         await api.notes.update(pathParams.id ?? "", body.body),
+    },
+    {
+      method: "delete",
+      path: "/api/notes/:id",
+      handler: async ({ pathParams }) =>
+        await api.notes.delete(pathParams.id ?? ""),
     },
     {
       method: "get",

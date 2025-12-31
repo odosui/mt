@@ -101,12 +101,29 @@ export async function createFSNotesStore(
     return n;
   }
 
+  async function deleteNote(id: string) {
+    const existingNote = notes[id];
+    if (!existingNote) {
+      throw new Error(`Note with id ${id} not found`);
+    }
+
+    // Find and delete the file (filename includes title which may have changed)
+    const files = await fs.readdir(notesDir);
+    const noteFile = files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
+    if (noteFile) {
+      await fs.unlink(path.join(notesDir, noteFile));
+    }
+
+    delete notes[id];
+  }
+
   return {
     noteCounts,
     getNotes,
     getNote,
     createNote,
     updateNote,
+    deleteNote,
   };
 }
 

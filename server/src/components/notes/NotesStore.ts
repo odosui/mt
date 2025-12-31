@@ -32,4 +32,5 @@ export interface NoteStore {
     data: Partial<Note>,
     skipUpdatedAt: boolean,
   ): Promise<Note>;
+  deleteNote(id: string): Promise<void>;
 }

@@ -91,7 +91,9 @@ test.describe("Notes", () => {
 
     // Verify note is deleted
     await expect(noteItem(p, "Note to Delete")).not.toBeVisible();
-    // await expect(tagItem(p, "temp")).not.toBeVisible();
+    await expect(tagItem(p, "temp")).not.toBeVisible({
+      timeout: 20000,
+    });
   });
 
   test("should filter by tag", async ({ page: p }) => {

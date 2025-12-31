@@ -17,7 +17,7 @@ cd "$repo_dir" || {
 if [[ -n "$(git status --porcelain)" ]]; then
   print -P "%F{yellow}mts:%f committing local changes"
   git add . || exit 1
-  git commit -m "wip: local changes" || exit 1
+  git commit -m "updates" || exit 1
 else
   print -P "%F{cyan}mts:%f working tree clean"
 fi

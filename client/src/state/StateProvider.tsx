@@ -254,18 +254,25 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   }, [getCurrentNote])
 
   const deleteCurrentNote = useCallback(async () => {
-    const note = getCurrentNote()
-    if (!note) {
+    const n = getCurrentNote()
+    if (!n) {
       return
     }
-    await api.notes.del(note.sid)
+    await api.notes.del(n.sid)
 
-    const newNotes = (notes.data || []).filter((n) => n.sid !== note.sid)
-    delete fullNotes.current[note.sid]
+    const newNotes = (notes.data || []).filter((n) => n.sid !== n.sid)
+    delete fullNotes.current[n.sid]
     setNotes({ loading: false, data: newNotes })
 
+    if (n.tags.length > 0) {
+      setTags({
+        loading: false,
+        data: updateTags(tags.data || [], n.tags, []),
+      })
+    }
+
     setFocusMode(false)
-  }, [notes.data, fullNotes, getCurrentNote])
+  }, [notes.data, fullNotes, tags.data, getCurrentNote])
 
   const addNewNote = useCallback(async () => {
     const newNote = await api.notes.create('# New note')
@@ -526,7 +533,7 @@ function empty() {
   }
 }
 
-function updateTags(tags: ITag[], oldTags: string[], newTags: string[]) {
+export function updateTags(tags: ITag[], oldTags: string[], newTags: string[]) {
   const diff = tagsDiff(oldTags, newTags)
 
   const tt = [...tags]

@@ -63,7 +63,7 @@ function applyDevCors(app: Express) {
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header(
       "Access-Control-Allow-Methods",
-      "GET, POST, PATCH, PUT, OPTIONS",
+      "GET, POST, PATCH, PUT, OPTIONS, DELETE",
     );
     next();
   });
