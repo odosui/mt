@@ -5,7 +5,7 @@ import { createCoreApi } from "./api/CoreApi";
 import { createFSNotesStore } from "./components/notes/FSNotesStore";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.MT_PORT || 3000;
 
 export async function startServer(mtHome: string) {
   const app = express();

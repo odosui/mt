@@ -5,6 +5,7 @@ APP_DIR="$HOME/projects/mt"
 PIDFILE="$APP_DIR/mt.pid"
 LOGFILE="$APP_DIR/mt.log"
 SERVER_SCRIPT="$APP_DIR/server/dist/index.js"
+MT_PORT=${MT_PORT:-8042}
 
 cmd="${1:-start}"
 
@@ -32,7 +33,7 @@ start() {
   cd "$APP_DIR"
 
   # Start detached, log to file
-  NODE_ENV=production nohup node server/dist/index.js >>"$LOGFILE" 2>&1 &
+  MT_PORT=$MT_PORT NODE_ENV=production nohup node server/dist/index.js >>"$LOGFILE" 2>&1 &
 
   local pid="$!"
   echo "$pid" > "$PIDFILE"
