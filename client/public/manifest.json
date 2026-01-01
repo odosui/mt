@@ -2,10 +2,13 @@
   "name": "mt - Knowledge Management",
   "short_name": "mt",
   "description": "Knowledge management with spaced repetition",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "start_url": "/app/notes",
+  "display_override": ["fullscreen", "standalone"],
+  "background_color": "#53424C",
+  "theme_color": "#3367D6",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities", "education"],
   "icons": [
     {
       "src": "/apple-touch-icon.png",
