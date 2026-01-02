@@ -23,8 +23,19 @@ export async function createFSNotesStore(
     return { total_notes: Object.keys(notes).length };
   }
 
-  async function getNotes(tags: string, isReview: boolean, favOnly: boolean) {
+  async function getNotes(
+    tags: string,
+    isReview: boolean,
+    favOnly: boolean,
+    query?: string,
+  ) {
     let res = Object.values(notes);
+
+    // filter by text query
+    if (query && query.trim()) {
+      const searchTerm = query.trim().toLowerCase();
+      res = res.filter((n) => n.body.toLowerCase().includes(searchTerm));
+    }
 
     // filter by tags
     const ts = tags ? tags.split(",").map((t) => t.trim().toLowerCase()) : "";

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Note, NoteStore } from "../components/notes/NotesStore";
+import { extractSnippetWithContext } from "../components/notes/utils";
 import createQuestionsService from "../components/questions/QuestionService";
 import createReviewService from "../components/reviews/ReviewService";
 import {
@@ -59,15 +60,17 @@ export const createCoreApi = (noteStore: NoteStore) => {
         tags: string | undefined,
         is_review: string | undefined,
         fav_only: string | undefined,
+        query: string | undefined,
       ) => {
         return safe(async () => {
           const res = await noteStore.getNotes(
             tags ?? "",
             is_review === "true",
             fav_only === "true",
+            query,
           );
 
-          return ok(res.map(listView));
+          return ok(res.map((note) => listView(note, query)));
         });
       },
       get: async (id: string) => {
@@ -174,7 +177,12 @@ export const createCoreApi = (noteStore: NoteStore) => {
       method: "get",
       path: "/api/notes",
       handler: async ({ query }) =>
-        await api.notes.list(query.tags, query.is_review, query.fav_only),
+        await api.notes.list(
+          query.tags,
+          query.is_review,
+          query.fav_only,
+          query.query,
+        ),
     },
     {
       method: "get",
@@ -363,12 +371,12 @@ function error(status: number, message: string) {
 // VIEWS
 // ===============
 
-function listView(n: Note) {
+function listView(n: Note, query?: string) {
   return {
     id: n.id,
     level: n.level,
     sid: parseInt(n.id, 10),
-    snippet: n.body ? n.body.split("\n").slice(0, 3).join("\n") : "",
+    snippet: extractSnippetWithContext(n.body, query),
     tags: n.tags,
     updated_at_in_words: dayjs(n.updated_at).fromNow(),
     favorite: n.favorite,
@@ -377,7 +385,7 @@ function listView(n: Note) {
 
 function fullView(n: Note) {
   return {
-    ...listView(n),
+    ...listView(n), // fullView doesn't need query context
     body: n.body,
     updated_at: n.updated_at,
     last_reviewed_at: n.last_reviewed_at,

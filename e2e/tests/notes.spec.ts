@@ -138,6 +138,65 @@ test.describe("Notes", () => {
   });
 
   test("should filter by text", async ({ page: p }) => {
-    // todo
+    await p.goto("/app/notes");
+
+    // Create first note about JavaScript
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# JavaScript Promises\n\nLearn about async/await and promises in JavaScript\n\n#javascript",
+    );
+    await saveBtn(p).click();
+    await expect(noteItem(p, "JavaScript Promises")).toBeVisible();
+
+    // Create second note about Python
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# Python Decorators\n\nUnderstanding decorators in Python\n\n#python",
+    );
+    await saveBtn(p).click();
+    await expect(noteItem(p, "Python Decorators")).toBeVisible();
+
+    // Create third note about TypeScript
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# TypeScript Generics\n\nMastering generics in TypeScript\n\n#typescript",
+    );
+    await saveBtn(p).click();
+    await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
+
+    // All notes should be visible initially
+    await expect(noteItem(p, "JavaScript Promises")).toBeVisible();
+    await expect(noteItem(p, "Python Decorators")).toBeVisible();
+    await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
+
+    // Filter by "Python"
+    const searchInput = p.locator('input[type="search"]');
+    await searchInput.fill("Python");
+
+    // Wait for debounced search (500ms + buffer)
+    await p.waitForTimeout(600);
+
+    // Only Python note should be visible
+    await expect(noteItem(p, "Python Decorators")).toBeVisible();
+    await expect(noteItem(p, "JavaScript Promises")).not.toBeVisible();
+    await expect(noteItem(p, "TypeScript Generics")).not.toBeVisible();
+
+    // Filter by "TypeScript"
+    await searchInput.fill("TypeScript");
+    await p.waitForTimeout(600);
+
+    // Only TypeScript note should be visible
+    await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
+    await expect(noteItem(p, "JavaScript Promises")).not.toBeVisible();
+    await expect(noteItem(p, "Python Decorators")).not.toBeVisible();
+
+    // Clear filter
+    await searchInput.fill("");
+    await p.waitForTimeout(600);
+
+    // All notes should be visible again
+    await expect(noteItem(p, "JavaScript Promises")).toBeVisible();
+    await expect(noteItem(p, "Python Decorators")).toBeVisible();
+    await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
   });
 });

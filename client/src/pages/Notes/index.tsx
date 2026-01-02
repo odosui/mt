@@ -213,7 +213,11 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
               <div className="snippet">
                 <div
                   className="snippet-body"
-                  dangerouslySetInnerHTML={{ __html: title(note.snippet) }}
+                  dangerouslySetInnerHTML={{
+                    __html: note.snippet.includes('<mark>')
+                      ? note.snippet
+                      : title(note.snippet),
+                  }}
                 ></div>
               </div>
             </div>

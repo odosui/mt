@@ -24,7 +24,12 @@ export type Note = {
 
 export interface NoteStore {
   noteCounts(): Promise<{ total_notes: number }>;
-  getNotes(tags: string, isReview: boolean, favOnly: boolean): Promise<Note[]>;
+  getNotes(
+    tags: string,
+    isReview: boolean,
+    favOnly: boolean,
+    query?: string,
+  ): Promise<Note[]>;
   getNote(id: string): Promise<Note | null>;
   createNote(body: string): Promise<Note>;
   updateNote(
