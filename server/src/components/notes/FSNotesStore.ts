@@ -107,6 +107,13 @@ export async function createFSNotesStore(
       n.updated_at = dayjs().toISOString();
     }
 
+    // Delete old file before writing (filename may change if title changed)
+    const files = await fs.readdir(notesDir);
+    const oldFile = files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
+    if (oldFile) {
+      await fs.unlink(path.join(notesDir, oldFile));
+    }
+
     await writeToDisk(notesDir, n);
     notes[id] = n;
     return n;
