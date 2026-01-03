@@ -29,7 +29,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     env: {
       MT_HOME: `/tmp/mt-e2e-test-${randomUUID()}`,
-      PORT: "3310",
+      MT_PORT: "3310",
       NODE_ENV: "production",
     },
   },
