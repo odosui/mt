@@ -14,7 +14,14 @@ type Props = {
 
 const DEFAULT_TEXT = '# New note'
 
-const Editor: React.FC<Props> = ({ initialText, onChange, onSave, onCancel, hasChanges }) => {
+const Editor: React.FC<Props> = ({
+  initialText,
+  onChange,
+  onSave,
+  onCancel,
+  hasChanges,
+}) => {
+  console.log('initialText', initialText)
   const [value, setValue] = useState(initialText)
   const [selectionStart, setSelectionStart] = useState(0)
   const [selectionEnd, setSelectionEnd] = useState(0)
@@ -153,7 +160,11 @@ const Editor: React.FC<Props> = ({ initialText, onChange, onSave, onCancel, hasC
       if (event.key === 'Escape') {
         event.preventDefault()
         if (hasChanges) {
-          if (confirm('You have unsaved changes. Are you sure you want to discard them?')) {
+          if (
+            confirm(
+              'You have unsaved changes. Are you sure you want to discard them?',
+            )
+          ) {
             onCancel()
           }
         } else {

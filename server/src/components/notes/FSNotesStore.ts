@@ -223,7 +223,10 @@ async function readNotes(notesDir: string) {
 }
 
 function readNote(id: string, content: string): Note {
-  const [, metadata, body] = content.split("---");
+  // Split only on first two --- delimiters to handle --- in note body
+  const parts = content.split("---");
+  const metadata = parts[1] || "";
+  const body = parts.slice(2).join("---");
   const mt: Record<string, string> = {};
   const flashcards: Flashcard[] = [];
 
