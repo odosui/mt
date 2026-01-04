@@ -17,10 +17,18 @@ export async function createFSNotesStore(
   const mtHome = mtHomeArg || getDefaultMTHome();
   const notesDir = path.join(mtHome, "notes");
 
-  const notes: Record<string, Note> = await readNotes(notesDir);
+  async function readn() {
+    const notes: Record<string, Note> = await readNotes(notesDir);
+    return notes;
+  }
 
   async function noteCounts() {
-    return { total_notes: Object.keys(notes).length };
+    await fs.mkdir(notesDir, { recursive: true });
+    const files = await fs.readdir(notesDir);
+    const mdFiles = files.filter(
+      (f) => f.endsWith(".md") && extractIdFromFilename(f),
+    );
+    return { total_notes: mdFiles.length };
   }
 
   async function getNotes(
@@ -29,6 +37,8 @@ export async function createFSNotesStore(
     favOnly: boolean,
     query?: string,
   ) {
+    const notes = await readn();
+
     let res = Object.values(notes);
 
     // filter by text query
@@ -60,12 +70,28 @@ export async function createFSNotesStore(
   }
 
   async function getNote(id: string) {
-    return notes[id] ?? null;
+    const files = await fs.readdir(notesDir);
+    const noteFile = findNoteFile(files, id);
+    if (!noteFile) {
+      return null;
+    }
+    const filePath = path.join(notesDir, noteFile);
+    const content = await fs.readFile(filePath, "utf-8");
+    return readNote(id, content);
   }
 
   async function createNote(body: string) {
-    const id = nextId(notes);
-    const note: Note = {
+    const files = await fs.readdir(notesDir);
+
+    // figuring out the next id
+    const ids = files
+      .map(extractIdFromFilename)
+      .filter(Boolean)
+      .map((id) => parseInt(id!, 10));
+    const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+    const id = (maxId + 1).toString();
+
+    const n: Note = {
       id,
       body,
       tags: extractTags(body),
@@ -77,11 +103,9 @@ export async function createFSNotesStore(
       favorite: false,
     };
 
-    await writeToDisk(notesDir, note);
+    await writeToDisk(notesDir, n);
 
-    notes[id] = note;
-
-    return note;
+    return n;
   }
 
   async function updateNote(
@@ -90,10 +114,17 @@ export async function createFSNotesStore(
     skipUpdatedAt = false,
   ) {
     delete data.id; // cannot update id
-    const existingNote = notes[id];
-    if (!existingNote) {
+
+    // Find existing note file
+    const files = await fs.readdir(notesDir);
+    const oldFile = findNoteFile(files, id);
+    if (!oldFile) {
       throw new Error(`Note with id ${id} not found`);
     }
+
+    const filePath = path.join(notesDir, oldFile);
+    const content = await fs.readFile(filePath, "utf-8");
+    const existingNote = readNote(id, content);
 
     const body = data.body ?? existingNote.body;
     const n: Note = {
@@ -108,31 +139,20 @@ export async function createFSNotesStore(
     }
 
     // Delete old file before writing (filename may change if title changed)
-    const files = await fs.readdir(notesDir);
-    const oldFile = files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
-    if (oldFile) {
-      await fs.unlink(path.join(notesDir, oldFile));
-    }
+    await fs.unlink(filePath);
 
     await writeToDisk(notesDir, n);
-    notes[id] = n;
     return n;
   }
 
   async function deleteNote(id: string) {
-    const existingNote = notes[id];
-    if (!existingNote) {
+    const files = await fs.readdir(notesDir);
+    const noteFile = findNoteFile(files, id);
+    if (!noteFile) {
       throw new Error(`Note with id ${id} not found`);
     }
 
-    // Find and delete the file (filename includes title which may have changed)
-    const files = await fs.readdir(notesDir);
-    const noteFile = files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
-    if (noteFile) {
-      await fs.unlink(path.join(notesDir, noteFile));
-    }
-
-    delete notes[id];
+    await fs.unlink(path.join(notesDir, noteFile));
   }
 
   return {
@@ -184,19 +204,6 @@ async function writeToDisk(notesDir: string, note: Note) {
   await fs.writeFile(filePath, content, "utf-8");
 }
 
-function nextId(notes: Record<string, Note>) {
-  const maxId = Object.keys(notes).reduce((acc, id) => {
-    const num = parseInt(id, 10);
-    if (num > acc) {
-      return num;
-    }
-
-    return acc;
-  }, 0);
-
-  return (maxId + 1).toString();
-}
-
 async function readNotes(notesDir: string) {
   const notes: Record<string, Note> = {};
 
@@ -204,14 +211,10 @@ async function readNotes(notesDir: string) {
   const files = await fs.readdir(notesDir);
   const mdFiles = files.filter((f) => f.endsWith(".md"));
   for (const file of mdFiles) {
-    const m = file.match(/^\d+/);
-    if (!m) {
+    const id = extractIdFromFilename(file);
+    if (!id) {
       console.warn(`Skipping file with invalid name: ${file}`);
       continue;
-    }
-    const id = m[0];
-    if (!id) {
-      throw new Error("Invalid note id");
     }
 
     const filePath = path.join(notesDir, file);
@@ -289,4 +292,12 @@ function extractTags(body: string): string[] {
 
 function compareByModifiedDateDesc(a: Note, b: Note) {
   return b.updated_at.localeCompare(a.updated_at);
+}
+
+function findNoteFile(files: string[], id: string): string | undefined {
+  return files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
+}
+
+function extractIdFromFilename(filename: string): string | undefined {
+  return filename.match(/^(\d+)/)?.[1];
 }

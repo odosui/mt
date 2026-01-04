@@ -22,7 +22,6 @@ export function snakeCased(str: string): string {
 export function noteFilename(sid: string, title: string | null): string {
   const titlePart = title ? snakeCased(title) : null;
   const name = [sid, titlePart].filter(Boolean).join("_");
-
   return `${name}.md`;
 }
 
