@@ -13,7 +13,7 @@ const createReviewService = (noteStore: NoteStore) => {
         level: (note.level || 0) + 1,
         last_reviewed_at: dayjs().format("YYYY-MM-DD"),
       },
-      false,
+      true,
     );
     return n;
   }
