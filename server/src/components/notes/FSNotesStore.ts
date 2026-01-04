@@ -18,7 +18,7 @@ export async function createFSNotesStore(
   const notesDir = path.join(mtHome, "notes");
 
   async function readn() {
-    const notes: Record<string, Note> = await readNotes(notesDir);
+    const notes = await readNotes(notesDir);
     return notes;
   }
 

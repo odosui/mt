@@ -170,7 +170,7 @@ test.describe("Notes", () => {
     await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
 
     // Filter by "Python"
-    const searchInput = p.locator('input[type="search"]');
+    const searchInput = p.getByRole("searchbox", { name: "Search notes" });
     await searchInput.fill("Python");
 
     // Wait for debounced search (500ms + buffer)
