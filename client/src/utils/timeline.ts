@@ -37,6 +37,7 @@ export function extractYears(items: TimelineItem[]): string[] {
 // - today's events
 // - tomorrow's events
 // - this week's events
+// - next week's events
 // - this month's events
 // - next month's events
 // - second next month's events
@@ -52,6 +53,7 @@ export function groupTimeline(
   const todaysEvents: TimelineItem[] = []
   const tomorrowsEvents: TimelineItem[] = []
   const thisWeeksEvents: TimelineItem[] = []
+  const nextWeeksEvents: TimelineItem[] = []
   const thisMonthsEvents: TimelineItem[] = []
   const nextMonthsEvents: TimelineItem[] = []
   const secondNextMonthsEvents: TimelineItem[] = []
@@ -94,16 +96,31 @@ export function groupTimeline(
         new Date(
           today.getFullYear(),
           today.getMonth(),
-          today.getDate() - today.getDay(),
+          today.getDate() - ((today.getDay() + 6) % 7),
         ) &&
       itemDate <
         new Date(
           today.getFullYear(),
           today.getMonth(),
-          today.getDate() - today.getDay() + 7,
+          today.getDate() - ((today.getDay() + 6) % 7) + 7,
         )
     ) {
       thisWeeksEvents.push(item)
+    } else if (
+      itemDate >=
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - ((today.getDay() + 6) % 7) + 7,
+        ) &&
+      itemDate <
+        new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - ((today.getDay() + 6) % 7) + 14,
+        )
+    ) {
+      nextWeeksEvents.push(item)
     } else if (
       itemDate >= new Date(today.getFullYear(), today.getMonth(), 1) &&
       itemDate < new Date(today.getFullYear(), today.getMonth() + 1, 1)
@@ -144,6 +161,7 @@ export function groupTimeline(
     todaysEvents,
     tomorrowsEvents,
     thisWeeksEvents,
+    nextWeeksEvents,
     thisMonthsEvents,
     nextMonthsEvents,
     secondNextMonthsEvents,

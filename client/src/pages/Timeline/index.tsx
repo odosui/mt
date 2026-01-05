@@ -37,6 +37,7 @@ const Timeline = () => {
     todaysEvents,
     tomorrowsEvents,
     thisWeeksEvents,
+    nextWeeksEvents,
     thisMonthsEvents,
     nextMonthsEvents,
     secondNextMonthsEvents,
@@ -91,6 +92,10 @@ const Timeline = () => {
 
           {thisWeeksEvents && thisWeeksEvents.length > 0 && (
             <TimelineGroup events={thisWeeksEvents} title="This Week" />
+          )}
+
+          {nextWeeksEvents && nextWeeksEvents.length > 0 && (
+            <TimelineGroup events={nextWeeksEvents} title="Next Week" />
           )}
 
           {thisMonthsEvents && thisMonthsEvents.length > 0 && (
