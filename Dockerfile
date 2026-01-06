@@ -21,6 +21,7 @@ RUN npm run build
 
 # Stage 3: Production image
 FROM node:20-alpine
+RUN apk add --no-cache git
 WORKDIR /app
 
 # Copy server dependencies and built code

@@ -34,7 +34,12 @@ const createSyncService = (mtHome: string) => {
       return { changed_files: lines.length, branch, ahead, behind };
     } catch (e: any) {
       // Not a git repo or git not installed
-      if (e.code === 128 || e.message?.includes("not a git repository")) {
+      if (
+        e.code === 128 ||
+        e.message?.includes("not a git repository") ||
+        e.message?.includes("git: not found") ||
+        e.message?.includes("'git' is not recognized")
+      ) {
         return NO_GIT_RESPONSE;
       }
       throw e;
