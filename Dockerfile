@@ -33,11 +33,11 @@ COPY --from=client-builder /app/client/dist ./client/dist
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV MT_PORT=3042
 ENV MT_HOME=/data/mt
 
 # Expose the port
-EXPOSE 3000
+EXPOSE 3042
 
 # Create mt directory
 RUN mkdir -p /data/mt/notes
