@@ -1,5 +1,6 @@
 import bodyParser from "body-parser";
 import express, { Express } from "express";
+import os from "os";
 import path from "path";
 import { createCoreApi } from "./api/CoreApi";
 import { createFSNotesStore } from "./components/notes/FSNotesStore";
@@ -7,7 +8,12 @@ import { createFSNotesStore } from "./components/notes/FSNotesStore";
 const NODE_ENV = process.env.NODE_ENV || "development";
 const PORT = process.env.MT_PORT || 3000;
 
-export async function startServer(mtHome: string) {
+function getDefaultMTHome() {
+  return path.join(os.homedir(), "mt");
+}
+
+export async function startServer(mtHomeArg: string) {
+  const mtHome = mtHomeArg || getDefaultMTHome();
   const app = express();
 
   app.use(bodyParser.json());
@@ -19,7 +25,7 @@ export async function startServer(mtHome: string) {
 
   // init out app
   const noteStore = await createFSNotesStore(mtHome);
-  const coreApi = createCoreApi(noteStore);
+  const coreApi = createCoreApi(noteStore, mtHome);
 
   // mapping apis
   for (const m of coreApi.routes) {

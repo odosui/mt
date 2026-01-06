@@ -13,6 +13,7 @@ import { useContext, useState } from 'react'
 import { NavLink, useLocation } from 'slim-react-router'
 import { StateContext } from '../state/StateProvider'
 import ThemeToggle from './ThemeToggle'
+import GitStatus from './GitStatus'
 
 const Sidebar: React.FC = () => {
   const [tagTerm, setTagTerm] = useState('')
@@ -156,6 +157,8 @@ const Sidebar: React.FC = () => {
           ))}
         </div>
       </div>
+      <GitStatus />
+
       <div className="menu-item settings-link">
         <NavLink
           to={`/app/settings`}

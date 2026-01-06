@@ -6,6 +6,7 @@ import {
   ITag,
   Question,
   ReviewLog,
+  SyncStatus,
   TimelineItem,
 } from './types'
 
@@ -100,6 +101,9 @@ export default {
       }
       return result
     },
+  },
+  sync: {
+    status: (): Promise<SyncStatus> => api('get', '/sync/status'),
   },
   questions: {
     list: (noteId?: number): Promise<Question[]> => {

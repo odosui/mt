@@ -9,6 +9,7 @@ import {
   noSkipReviewByTag,
   requresReview,
 } from "../components/reviews/utils";
+import createSyncService from "../components/sync/SyncService";
 import { createTagsService } from "../components/tags/TagsService";
 import createTimelineService from "../components/timeline/TimelineService";
 dayjs.extend(relativeTime);
@@ -26,11 +27,12 @@ export type RouteConfig = {
 
 // the Api class is the server-agnostic entrypoint
 // for the API functionality.
-export const createCoreApi = (noteStore: NoteStore) => {
+export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
   const tagsService = createTagsService(noteStore);
   const reviewService = createReviewService(noteStore);
   const questionsService = createQuestionsService(noteStore);
   const timelineService = createTimelineService(noteStore);
+  const syncService = createSyncService(mtHome);
 
   const api = {
     health: () => {
@@ -145,6 +147,14 @@ export const createCoreApi = (noteStore: NoteStore) => {
         });
       },
     },
+    sync: {
+      status: async () => {
+        return safe(async () => {
+          const status = await syncService.getStatus();
+          return ok(status);
+        });
+      },
+    },
   };
 
   const routes: RouteConfig[] = [
@@ -152,6 +162,11 @@ export const createCoreApi = (noteStore: NoteStore) => {
       method: "get",
       path: "/api/health",
       handler: async () => api.health(),
+    },
+    {
+      method: "get",
+      path: "/api/sync/status",
+      handler: async () => await api.sync.status(),
     },
     {
       method: "get",

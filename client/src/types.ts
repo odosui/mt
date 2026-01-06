@@ -77,3 +77,11 @@ export type TimelineItem = {
   content: string
   color: string | null
 }
+
+export type SyncStatus = {
+  changed_files: number
+  branch: string | null
+  ahead: number
+  behind: number
+  is_git_repo?: boolean
+}

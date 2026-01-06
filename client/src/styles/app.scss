@@ -14,6 +14,7 @@
 @import './app/flashcards-page';
 @import './components/tag-autocomplete';
 @import './components/theme-toggle';
+@import './app/git';
 
 .desktop-app {
   display: flex;
@@ -99,6 +100,10 @@
 
   // note preview
   --color-note-preview-error-bg: #fff0f0;
+
+  // git
+  --color-git-changes: #f0883e;
+  --color-git-clean: #2ea043;
 }
 
 [data-theme='dark'] {
@@ -175,6 +180,10 @@
 
   // note preview
   --color-note-preview-error-bg: #2d1616;
+
+  // git
+  --color-git-changes: #f0883e;
+  --color-git-clean: #3fb950;
 }
 
 * {

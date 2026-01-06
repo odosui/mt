@@ -1,0 +1,50 @@
+.git-status {
+  display: flex;
+  align-items: center;
+  gap: $unit1;
+  padding: $unit0 $unit2;
+  margin: 0 $unit3 $unit2;
+  border-radius: $unit1;
+  background-color: rgba(46, 160, 67, 0.15);
+  color: var(--color-git-clean);
+
+  svg {
+    fill: var(--color-git-clean);
+  }
+
+  .git-status-branch {
+    font-size: $text1;
+    font-weight: 500;
+    color: var(--color-git-clean);
+  }
+
+  .git-status-check {
+    margin-left: auto;
+    fill: var(--color-git-clean);
+  }
+
+  .git-status-remote {
+    font-size: $text0;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .git-status-count {
+    margin-left: auto;
+    background-color: var(--color-git-changes);
+    color: #fff;
+    border-radius: $unit2;
+    padding: 1px $unit1;
+    font-size: $text0;
+    font-weight: 500;
+  }
+
+  &.has-changes {
+    background-color: var(--color-menu-bg-hover);
+    color: var(--color-git-changes);
+
+    svg {
+      fill: var(--color-git-changes);
+    }
+  }
+}
