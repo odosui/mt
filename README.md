@@ -34,7 +34,7 @@ npm run build
 node server/dist/index.js
 ```
 
-Now open your browser and go to `http://localhost:3000`. Your notes are going be stored in `~/mt` (or `C:\Users\YourName\mt` on Windows) by default.
+Now open your browser and go to `http://localhost:8042`. Your notes are going be stored in `~/mt` (or `C:\Users\YourName\mt` on Windows) by default.
 
 ## Using start up script (MacOS/Linux only)
 
