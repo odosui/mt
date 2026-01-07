@@ -38,6 +38,10 @@ export function delBtn(p: Page) {
   return p.locator('.dropdown-menu .menu-item:has-text("Delete note")');
 }
 
+export function favBtn(p: Page) {
+  return p.locator('.menu-action[title*="favorites"]');
+}
+
 // Helpers
 
 export async function expectTag(page: Page, tag: string, count: number) {

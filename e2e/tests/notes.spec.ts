@@ -10,6 +10,7 @@ import {
   moreMenuBtn,
   delBtn,
   tagItem,
+  favBtn,
 } from "./helpers";
 
 test.describe("Notes", () => {
@@ -198,5 +199,32 @@ test.describe("Notes", () => {
     await expect(noteItem(p, "JavaScript Promises")).toBeVisible();
     await expect(noteItem(p, "Python Decorators")).toBeVisible();
     await expect(noteItem(p, "TypeScript Generics")).toBeVisible();
+  });
+
+  test("should add and remove a note from favorites", async ({ page: p }) => {
+    await p.goto("/app/notes");
+
+    // Create a note
+    await newNoteBtn(p).click();
+    await noteTA(p).fill("# Favorite Test Note\n\nThis note will be favorited");
+    await saveBtn(p).click();
+    await expect(noteItem(p, "Favorite Test Note")).toBeVisible();
+
+    // Add to favorites
+    await expect(favBtn(p)).toHaveAttribute("title", "Add to favorites");
+    await favBtn(p).click();
+    await expect(favBtn(p)).toHaveAttribute("title", "Remove from favorites");
+
+    // Verify note appears in favorites page
+    await p.goto("/app/fav");
+    await expect(noteItem(p, "Favorite Test Note")).toBeVisible();
+
+    // Remove from favorites
+    await favBtn(p).click();
+    await expect(favBtn(p)).toHaveAttribute("title", "Add to favorites");
+
+    // Verify note is no longer in favorites page
+    await p.goto("/app/fav");
+    await expect(noteItem(p, "Favorite Test Note")).not.toBeVisible();
   });
 });

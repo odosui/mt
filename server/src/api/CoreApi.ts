@@ -116,6 +116,26 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
           return ok(items);
         });
       },
+      fav: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          await noteStore.updateNote(id, { favorite: true }, true);
+          return ok({ success: true });
+        });
+      },
+      unfav: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          await noteStore.updateNote(id, { favorite: false }, true);
+          return ok({ success: true });
+        });
+      },
     },
     reviews: {
       counts: async () => {
@@ -221,6 +241,18 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
       path: "/api/notes/:id",
       handler: async ({ pathParams }) =>
         await api.notes.delete(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/fav",
+      handler: async ({ pathParams }) =>
+        await api.notes.fav(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/unfav",
+      handler: async ({ pathParams }) =>
+        await api.notes.unfav(pathParams.id ?? ""),
     },
     {
       method: "get",

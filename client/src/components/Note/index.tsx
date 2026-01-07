@@ -337,6 +337,11 @@ const Note: React.FC<{
                     className={`menu-action ${
                       currentNote.favorite ? 'active' : ''
                     }`}
+                    title={
+                      currentNote.favorite
+                        ? 'Remove from favorites'
+                        : 'Add to favorites'
+                    }
                   >
                     <StarIcon />
                   </a>
