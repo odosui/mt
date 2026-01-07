@@ -25,7 +25,7 @@ const MobildBottomNavigation: React.FC = () => {
       />
       <NavItem
         path="/app/flashcards"
-        title="Flashcards"
+        title="Cards"
         icon={<NoteIcon />}
         counter={questionsCount || 0}
       />
