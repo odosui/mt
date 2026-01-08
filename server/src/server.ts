@@ -1,5 +1,6 @@
 import bodyParser from "body-parser";
 import express, { Express } from "express";
+import multer from "multer";
 import os from "os";
 import path from "path";
 import { createCoreApi } from "./api/CoreApi";
@@ -23,9 +24,37 @@ export async function startServer(mtHomeArg: string) {
     applyDevCors(app);
   }
 
+  // serve media files from {mtHome}/media
+  const mediaPath = path.join(mtHome, "media");
+  app.use("/media", express.static(mediaPath));
+
   // init out app
   const noteStore = await createFSNotesStore(mtHome);
   const coreApi = createCoreApi(noteStore, mtHome);
+
+  // image upload endpoint (requires multipart handling)
+  const upload = multer({ storage: multer.memoryStorage() });
+  app.post(
+    "/api/note_images",
+    upload.single("image"),
+    async (req: any, res: any) => {
+      const noteId = req.body.note_sid;
+      const file = req.file;
+
+      if (!noteId || !file) {
+        return res
+          .status(400)
+          .json({ error: "Missing note_sid or image file" });
+      }
+
+      const { status, json } = await coreApi.images.upload(
+        noteId,
+        file.originalname,
+        file.buffer,
+      );
+      res.status(status).json(json);
+    },
+  );
 
   // mapping apis
   for (const m of coreApi.routes) {
@@ -71,6 +100,7 @@ function applyDevCors(app: Express) {
       "Access-Control-Allow-Methods",
       "GET, POST, PATCH, PUT, OPTIONS, DELETE",
     );
+    res.header("Access-Control-Allow-Credentials", "true");
     next();
   });
 }

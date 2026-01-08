@@ -64,7 +64,7 @@ export interface Question {
 }
 
 export type INoteImage = {
-  id: number
+  id: string
   name: string
   url: string
   created_at: string

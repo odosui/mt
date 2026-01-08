@@ -88,7 +88,7 @@ export default {
     list: (noteSid: number): Promise<INoteImage[]> => {
       return api('get', `/note_images?note_sid=${noteSid}`)
     },
-    delete: (id: number): Promise<{ success: boolean }> =>
+    delete: (id: string): Promise<{ success: boolean }> =>
       api('delete', `/note_images/${id}`),
     upload: async (noteSid: number, file: File) => {
       const result = await multipart<INoteImage>('/note_images', {
@@ -224,7 +224,9 @@ async function multipart<T>(
     params.body = toFormData(data || {})
   }
 
-  const response = await fetch(`/api${url}`, params)
+  // @ts-ignore
+  const base = window.API_SERVER_URL || ''
+  const response = await fetch(`${base}/api${url}`, params)
 
   if (response.status === 400) {
     const e = await response.json()

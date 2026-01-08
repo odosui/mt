@@ -16,4 +16,12 @@ export default defineConfig({
   define: {
     API_SERVER_URL: JSON.stringify(apiServerUrl),
   },
+  server: {
+    proxy: {
+      "/media": {
+        target: config.apiServerUrl,
+        changeOrigin: true,
+      },
+    },
+  },
 });

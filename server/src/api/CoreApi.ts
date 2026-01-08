@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { createFSMediaStore } from "../components/media/FSMediaStore";
+import { ImageMetas } from "../components/media/MediaStore";
 import { Note, NoteStore } from "../components/notes/NotesStore";
 import { extractSnippetWithContext } from "../components/notes/utils";
 import createQuestionsService from "../components/questions/QuestionService";
@@ -33,6 +35,7 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
   const questionsService = createQuestionsService(noteStore);
   const timelineService = createTimelineService(noteStore);
   const syncService = createSyncService(mtHome);
+  const mediaStore = createFSMediaStore(mtHome);
 
   const api = {
     health: () => {
@@ -81,13 +84,15 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
           if (!note) {
             return error(404, "Note not found");
           }
-          return ok(fullView(note));
+          const imageMetas = await mediaStore.getImagesForNote(id);
+          return ok(fullView(note, imageMetas));
         });
       },
       create: async (body: string) => {
         return safe(async () => {
           const note = await noteStore.createNote(body);
-          return ok(fullView(note));
+          const imageMetas = await mediaStore.getImagesForNote(note.id);
+          return ok(fullView(note, imageMetas));
         });
       },
       update: async (id: string, body: string) => {
@@ -97,7 +102,8 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
             return error(404, "Note not found");
           }
           const updated = await noteStore.updateNote(id, { body }, false);
-          return ok(fullView(updated));
+          const imageMetas = await mediaStore.getImagesForNote(id);
+          return ok(fullView(updated, imageMetas));
         });
       },
       delete: async (id: string) => {
@@ -154,7 +160,8 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
       done: async (id: string) => {
         return safe(async () => {
           const note = await reviewService.reviewNote(id);
-          return ok(fullView(note));
+          const imageMetas = await mediaStore.getImagesForNote(id);
+          return ok(fullView(note, imageMetas));
         });
       },
     },
@@ -172,6 +179,26 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
         return safe(async () => {
           const status = await syncService.getStatus();
           return ok(status);
+        });
+      },
+    },
+    images: {
+      list: async (noteId: string) => {
+        return safe(async () => {
+          const images = await mediaStore.listImages(noteId);
+          return ok(images);
+        });
+      },
+      upload: async (noteId: string, filename: string, data: Buffer) => {
+        return safe(async () => {
+          const image = await mediaStore.uploadImage(noteId, filename, data);
+          return ok(image);
+        });
+      },
+      delete: async (imageId: string) => {
+        return safe(async () => {
+          await mediaStore.deleteImage(imageId);
+          return ok({ success: true });
         });
       },
     },
@@ -257,7 +284,13 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
     {
       method: "get",
       path: "/api/note_images",
-      handler: async () => ok([]),
+      handler: async ({ query }) => await api.images.list(query.note_sid ?? ""),
+    },
+    {
+      method: "delete",
+      path: "/api/note_images/:id",
+      handler: async ({ pathParams }) =>
+        await api.images.delete(pathParams.id ?? ""),
     },
     {
       method: "post",
@@ -430,7 +463,7 @@ function listView(n: Note, query?: string) {
   };
 }
 
-function fullView(n: Note) {
+function fullView(n: Note, imageMetas: ImageMetas = {}) {
   return {
     ...listView(n), // fullView doesn't need query context
     body: n.body,
@@ -439,6 +472,7 @@ function fullView(n: Note) {
     created_at: n.created_at,
     needs_review: requresReview(n) && noSkipReviewByTag(n),
     upcoming_reviews_in_days: nextReviewPoints(n),
+    image_metas: imageMetas,
 
     // TODO: implement these
     published: false,
