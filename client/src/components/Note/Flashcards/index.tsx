@@ -34,9 +34,13 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
     loadData()
   }, [noteId])
 
-  const handleSubmit = async (question: string, answer: string) => {
-    const q = await api.questions.create(String(noteId), question, answer)
-    setQuestions([q, ...questions])
+  const handleSubmit = async (cards: { question: string; answer: string }[]) => {
+    const created = []
+    for (const card of cards) {
+      const q = await api.questions.create(String(noteId), card.question, card.answer)
+      created.push(q)
+    }
+    setQuestions([...created.reverse(), ...questions])
     reloadCounters()
   }
 
@@ -59,19 +63,13 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
     setInitialQuestion('')
   }
 
-  const handleAiCardSubmit = async (id: string) => {
-    const aiq = aiQs.find((s) => s.id === id)
-    if (!aiq) {
-      return
+  const handleAiCardSubmit = async (id: string, cards: { question: string; answer: string }[]) => {
+    const created = []
+    for (const card of cards) {
+      const q = await api.questions.create(String(noteId), card.question, card.answer)
+      created.push(q)
     }
-
-    const q = await api.questions.create(
-      String(noteId),
-      aiq.question,
-      aiq.answer,
-    )
-    setQuestions([q, ...questions])
-
+    setQuestions([...created.reverse(), ...questions])
     setAiQs(aiQs.filter((q) => q.id !== id))
     reloadCounters()
   }
@@ -166,7 +164,7 @@ const Flashcards: React.FC<{ noteId: number }> = ({ noteId }) => {
               {aiQs.map((q) => (
                 <FlashcardForm
                   key={q.id}
-                  onSubmit={() => handleAiCardSubmit(q.id)}
+                  onSubmit={(cards) => handleAiCardSubmit(q.id, cards)}
                   initialAnswer={q.answer}
                   initialQuestion={q.question}
                   onDelete={() => handleAiCardDelete(q.id)}

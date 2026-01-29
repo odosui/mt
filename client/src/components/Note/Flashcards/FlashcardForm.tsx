@@ -2,15 +2,17 @@ import { XIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import AutoresizableTextarea from '../../../ui/AutoresizableTextarea'
+import Button from '../../../ui/Button'
 
 const FlashcardForm: React.FC<{
   initialQuestion: string
   initialAnswer: string
-  onSubmit: (question: string, answer: string) => void
+  onSubmit: (cards: { question: string; answer: string }[]) => void
   onDelete?: () => void
 }> = ({ initialAnswer, initialQuestion, onSubmit, onDelete }) => {
   const [answer, setAnswer] = useState(initialAnswer)
   const [question, setQuestion] = useState(initialQuestion)
+  const [addReversed, setAddReversed] = useState(false)
 
   const qRef = React.useRef<HTMLTextAreaElement>(null)
   const aRef = React.useRef<HTMLTextAreaElement>(null)
@@ -27,7 +29,11 @@ const FlashcardForm: React.FC<{
 
     qRef.current?.focus()
 
-    onSubmit(question, answer)
+    const cards = [{ question, answer }]
+    if (addReversed) {
+      cards.push({ question: answer, answer: question })
+    }
+    onSubmit(cards)
   }
 
   useEffect(() => {
@@ -78,10 +84,18 @@ const FlashcardForm: React.FC<{
             required
           />
         </div>
+        <div className="form-row">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={addReversed}
+              onChange={(e) => setAddReversed(e.target.checked)}
+            />
+            Add Reversed
+          </label>
+        </div>
         <div className="form-row add-btn">
-          <button type="submit" className="btn">
-            Add card
-          </button>
+          <Button type="submit">Add card{addReversed ? 's' : ''}</Button>
         </div>
       </form>
     </div>
