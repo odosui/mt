@@ -11,7 +11,8 @@ export const createTagsService = (noteStore: NoteStore) => {
     const notes = await noteStore.getNotes("", false, false);
     return Object.values(notes)
       .reduce((acc, n) => {
-        n.tags.forEach((tag) => {
+        const uniqueTags = [...new Set(n.tags)];
+        uniqueTags.forEach((tag) => {
           const canTag = tag.trim().toLowerCase();
 
           const t = acc.find((t) => t.id === canTag);
