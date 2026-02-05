@@ -48,6 +48,8 @@ interface IState {
   toggleFlashcardsVisible: () => void
   imagesVisible: boolean
   toggleImagesVisible: () => void
+  quizzesVisible: boolean
+  toggleQuizzesVisible: () => void
   createNoteAndLinkFromCurrent: (title: string) => Promise<void>
   timelineCount: number | null
   pinNote: (sid: number) => Promise<void>
@@ -83,6 +85,8 @@ export const INITIAL_STATE: IState = {
   toggleFlashcardsVisible: () => {},
   imagesVisible: true,
   toggleImagesVisible: () => {},
+  quizzesVisible: false,
+  toggleQuizzesVisible: () => {},
   totalNoteCount: null,
   timelineCount: null,
   createNoteAndLinkFromCurrent: async () => {},
@@ -123,6 +127,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
 
   const toggleImagesVisible = useCallback(() => {
     setImagesVisible((s) => !s)
+  }, [])
+
+  const [quizzesVisible, setQuizzesVisible] = useState(false)
+
+  const toggleQuizzesVisible = useCallback(() => {
+    setQuizzesVisible((s) => !s)
   }, [])
 
   // App cache to store the full notes
@@ -516,6 +526,8 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     toggleFavCurrentNote,
     toggleFlashcardsVisible,
     toggleImagesVisible,
+    quizzesVisible,
+    toggleQuizzesVisible,
     totalNoteCount,
     timelineCount,
     createNoteAndLinkFromCurrent,

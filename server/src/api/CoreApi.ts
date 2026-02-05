@@ -5,6 +5,8 @@ import { ImageMetas } from "../components/media/MediaStore";
 import { Note, NoteStore } from "../components/notes/NotesStore";
 import { extractSnippetWithContext } from "../components/notes/utils";
 import createQuestionsService from "../components/questions/QuestionService";
+import { createFSQuizStore } from "../components/quizzes/QuizStore";
+import { generateQuiz } from "../components/quizzes/quizgen";
 import createReviewService from "../components/reviews/ReviewService";
 import {
   nextReviewPoints,
@@ -36,6 +38,7 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
   const timelineService = createTimelineService(noteStore);
   const syncService = createSyncService(mtHome);
   const mediaStore = createFSMediaStore(mtHome);
+  const quizStore = createFSQuizStore(mtHome);
 
   const api = {
     health: () => {
@@ -391,6 +394,76 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
             answer,
           );
           return ok(q);
+        });
+      },
+    },
+    {
+      method: "get",
+      path: "/api/quizzes",
+      handler: async ({ query }) => {
+        const noteId = query.note_id;
+        if (!noteId) {
+          return error(400, "Missing required field: note_id");
+        }
+        return safe(async () => {
+          const quizzes = await quizStore.listByNote(noteId);
+          return ok(quizzes);
+        });
+      },
+    },
+    {
+      method: "get",
+      path: "/api/quizzes/:noteId/:quizId",
+      handler: async ({ pathParams }) => {
+        const { noteId, quizId } = pathParams;
+        if (!noteId || !quizId) {
+          return error(400, "Missing required params: noteId, quizId");
+        }
+        return safe(async () => {
+          const quiz = await quizStore.getOne(noteId, parseInt(quizId, 10));
+          if (!quiz) {
+            return error(404, "Quiz not found");
+          }
+          return ok(quiz);
+        });
+      },
+    },
+    {
+      method: "post",
+      path: "/api/quizzes/generate",
+      handler: async ({ body }) => {
+        const text = body.text;
+        const numberOfQuestions = body.number_of_questions;
+        const title = body.title;
+        const noteId = body.note_id;
+        const extraInstructions = body.extra_instructions;
+
+        if (!text || !numberOfQuestions || !noteId) {
+          return error(
+            400,
+            "Missing required fields: text, number_of_questions, and note_id",
+          );
+        }
+
+        if (numberOfQuestions < 1 || numberOfQuestions > 100) {
+          return error(400, "number_of_questions must be between 1 and 100");
+        }
+
+        if (text.length > 32768) {
+          return error(400, "text must be at most 32768 characters");
+        }
+
+        return safe(async () => {
+          const [items, err] = await generateQuiz(
+            text,
+            numberOfQuestions,
+            extraInstructions || undefined,
+          );
+          if (err) {
+            return error(500, err);
+          }
+          const saved = await quizStore.save(noteId, title, items!);
+          return ok(saved);
         });
       },
     },

@@ -5,6 +5,7 @@ import {
   INoteSearch,
   ITag,
   Question,
+  Quiz,
   ReviewLog,
   SyncStatus,
   TimelineItem,
@@ -104,6 +105,26 @@ export default {
   },
   sync: {
     status: (): Promise<SyncStatus> => api('get', '/sync/status'),
+  },
+  quizzes: {
+    list: (noteId: number): Promise<Quiz[]> =>
+      api('get', '/quizzes', { note_id: `${noteId}` }),
+    get: (noteId: string, quizId: string): Promise<Quiz> =>
+      api('get', `/quizzes/${noteId}/${quizId}`),
+    generate: (
+      noteId: string,
+      title: string,
+      text: string,
+      numberOfQuestions: number,
+      extraInstructions?: string,
+    ): Promise<Quiz> =>
+      api('post', '/quizzes/generate', {
+        note_id: noteId,
+        title,
+        text,
+        number_of_questions: `${numberOfQuestions}`,
+        extra_instructions: extraInstructions || '',
+      }),
   },
   questions: {
     list: (noteId?: number): Promise<Question[]> => {

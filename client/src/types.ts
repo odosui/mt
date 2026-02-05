@@ -63,6 +63,20 @@ export interface Question {
   note_id: string
 }
 
+export type QuizItem = {
+  question: string
+  answers: [string, string, string, string]
+  correctIndex: number
+}
+
+export type Quiz = {
+  id: number
+  noteId: string
+  title: string
+  items: QuizItem[]
+  created_at: string
+}
+
 export type INoteImage = {
   id: string
   name: string

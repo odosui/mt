@@ -1,4 +1,5 @@
 import {
+  BeakerIcon,
   CheckIcon,
   CopyIcon,
   DownloadIcon,
@@ -26,6 +27,7 @@ import ChangelogsModal from './ChangelogsModal'
 import Flashcards from './Flashcards'
 import HelpModal from './HelpModal'
 import Images from './Images'
+import Quizzes from './Quizzes'
 import PublishSettingsModal from './PublishSettingsModal'
 import ReviewMenu from './ReviewMenu'
 import { SelectionMenu } from './SelectionMenu'
@@ -65,8 +67,10 @@ const Note: React.FC<{
     toggleFavCurrentNote,
     toggleFlashcardsVisible,
     toggleImagesVisible,
+    toggleQuizzesVisible,
     flashcardsVisible,
     imagesVisible,
+    quizzesVisible,
     createNoteAndLinkFromCurrent,
     saveCurrentNote,
   } = useContext(StateContext)
@@ -255,6 +259,15 @@ const Note: React.FC<{
             </div>
           )}
 
+          {!quizzesVisible && !focusMode && (
+            <div
+              className="side-toggler quizzes-toggler"
+              onClick={toggleQuizzesVisible}
+            >
+              <BeakerIcon /> Quizzes
+            </div>
+          )}
+
           <div className="note-panel">
             <div className="note-panel-inner">
               <DropdownMenu
@@ -400,6 +413,7 @@ const Note: React.FC<{
         </div>
         {!focusMode && <Flashcards noteId={currentNote.id} />}
         {!focusMode && <Images noteSid={currentNote.sid} />}
+        {!focusMode && <Quizzes noteId={currentNote.id} />}
       </div>
     </div>
   )

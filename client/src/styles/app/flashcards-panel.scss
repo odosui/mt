@@ -159,3 +159,184 @@
     margin-top: $unit2;
   }
 }
+
+.quizzes-panel {
+  .quiz-menu-form {
+    background-color: var(--color-flashcards-panel-form-bg);
+    width: 100%;
+    border-radius: $unit0;
+    padding: $unit2;
+
+    .form-row {
+      margin-bottom: $unit2;
+    }
+
+    textarea,
+    input[type='text'],
+    input[type='number'] {
+      border: 1px solid var(--color-flashcards-panel-border);
+      width: 100%;
+      background: transparent;
+      padding: $unit1;
+      resize: vertical;
+      font-size: $text2;
+      border-radius: $unit0;
+      color: var(--color-flashcards-panel-text);
+    }
+
+    input[type='number'] {
+      width: $unit9;
+    }
+
+    label {
+      font-size: $text0;
+      text-transform: uppercase;
+      color: var(--color-flashcards-panel-text-secondary);
+      margin-bottom: $unit0;
+      display: block;
+    }
+
+    .quiz-error {
+      color: #e74c3c;
+      font-size: $text1;
+      margin-bottom: $unit2;
+    }
+
+    .form-row.add-btn {
+      margin-top: $unit3;
+      display: flex;
+      justify-content: center;
+
+      button {
+        background: transparent;
+        color: var(--color-flashcards-panel-accent);
+        justify-content: center;
+        transition: background-color 0.2s ease-out;
+        &:hover {
+          background: var(--color-flashcards-panel-bg-hover);
+        }
+      }
+    }
+  }
+
+  .quiz-menu-empty {
+    padding: $unit5 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    p {
+      color: var(--color-flashcards-panel-text-secondary);
+    }
+  }
+
+  .quiz-list-item {
+    padding: $unit2;
+    margin-bottom: $unit1;
+    border-radius: $unit0;
+    background: var(--color-flashcards-panel-form-bg);
+    border: 1px solid var(--color-flashcards-panel-border);
+    cursor: pointer;
+    transition: background-color 0.15s ease-out;
+
+    &:hover {
+      background: var(--color-flashcards-panel-bg-hover);
+    }
+
+    .quiz-list-item-title {
+      font-size: $text2;
+      color: var(--color-flashcards-panel-text);
+      font-weight: 500;
+    }
+
+    .quiz-list-item-meta {
+      font-size: $text0;
+      color: var(--color-flashcards-panel-text-secondary);
+      margin-top: $unit0;
+    }
+
+    .quiz-list-item-take {
+      display: inline-block;
+      margin-top: $unit1;
+      font-size: $text1;
+      color: var(--color-flashcards-panel-accent);
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .quiz-result {
+    .quiz-result-header {
+      margin-bottom: $unit3;
+
+      h4 {
+        color: var(--color-flashcards-panel-text);
+        font-size: $text3;
+        margin-bottom: $unit1;
+      }
+
+      .quiz-score {
+        font-size: $text2;
+        color: var(--color-flashcards-panel-accent);
+        font-weight: bold;
+      }
+    }
+
+    .quiz-question {
+      margin-bottom: $unit3;
+
+      .quiz-question-text {
+        font-size: $text2;
+        color: var(--color-flashcards-panel-text);
+        margin-bottom: $unit1;
+        font-weight: 500;
+      }
+
+      .quiz-answer {
+        padding: $unit1 $unit2;
+        margin-bottom: $unit0;
+        border-radius: $unit0;
+        font-size: $text2;
+        color: var(--color-flashcards-panel-text);
+        background: var(--color-flashcards-panel-form-bg);
+        border: 1px solid var(--color-flashcards-panel-border);
+        cursor: pointer;
+        transition: background-color 0.15s ease-out;
+
+        &:hover {
+          background: var(--color-flashcards-panel-bg-hover);
+        }
+
+        &.correct {
+          background: #27ae6033;
+          border-color: #27ae60;
+        }
+
+        &.wrong {
+          background: #e74c3c33;
+          border-color: #e74c3c;
+        }
+      }
+    }
+
+    .form-row.add-btn {
+      margin-top: $unit3;
+      display: flex;
+      justify-content: center;
+
+      button {
+        background: transparent;
+        color: var(--color-flashcards-panel-accent);
+        justify-content: center;
+        transition: background-color 0.2s ease-out;
+        &:hover {
+          background: var(--color-flashcards-panel-bg-hover);
+        }
+      }
+    }
+  }
+}

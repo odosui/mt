@@ -3,6 +3,7 @@ import { Route, Routes } from 'slim-react-router'
 import Sidebar from './components/Sidebar'
 import FlashCards from './pages/FlashCards'
 import Notes from './pages/Notes'
+import QuizPage from './pages/QuizPage'
 import Settings from './pages/Settings'
 import Timeline from './pages/Timeline'
 
@@ -20,6 +21,7 @@ const DesktopApp: React.FC = () => {
         <Route path="/app/settings" element={<Settings />} />
         <Route path="/app/quiz" element={<FlashCards />} />
         <Route path="/app/timeline" element={<Timeline />} />
+        <Route path="/quiz/:id" element={<QuizPage />} />
       </Routes>
     </div>
   )
