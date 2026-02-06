@@ -125,6 +125,8 @@ export default {
         number_of_questions: `${numberOfQuestions}`,
         extra_instructions: extraInstructions || '',
       }),
+    saveResult: (noteId: string, quizId: number, score: number): Promise<Quiz> =>
+      api('post', `/quizzes/${noteId}/${quizId}/result`, { score }),
   },
   questions: {
     list: (noteId?: number): Promise<Question[]> => {
@@ -178,7 +180,7 @@ type FetchParams = Parameters<typeof fetch>[1]
 async function api(
   method: string,
   url: string,
-  data?: { [k: string]: string },
+  data?: { [k: string]: string | number },
 ) {
   const attrs: FetchParams = {
     method,
@@ -210,7 +212,7 @@ async function api(
   return fetch(`${base}/api${url}`, attrs).then((x) => x.json())
 }
 
-function toQuery(data: { [k: string]: string }) {
+function toQuery(data: { [k: string]: string | number }) {
   const esc = window.encodeURIComponent
   return (
     Object.keys(data)

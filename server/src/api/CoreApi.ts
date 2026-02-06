@@ -449,8 +449,8 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
           return error(400, "number_of_questions must be between 1 and 100");
         }
 
-        if (text.length > 32768) {
-          return error(400, "text must be at most 32768 characters");
+        if (text.length > 65536) {
+          return error(400, "text must be at most 65536 characters");
         }
 
         return safe(async () => {
@@ -481,6 +481,34 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
         return safe(async () => {
           await questionsService.deleteQuestion(noteId, question);
           return ok({ success: true });
+        });
+      },
+    },
+    {
+      method: "post",
+      path: "/api/quizzes/:noteId/:quizId/result",
+      handler: async ({ pathParams, body }) => {
+        const { noteId, quizId } = pathParams;
+        const score = body.score;
+
+        if (!noteId || !quizId) {
+          return error(400, "Missing required params: noteId, quizId");
+        }
+
+        if (typeof score !== "number" || score < 0 || score > 100) {
+          return error(400, "Invalid score: must be a number between 0 and 100");
+        }
+
+        return safe(async () => {
+          const quiz = await quizStore.saveResult(
+            noteId,
+            parseInt(quizId, 10),
+            score,
+          );
+          if (!quiz) {
+            return error(404, "Quiz not found");
+          }
+          return ok(quiz);
         });
       },
     },

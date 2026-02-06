@@ -15,6 +15,7 @@ const QuizPage: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   const [currentIdx, setCurrentIdx] = useState(0)
   const [selected, setSelected] = useState<Record<number, number>>({})
@@ -65,6 +66,24 @@ const QuizPage: React.FC = () => {
     : 0
   const answered = Object.keys(revealed).length
   const finished = quiz ? answered === quiz.items.length : false
+  const scorePercent = quiz ? Math.round((score / quiz.items.length) * 100) : 0
+
+  const handleSaveAndClose = async () => {
+    if (!quiz) return
+    setSaving(true)
+    try {
+      await api.quizzes.saveResult(quiz.noteId, quiz.id, scorePercent)
+      navigate(-1)
+    } catch {
+      setSaving(false)
+    }
+  }
+
+  const handleRetake = () => {
+    setCurrentIdx(0)
+    setSelected({})
+    setRevealed({})
+  }
 
   if (loading) {
     return (
@@ -125,7 +144,14 @@ const QuizPage: React.FC = () => {
                   ? 'Well done!'
                   : 'Keep studying!'}
             </p>
-            <button className="qp-btn" onClick={() => navigate(-1)}>Done</button>
+            <div className="qp-finished-actions">
+              <button className="qp-btn" onClick={handleSaveAndClose} disabled={saving}>
+                {saving ? 'Saving...' : 'Save & Close'}
+              </button>
+              <button className="qp-btn qp-btn-secondary" onClick={handleRetake}>
+                Retake
+              </button>
+            </div>
           </div>
         ) : (
           <div className="qp-card">

@@ -13,12 +13,15 @@ export type Quiz = {
   title: string;
   items: QuizItem[];
   created_at: string;
+  last_taken_at?: string;
+  last_score?: number;
 };
 
 export interface QuizStore {
   listByNote(noteId: string): Promise<Quiz[]>;
   getOne(noteId: string, quizId: number): Promise<Quiz | null>;
   save(noteId: string, title: string, items: QuizItem[]): Promise<Quiz>;
+  saveResult(noteId: string, quizId: number, score: number): Promise<Quiz | null>;
 }
 
 export function createFSQuizStore(mtHome: string): QuizStore {
@@ -103,5 +106,24 @@ export function createFSQuizStore(mtHome: string): QuizStore {
     }
   }
 
-  return { listByNote, getOne, save };
+  async function saveResult(
+    noteId: string,
+    quizId: number,
+    score: number,
+  ): Promise<Quiz | null> {
+    const quiz = await getOne(noteId, quizId);
+    if (!quiz) {
+      return null;
+    }
+
+    quiz.last_taken_at = new Date().toISOString();
+    quiz.last_score = score;
+
+    const filePath = path.join(quizzesDir, quizFilename(noteId, quizId));
+    await fs.writeFile(filePath, JSON.stringify(quiz, null, 2), "utf-8");
+
+    return quiz;
+  }
+
+  return { listByNote, getOne, save, saveResult };
 }

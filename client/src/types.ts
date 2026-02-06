@@ -75,6 +75,8 @@ export type Quiz = {
   title: string
   items: QuizItem[]
   created_at: string
+  last_taken_at?: string
+  last_score?: number
 }
 
 export type INoteImage = {

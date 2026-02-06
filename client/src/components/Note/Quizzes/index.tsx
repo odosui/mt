@@ -1,4 +1,5 @@
 import { PlusIcon, XIcon } from '@primer/octicons-react'
+import { formatDistanceToNow } from 'date-fns'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'slim-react-router'
@@ -66,6 +67,14 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
                 <div className="quiz-list-item-title">{q.title}</div>
                 <div className="quiz-list-item-meta">
                   {q.items.length} questions
+                  {q.last_taken_at && (
+                    <>
+                      {' · '}
+                      <span className="quiz-list-item-score">{q.last_score}%</span>
+                      {' · '}
+                      {formatDistanceToNow(new Date(q.last_taken_at), { addSuffix: true })}
+                    </>
+                  )}
                 </div>
                 <a
                   href={`/quiz/${q.noteId}__${q.id}`}

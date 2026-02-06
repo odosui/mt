@@ -236,6 +236,16 @@
     &:hover:not(:disabled) {
       opacity: 0.85;
     }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &.qp-btn-secondary {
+      background: var(--subtle);
+      color: var(--color-text);
+    }
   }
 
   // ---------- finished screen ----------
@@ -259,6 +269,11 @@
       font-size: $text3;
       color: var(--lighter);
       margin-bottom: $unit5;
+    }
+
+    .qp-finished-actions {
+      display: flex;
+      gap: $unit2;
     }
   }
 }

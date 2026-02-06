@@ -5,7 +5,7 @@ import { Quiz } from '../../../types'
 import Button from '../../../ui/Button'
 import Spinner from '../../../ui/Spinner'
 
-const TEXT_MAX_LENGTH = 32768
+const TEXT_MAX_LENGTH = 65536
 const MAX_QUESTIONS = 100
 
 const QuizForm: React.FC<{
@@ -72,18 +72,15 @@ const QuizForm: React.FC<{
             required
           />
         </div>
-        <div className="form-row">
+        <div className="form-row form-row-flex">
           <label htmlFor="quiz-text">
             Text ({text.length}/{TEXT_MAX_LENGTH})
           </label>
           <textarea
             id="quiz-text"
             value={text}
-            onChange={(e) =>
-              setText(e.target.value.slice(0, TEXT_MAX_LENGTH))
-            }
+            onChange={(e) => setText(e.target.value.slice(0, TEXT_MAX_LENGTH))}
             maxLength={TEXT_MAX_LENGTH}
-            rows={10}
             required
           />
         </div>
