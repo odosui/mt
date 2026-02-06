@@ -201,6 +201,10 @@
     font-size: $text1;
     font-weight: 600;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $unit2;
 
     &.correct {
       color: #27ae60;
@@ -208,6 +212,10 @@
 
     &.wrong {
       color: #e74c3c;
+    }
+
+    .qp-continue-btn {
+      margin-top: $unit1;
     }
   }
 

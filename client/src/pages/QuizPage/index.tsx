@@ -1,4 +1,8 @@
-import { ArrowLeftIcon, CheckCircleIcon, XCircleIcon } from '@primer/octicons-react'
+import {
+  ArrowLeftIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from '@primer/octicons-react'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'slim-react-router'
@@ -49,17 +53,29 @@ const QuizPage: React.FC = () => {
     setRevealed((r) => ({ ...r, [currentIdx]: true }))
   }
 
-  // Auto-advance to next question after a short delay
+  const isCurrentCorrect =
+    quiz &&
+    revealed[currentIdx] &&
+    selected[currentIdx] === quiz.items[currentIdx]?.correctIndex
+
+  // Auto-advance to next question after a short delay (only for correct answers)
   useEffect(() => {
     if (!quiz || !revealed[currentIdx]) return
     if (currentIdx >= quiz.items.length - 1) return
+    if (!isCurrentCorrect) return // Don't auto-advance on wrong answers
 
     const timer = setTimeout(() => {
       setCurrentIdx((i) => i + 1)
     }, 1200)
 
     return () => clearTimeout(timer)
-  }, [revealed, currentIdx, quiz])
+  }, [revealed, currentIdx, quiz, isCurrentCorrect])
+
+  const handleContinue = () => {
+    if (currentIdx < (quiz?.items.length ?? 0) - 1) {
+      setCurrentIdx((i) => i + 1)
+    }
+  }
 
   const score = quiz
     ? quiz.items.filter((q, i) => selected[i] === q.correctIndex).length
@@ -97,7 +113,14 @@ const QuizPage: React.FC = () => {
     return (
       <div className="quiz-page">
         <div className="qp-container">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate(-1) }} className="qp-back">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate(-1)
+            }}
+            className="qp-back"
+          >
             <ArrowLeftIcon size={14} /> Back
           </a>
           <p className="qp-error">{error || 'Quiz not found'}</p>
@@ -113,7 +136,14 @@ const QuizPage: React.FC = () => {
   return (
     <div className="quiz-page">
       <div className="qp-container">
-        <a href="#" onClick={(e) => { e.preventDefault(); navigate(-1) }} className="qp-back">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault()
+            navigate(-1)
+          }}
+          className="qp-back"
+        >
           <ArrowLeftIcon size={14} /> Back
         </a>
 
@@ -136,7 +166,9 @@ const QuizPage: React.FC = () => {
 
         {finished ? (
           <div className="qp-finished">
-            <div className="qp-finished-score">{score}/{quiz.items.length}</div>
+            <div className="qp-finished-score">
+              {score}/{quiz.items.length}
+            </div>
             <p className="qp-finished-label">
               {score === quiz.items.length
                 ? 'Perfect score!'
@@ -145,10 +177,17 @@ const QuizPage: React.FC = () => {
                   : 'Keep studying!'}
             </p>
             <div className="qp-finished-actions">
-              <button className="qp-btn" onClick={handleSaveAndClose} disabled={saving}>
+              <button
+                className="qp-btn"
+                onClick={handleSaveAndClose}
+                disabled={saving}
+              >
                 {saving ? 'Saving...' : 'Save & Close'}
               </button>
-              <button className="qp-btn qp-btn-secondary" onClick={handleRetake}>
+              <button
+                className="qp-btn qp-btn-secondary"
+                onClick={handleRetake}
+              >
                 Retake
               </button>
             </div>
@@ -178,22 +217,34 @@ const QuizPage: React.FC = () => {
                     <span className="qp-card-answer-label">{LABELS[ai]}</span>
                     <span className="qp-card-answer-text">{a}</span>
                     {isRevealed && ai === item.correctIndex && (
-                      <CheckCircleIcon size={16} className="qp-card-answer-icon" />
+                      <CheckCircleIcon
+                        size={16}
+                        className="qp-card-answer-icon"
+                      />
                     )}
-                    {isRevealed && ai === selected[currentIdx] && ai !== item.correctIndex && (
-                      <XCircleIcon size={16} className="qp-card-answer-icon" />
-                    )}
+                    {isRevealed &&
+                      ai === selected[currentIdx] &&
+                      ai !== item.correctIndex && (
+                        <XCircleIcon
+                          size={16}
+                          className="qp-card-answer-icon"
+                        />
+                      )}
                   </button>
                 )
               })}
             </div>
 
-            {isRevealed && (
-              <div className={`qp-card-feedback ${wasCorrect ? 'correct' : 'wrong'}`}>
-                {wasCorrect ? 'Correct!' : 'Incorrect'}
+            {isRevealed && !wasCorrect && currentIdx < quiz.items.length - 1 && (
+              <div className="qp-card-feedback">
+                <button
+                  className="qp-btn qp-continue-btn"
+                  onClick={handleContinue}
+                >
+                  Continue
+                </button>
               </div>
             )}
-
           </div>
         )}
       </div>
