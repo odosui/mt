@@ -1,4 +1,4 @@
-import { PlusIcon, XIcon } from '@primer/octicons-react'
+import { PlayIcon, PlusIcon, XIcon } from '@primer/octicons-react'
 import { formatDistanceToNow } from 'date-fns'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
@@ -41,7 +41,14 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
       <h3>
         Quizzes
         {showForm && (
-          <a href="#" onClick={(e) => { e.preventDefault(); setShowForm(false) }} className="action-btn">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              setShowForm(false)
+            }}
+            className="action-btn"
+          >
             <XIcon />
           </a>
         )}
@@ -52,27 +59,26 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
         )}
       </h3>
 
-      {showForm && (
-        <QuizForm noteId={noteId} onGenerated={handleGenerated} />
-      )}
+      {showForm && <QuizForm noteId={noteId} onGenerated={handleGenerated} />}
 
       {!showForm && (
         <>
           <div className="quiz-menu-list">
             {quizzes.map((q) => (
-              <div
-                key={`${q.noteId}-${q.id}`}
-                className="quiz-list-item"
-              >
+              <div key={`${q.noteId}-${q.id}`} className="quiz-list-item">
                 <div className="quiz-list-item-title">{q.title}</div>
                 <div className="quiz-list-item-meta">
                   {q.items.length} questions
                   {q.last_taken_at && (
                     <>
                       {' · '}
-                      <span className="quiz-list-item-score">{q.last_score}%</span>
+                      <span className="quiz-list-item-score">
+                        {q.last_score}%
+                      </span>
                       {' · '}
-                      {formatDistanceToNow(new Date(q.last_taken_at), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(q.last_taken_at), {
+                        addSuffix: true,
+                      })}
                     </>
                   )}
                 </div>
@@ -84,6 +90,7 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
                     navigate(`/quiz/${q.noteId}__${q.id}`)
                   }}
                 >
+                  <PlayIcon size={12} />
                   Take
                 </a>
               </div>

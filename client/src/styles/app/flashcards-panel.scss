@@ -269,7 +269,8 @@
   }
 
   .quiz-list-item {
-    padding: $unit2;
+    position: relative;
+    padding: $unit3;
     margin-bottom: $unit1;
     border-radius: $unit0;
     background: var(--color-flashcards-panel-form-bg);
@@ -285,12 +286,13 @@
       font-size: $text2;
       color: var(--color-flashcards-panel-text);
       font-weight: 500;
+      padding-right: $unit7;
     }
 
     .quiz-list-item-meta {
       font-size: $text0;
       color: var(--color-flashcards-panel-text-secondary);
-      margin-top: $unit0;
+      margin-top: $unit1;
 
       .quiz-list-item-score {
         color: var(--color-flashcards-panel-accent);
@@ -299,15 +301,28 @@
     }
 
     .quiz-list-item-take {
-      display: inline-block;
-      margin-top: $unit1;
-      font-size: $text1;
-      color: var(--color-flashcards-panel-accent);
-      text-decoration: none;
+      position: absolute;
+      top: $unit3;
+      right: $unit3;
+      display: inline-flex;
+      align-items: center;
+      gap: $unit0;
+      padding: $unit0 $unit1;
+      font-size: $text0;
       font-weight: 500;
+      color: var(--color-flashcards-panel-text-secondary-intense);
+      text-decoration: none;
+      background: var(--color-flashcards-panel-bg-hover-intense);
+      border: none;
+      border-radius: $unit0;
+      transition: background-color 0.15s ease-out;
+
+      svg {
+        fill: var(--color-flashcards-panel-text-secondary-intense);
+      }
 
       &:hover {
-        text-decoration: underline;
+        background: var(--color-flashcards-panel-border);
       }
     }
   }

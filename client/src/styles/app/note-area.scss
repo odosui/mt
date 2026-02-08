@@ -172,16 +172,16 @@
           }
         }
 
-        .flashcards-toggler {
+        .quizzes-toggler {
           top: $unit9;
         }
 
-        .images-toggler {
+        .flashcards-toggler {
           top: calc($unit10 + $unit8);
         }
 
-        .quizzes-toggler {
-          top: calc($unit10 + $unit8 + $unit9 + $unit2);
+        .images-toggler {
+          top: calc($unit10 + $unit11);
         }
       }
     }
