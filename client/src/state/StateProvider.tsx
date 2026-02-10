@@ -33,6 +33,7 @@ interface IState {
     slug: string,
     title: string,
     description: string,
+    category: string,
   ) => Promise<void>
   unpublishCurrentNote: () => Promise<void>
   toggleFocusMode: () => void
@@ -330,7 +331,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   }, [notes.data, getCurrentNote])
 
   const publishCurrentNote = useCallback(
-    async (slug: string, title: string, description: string) => {
+    async (slug: string, title: string, description: string, category: string) => {
       const note = getCurrentNote()
       if (!note) {
         return
@@ -340,6 +341,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         slug,
         title,
         description,
+        category,
       )
 
       fullNotes.current[newNote.sid] = {
@@ -348,6 +350,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         published: true,
         seo_title: title,
         seo_description: description,
+        seo_category: category,
         seo_url: newNote.seo_url,
       }
 

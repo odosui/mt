@@ -50,11 +50,13 @@ export default {
       slug: string,
       title: string,
       description: string,
+      category: string,
     ): Promise<INote> =>
       api('post', `/notes/${id}/publish`, {
         slug,
         seo_title: title,
         seo_description: description,
+        seo_category: category,
       }),
     unpublish: (id: number): Promise<{ success: boolean }> =>
       api('post', `/notes/${id}/unpublish`, {}),

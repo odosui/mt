@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { marked } from "marked";
-import { extractTitle, snakeCased } from "./components/notes/utils";
+import { extractTitle } from "./components/notes/utils";
 
 interface SeoNote {
   id: string;
@@ -12,17 +12,16 @@ interface SeoNote {
   slug: string;
 }
 
-const OUTPUT_DIR = "static-website";
 const TEMPLATES_DIR = path.join(__dirname, "templates");
 
 async function loadLayoutTemplate(): Promise<string> {
   return fs.readFile(path.join(TEMPLATES_DIR, "layout.html"), "utf-8");
 }
 
-export async function buildStaticSite(mtHome: string) {
+export async function buildStaticSite(mtHome: string, outputDir: string) {
   const notesDir = path.join(mtHome, "notes");
   const mediaDir = path.join(mtHome, "media");
-  const outDir = path.resolve(OUTPUT_DIR);
+  const outDir = path.resolve(outputDir);
   const layoutTemplate = await loadLayoutTemplate();
 
   // Read all notes and filter to seo_published
@@ -41,13 +40,14 @@ export async function buildStaticSite(mtHome: string) {
     if (meta.seo_published !== "true") continue;
 
     const title = meta.seo_title || extractTitle(body);
+    const slug = file.replace(/\.md$/, "").replace(/^\d+_/, "");
     published.push({
       id,
       body,
       seo_title: title,
       seo_description: meta.seo_description || "",
       seo_category: meta.seo_category || "uncategorized",
-      slug: snakeCased(extractTitle(body)),
+      slug,
     });
   }
 

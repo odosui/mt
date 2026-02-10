@@ -101,6 +101,11 @@ export async function createFSNotesStore(
       updated_at: dayjs().toISOString(),
       last_reviewed_at: "",
       favorite: false,
+      seo_title: "",
+      seo_description: "",
+      seo_published: false,
+      seo_category: "",
+      seo_slug: "",
     };
 
     await writeToDisk(notesDir, n);
@@ -181,6 +186,11 @@ async function writeToDisk(notesDir: string, note: Note) {
     `favorite: ${note.favorite}`,
     `last_reviewed_at: ${note.last_reviewed_at}`,
     `level: ${note.level}`,
+    `seo_title: ${note.seo_title}`,
+    `seo_description: ${note.seo_description}`,
+    `seo_published: ${note.seo_published}`,
+    `seo_category: ${note.seo_category}`,
+    `seo_slug: ${note.seo_slug}`,
   ];
 
   // Add flashcards to metadata
@@ -267,6 +277,11 @@ function readNote(id: string, content: string): Note {
     updated_at: mt.updated_at ?? "",
     last_reviewed_at: mt.last_reviewed_at ?? "",
     favorite: mt.favorite === "true",
+    seo_title: mt.seo_title ?? "",
+    seo_description: mt.seo_description ?? "",
+    seo_published: mt.seo_published === "true",
+    seo_category: mt.seo_category ?? "",
+    seo_slug: mt.seo_slug ?? "",
   };
 
   return note;

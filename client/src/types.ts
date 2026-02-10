@@ -29,6 +29,7 @@ export interface INote extends INoteSearch {
   seo_url: string | null
   seo_title: string | null
   seo_description: string | null
+  seo_category: string | null
   image_metas: IImageMetas
 }
 

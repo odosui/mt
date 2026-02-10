@@ -145,6 +145,48 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
           return ok({ success: true });
         });
       },
+      publish: async (
+        id: string,
+        slug: string,
+        title: string,
+        description: string,
+        category: string,
+      ) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          const updated = await noteStore.updateNote(
+            id,
+            {
+              seo_slug: slug,
+              seo_title: title,
+              seo_description: description,
+              seo_category: category,
+              seo_published: true,
+            },
+            true,
+          );
+          const imageMetas = await mediaStore.getImagesForNote(id);
+          return ok(fullView(updated, imageMetas));
+        });
+      },
+      unpublish: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          const updated = await noteStore.updateNote(
+            id,
+            { seo_published: false },
+            true,
+          );
+          const imageMetas = await mediaStore.getImagesForNote(id);
+          return ok(fullView(updated, imageMetas));
+        });
+      },
     },
     reviews: {
       counts: async () => {
@@ -283,6 +325,24 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
       path: "/api/notes/:id/unfav",
       handler: async ({ pathParams }) =>
         await api.notes.unfav(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/publish",
+      handler: async ({ pathParams, body }) =>
+        await api.notes.publish(
+          pathParams.id ?? "",
+          body.slug ?? "",
+          body.seo_title ?? "",
+          body.seo_description ?? "",
+          body.seo_category ?? "",
+        ),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/unpublish",
+      handler: async ({ pathParams }) =>
+        await api.notes.unpublish(pathParams.id ?? ""),
     },
     {
       method: "get",
@@ -575,13 +635,13 @@ function fullView(n: Note, imageMetas: ImageMetas = {}) {
     upcoming_reviews_in_days: nextReviewPoints(n),
     image_metas: imageMetas,
 
-    // TODO: implement these
-    published: false,
+    published: n.seo_published,
     question_count: 0,
-    seo_description: null,
-    seo_title: null,
+    seo_description: n.seo_description || null,
+    seo_title: n.seo_title || null,
+    seo_category: n.seo_category || null,
     seo_url: null,
     sid: parseInt(n.id, 10),
-    slug: null,
+    slug: n.seo_slug || null,
   };
 }

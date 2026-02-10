@@ -11,7 +11,12 @@ async function main() {
   const mtHome: string = parsed[MT_HOME_GLAF] || process.env.MT_HOME;
 
   if (parsed[BUILD_FLAG]) {
-    await buildStaticSite(mtHome);
+    const outDir = parsed[BUILD_FLAG];
+    if (typeof outDir !== "string") {
+      console.error("Usage: --build-static-site <output-dir>");
+      process.exit(1);
+    }
+    await buildStaticSite(mtHome, outDir);
   } else {
     startServer(mtHome);
   }

@@ -15,6 +15,7 @@ const PublishSettingsModal: React.FC<{
     note.slug || dashCase(figureTitle(note.body)),
   )
   const [desc, setDesc] = useState(note.seo_description || '')
+  const [category, setCategory] = useState(note.seo_category || '')
 
   const { publishCurrentNote, unpublishCurrentNote } = useContext(StateContext)
 
@@ -26,7 +27,7 @@ const PublishSettingsModal: React.FC<{
     if (slug.length < 3 || title.length < 3) {
       return
     }
-    publishCurrentNote(slug, title, desc)
+    publishCurrentNote(slug, title, desc, category)
   }
 
   const unpublish: React.MouseEventHandler = (e) => {
@@ -84,6 +85,16 @@ const PublishSettingsModal: React.FC<{
                 <textarea
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="form-input">
+              <label>
+                Category
+                <input
+                  type="text"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                 />
               </label>
             </div>

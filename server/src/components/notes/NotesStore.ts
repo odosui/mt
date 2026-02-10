@@ -20,6 +20,13 @@ export type Note = {
   // timestamps
   created_at: string;
   updated_at: string;
+
+  // seo / publish
+  seo_title: string;
+  seo_description: string;
+  seo_published: boolean;
+  seo_category: string;
+  seo_slug: string;
 };
 
 export interface NoteStore {
