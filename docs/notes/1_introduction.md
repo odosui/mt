@@ -1,6 +1,6 @@
 ---
 created_at: 2026-02-09
-updated_at: 2026-02-10T17
+updated_at: 2026-02-10T20:48:23.996Z
 favorite: false
 last_reviewed_at: 2026-02-09
 level: 1
@@ -12,17 +12,17 @@ seo_slug: introduction
 ---
 # Introduction
 
-`mt` is an advanced tool that help us facilitate the learning process and organize the knowledge efficiently. It's like a knowledge manager meets spaced repetition kind of tool. `mt` provides a set of tools on top of your notes (spaced-repetition, anki-like flashcards, quizes, etc.). It uses AI where it can help, without messing up with the knowledge acquisition process.
+`mt` is a tool that help us facilitate the learning process and organize the knowledge efficiently. In other words, it's a "knowledge manager meets spaced repetition" kind of tool.
 
-![an interface](1__note_01.png)
+![mt's UI interface](1__mt.png)
 
-The main goal of `mt` is to help you learn and retain information effectively, without overwhelming you with unnecessary features or distractions.
+`mt` provides a set of tools on top of your notes (spaced-repetition, [Anki](https://apps.ankiweb.net/)-like flashcards, quizes, etc.). It uses AI where it can help, without messing up with the knowledge acquisition process.
 
-In the heart of it, `mt` is just an interface to markdown files that are stored in a directory on your computer. Markdown files are surprizingly powerful. Not only they let us structure the information using headers, lists, tables, etc., but they are also easy to extend. We support code blocks with syntax highlighting, mermaid diagrams, and more. Links are a first-class citizen in `mt`, and they are the key to build a good knowledge graph.
+But the main goal of `mt` is this — help you **learn** and **retain** information effectively.
 
-A link to another note can be created like `[link to another note](123)`. Here `123` is the id of the note you want to link to. Tags are simple words that start with `#`, for example `#tag`. They can be anywhere inside the note, and used to organize your notes in a way that makes sense to you. Learn more about markdown syntax in the [markdown section](#markdown).
+In the heart of it, `mt` is just an interface to markdown files that are stored in a directory on your computer. Markdown files are surprizingly powerful. Not only they let us structure the information using headers, lists, tables, etc., but they are also easy to extend. We support code blocks with syntax highlighting, mermaid diagrams, and more.
 
-![tags](tags.png)
+Learn more in [Create Your First Note](1) section.
 
 Once you add a note it enters a review schedule, that is the system reminds you to review the note at optimal intervals to maximize retention. Reviewing a note is as simple as opening it, reading it, and marking it as reviewed. For more information on how the review schedule works, check the [reviewing section](#reviewing).
 

@@ -7,7 +7,7 @@
     "build": "npm run build --prefix client && npm run build --prefix server",
     "start": "NODE_ENV=production npm run start --prefix server",
     "e2e": "playwright test",
-    "tmp-start": "NODE_ENV=production MT_PORT=3344 MT_HOME=./tmp NODE_ENV=production npm run start --prefix server",
+    "tmp-start": "NODE_ENV=production MT_PORT=3344 MT_HOME=../mt-tmp NODE_ENV=production npm run start --prefix server",
     "docs-start": "NODE_ENV=production MT_PORT=3345 MT_HOME=../docs NODE_ENV=production npm run start --prefix server",
     "docs-build": "MT_HOME=./docs npx ts-node --project server/tsconfig.json server/src/index.ts --build-static-site ../mt-docs-static",
     "docs-serve": "npx serve docs-static -l 3333"
