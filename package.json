@@ -9,7 +9,7 @@
     "e2e": "playwright test",
     "tmp-start": "NODE_ENV=production MT_PORT=3344 MT_HOME=./tmp NODE_ENV=production npm run start --prefix server",
     "docs-start": "NODE_ENV=production MT_PORT=3345 MT_HOME=../docs NODE_ENV=production npm run start --prefix server",
-    "docs-build": "MT_HOME=./docs npx ts-node --project server/tsconfig.json server/src/index.ts --build-static-site docs-static",
+    "docs-build": "MT_HOME=./docs npx ts-node --project server/tsconfig.json server/src/index.ts --build-static-site ../mt-docs-static",
     "docs-serve": "npx serve docs-static -l 3333"
   },
   "devDependencies": {

@@ -1,55 +1,44 @@
 import fs from "fs/promises";
-import path from "path";
 import { marked } from "marked";
-import { extractTitle } from "./components/notes/utils";
-
-interface SeoNote {
-  id: string;
-  body: string;
-  seo_title: string;
-  seo_description: string;
-  seo_category: string;
-  slug: string;
-}
+import path from "path";
+import { createFSNotesStore } from "./components/notes/FSNotesStore";
+import { Note } from "./components/notes/NotesStore";
+import { extractTitle, snakeCased } from "./components/notes/utils";
 
 const TEMPLATES_DIR = path.join(__dirname, "templates");
+
+const GEN_EXTS = new Set([
+  ".html",
+  ".css",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".svg",
+  ".webp",
+]);
 
 async function loadLayoutTemplate(): Promise<string> {
   return fs.readFile(path.join(TEMPLATES_DIR, "layout.html"), "utf-8");
 }
 
+function slugFor(note: Note): string {
+  return note.seo_slug || snakeCased(extractTitle(note.body));
+}
+
+function titleFor(note: Note): string {
+  return note.seo_title || extractTitle(note.body);
+}
+
 export async function buildStaticSite(mtHome: string, outputDir: string) {
-  const notesDir = path.join(mtHome, "notes");
   const mediaDir = path.join(mtHome, "media");
   const outDir = path.resolve(outputDir);
   const layoutTemplate = await loadLayoutTemplate();
 
   // Read all notes and filter to seo_published
-  const files = await fs.readdir(notesDir);
-  const mdFiles = files.filter((f) => f.endsWith(".md"));
-
-  const published: SeoNote[] = [];
-
-  for (const file of mdFiles) {
-    const id = file.match(/^(\d+)/)?.[1];
-    if (!id) continue;
-
-    const content = await fs.readFile(path.join(notesDir, file), "utf-8");
-    const { meta, body } = parseFrontmatter(content);
-
-    if (meta.seo_published !== "true") continue;
-
-    const title = meta.seo_title || extractTitle(body);
-    const slug = file.replace(/\.md$/, "").replace(/^\d+_/, "");
-    published.push({
-      id,
-      body,
-      seo_title: title,
-      seo_description: meta.seo_description || "",
-      seo_category: meta.seo_category || "uncategorized",
-      slug,
-    });
-  }
+  const store = await createFSNotesStore(mtHome);
+  const allNotes = await store.getNotes("", false, false);
+  const published = allNotes.filter((n) => n.seo_published);
 
   if (published.length === 0) {
     console.log("No notes with seo_published: true found.");
@@ -59,18 +48,30 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
   // Build a lookup: note id -> slug (for link rewriting)
   const idToSlug: Record<string, string> = {};
   for (const note of published) {
-    idToSlug[note.id] = note.slug;
+    idToSlug[note.id] = slugFor(note);
   }
 
-  // Prepare output directory
-  await fs.rm(outDir, { recursive: true, force: true });
+  // Clean generated files without deleting the entire directory
   await fs.mkdir(outDir, { recursive: true });
+  const existing = await fs.readdir(outDir);
+  for (const file of existing) {
+    const ext = path.extname(file).toLowerCase();
+    if (GEN_EXTS.has(ext)) {
+      await fs.rm(path.join(outDir, file), { force: true });
+    }
+  }
+  // Clean media subdirectory
+  const outMedia = path.join(outDir, "media");
+  try {
+    await fs.rm(outMedia, { recursive: true, force: true });
+  } catch {}
 
   // Generate pages
   for (const note of published) {
+    const slug = slugFor(note);
     const html = renderNotePage(note, published, idToSlug, layoutTemplate);
-    await fs.writeFile(path.join(outDir, `${note.slug}.html`), html, "utf-8");
-    console.log(`  ${note.slug}.html`);
+    await fs.writeFile(path.join(outDir, `${slug}.html`), html, "utf-8");
+    console.log(`  ${slug}.html`);
   }
 
   // Generate index page
@@ -79,42 +80,21 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
   console.log("  index.html");
 
   // Copy stylesheet and media for published notes
-  await fs.copyFile(path.join(TEMPLATES_DIR, "style.css"), path.join(outDir, "style.css"));
+  await fs.copyFile(
+    path.join(TEMPLATES_DIR, "style.css"),
+    path.join(outDir, "style.css"),
+  );
   await copyMedia(mediaDir, outDir, published);
 
   console.log(`\nStatic site built to ${outDir}/ (${published.length} pages)`);
-}
-
-// --- Frontmatter parser ---
-
-function parseFrontmatter(content: string): {
-  meta: Record<string, string>;
-  body: string;
-} {
-  const parts = content.split("---");
-  const metaRaw = parts[1] || "";
-  const body = parts.slice(2).join("---").trim();
-  const meta: Record<string, string> = {};
-
-  for (const line of metaRaw.trim().split("\n")) {
-    const idx = line.indexOf(":");
-    if (idx === -1) continue;
-    const key = line.substring(0, idx).trim();
-    const value = line.substring(idx + 1).trim();
-    if (key) meta[key] = value;
-  }
-
-  return { meta, body };
 }
 
 // --- Markdown conversion with link/image rewriting ---
 
 function convertMarkdown(
   body: string,
-  noteId: string,
   idToSlug: Record<string, string>,
 ): string {
-  // Rewrite image paths: ![alt](file.png) -> ![alt](media/{noteId}__file.png)
   // Skip absolute URLs (http/https)
   let processed = body.replace(
     /!\[([^\]]*)\]\(([^)]+)\)/g,
@@ -122,7 +102,7 @@ function convertMarkdown(
       if (src.startsWith("http://") || src.startsWith("https://")) {
         return `![${alt}](${src})`;
       }
-      return `![${alt}](media/${noteId}__${src})`;
+      return `![${alt}](media/${src})`;
     },
   );
 
@@ -143,10 +123,10 @@ function convertMarkdown(
 
 // --- HTML templates ---
 
-function sidebarHtml(pages: SeoNote[], currentSlug?: string): string {
-  const grouped: Record<string, SeoNote[]> = {};
+function sidebarHtml(pages: Note[], currentSlug?: string): string {
+  const grouped: Record<string, Note[]> = {};
   for (const p of pages) {
-    const cat = p.seo_category;
+    const cat = p.seo_category || "uncategorized";
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(p);
   }
@@ -155,9 +135,10 @@ function sidebarHtml(pages: SeoNote[], currentSlug?: string): string {
   for (const [category, notes] of Object.entries(grouped)) {
     html += `<h4>${escapeHtml(category)}</h4>\n<ul>\n`;
     for (const note of notes) {
-      const isCurrent = note.slug === currentSlug;
+      const slug = slugFor(note);
+      const isCurrent = slug === currentSlug;
       const cls = isCurrent ? ' class="current"' : "";
-      html += `  <li><a href="${note.slug}.html"${cls}>${escapeHtml(note.seo_title)}</a></li>\n`;
+      html += `  <li><a href="${slug}.html"${cls}>${escapeHtml(titleFor(note))}</a></li>\n`;
     }
     html += `</ul>\n`;
   }
@@ -167,7 +148,7 @@ function sidebarHtml(pages: SeoNote[], currentSlug?: string): string {
 function pageLayout(
   title: string,
   content: string,
-  pages: SeoNote[],
+  pages: Note[],
   layoutTemplate: string,
   currentSlug?: string,
   description?: string,
@@ -185,36 +166,37 @@ function pageLayout(
 }
 
 function renderNotePage(
-  note: SeoNote,
-  allPages: SeoNote[],
+  note: Note,
+  allPages: Note[],
   idToSlug: Record<string, string>,
   layoutTemplate: string,
 ): string {
-  const htmlContent = convertMarkdown(note.body, note.id, idToSlug);
+  const htmlContent = convertMarkdown(note.body, idToSlug);
   return pageLayout(
-    note.seo_title,
+    titleFor(note),
     htmlContent,
     allPages,
     layoutTemplate,
-    note.slug,
+    slugFor(note),
     note.seo_description,
   );
 }
 
-function renderIndexPage(pages: SeoNote[], layoutTemplate: string): string {
-  const grouped: Record<string, SeoNote[]> = {};
+function renderIndexPage(pages: Note[], layoutTemplate: string): string {
+  const grouped: Record<string, Note[]> = {};
   for (const p of pages) {
-    const cat = p.seo_category;
+    const cat = p.seo_category || "uncategorized";
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(p);
   }
 
-  let content = `<h1>Pages</h1>\n`;
+  let content = `<h1>mt's docs pages</h1>\n`;
   for (const [category, notes] of Object.entries(grouped)) {
     content += `<h2>${escapeHtml(category)}</h2>\n`;
     for (const note of notes) {
+      const slug = slugFor(note);
       content += `<article class="index-card">\n`;
-      content += `  <h3><a href="${note.slug}.html">${escapeHtml(note.seo_title)}</a></h3>\n`;
+      content += `  <h3><a href="${slug}.html">${escapeHtml(titleFor(note))}</a></h3>\n`;
       if (note.seo_description) {
         content += `  <p>${escapeHtml(note.seo_description)}</p>\n`;
       }
@@ -227,11 +209,7 @@ function renderIndexPage(pages: SeoNote[], layoutTemplate: string): string {
 
 // --- Media copy ---
 
-async function copyMedia(
-  mediaDir: string,
-  outDir: string,
-  published: SeoNote[],
-) {
+async function copyMedia(mediaDir: string, outDir: string, published: Note[]) {
   let exists = true;
   try {
     await fs.access(mediaDir);
