@@ -6,6 +6,8 @@ Knowledge management meets spaced repetition.
 
 **mt** helps organize and manage knowledge efficiently, helping you remember and make sense of information over time.
 
+[Read the docs](https://docs.mindthis.io/)
+
 ![mt showcase](media/main.png)
 
 ## Features
@@ -104,3 +106,7 @@ mt is a Progressive Web App (PWA). You can install it on your device like a nati
 ## Contributing
 
 Contributions are welcome! Please open issues and pull requests, and follow the code of conduct.
+
+## Documentation
+
+Docs are present as an `mt` knowledge base under `docs/` folder. You can either edit them in your favorite text editor or start the app with `MT_HOME=./docs`. See `package.json` for more details.
