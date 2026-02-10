@@ -1,16 +1,15 @@
-import * as React from 'react'
-import { useContext } from 'react'
-import { NavLink, useLocation } from 'slim-react-router'
-import { StateContext } from '../state/StateProvider'
-import Spinner from '../ui/Spinner'
 import { XIcon } from '@primer/octicons-react'
+import * as React from 'react'
+import { NavLink, useLocation } from 'slim-react-router'
 import ThemeToggle from '../components/ThemeToggle'
+import { useTags } from '../state/TagsProvider'
+import Spinner from '../ui/Spinner'
 
 const SideMenu: React.FC<{ open: boolean; onHide: () => void }> = ({
   open,
   onHide,
 }) => {
-  const { tags } = useContext(StateContext)
+  const { tags } = useTags()
 
   const location = useLocation()
 

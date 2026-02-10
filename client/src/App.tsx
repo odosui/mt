@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react'
 import { BrowserRouter } from 'slim-react-router'
 import { StateProvider } from './state/StateProvider'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { TagsProvider } from './state/TagsProvider'
 
 const DesktopApp = lazy(() => import('./DesktopApp'))
 const MobileApp = lazy(() => import('./MobileApp'))
@@ -13,11 +14,13 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <StateProvider>
-          <Suspense fallback={<Fallback />}>
-            {isMobile ? <MobileApp /> : <DesktopApp />}
-          </Suspense>
-        </StateProvider>
+        <TagsProvider>
+          <StateProvider>
+            <Suspense fallback={<Fallback />}>
+              {isMobile ? <MobileApp /> : <DesktopApp />}
+            </Suspense>
+          </StateProvider>
+        </TagsProvider>
       </ThemeProvider>
     </BrowserRouter>
   )

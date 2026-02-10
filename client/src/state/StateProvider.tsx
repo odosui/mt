@@ -3,14 +3,14 @@ import { createContext, useCallback, useEffect, useState, useRef } from 'react'
 import api from '../api'
 import { INote, INoteSearch, ITag } from '../types'
 import tagsDiff from '../utils/tag_diff'
+import { useTags } from './TagsProvider'
 
-interface Loadable<T> {
+export interface Loadable<T> {
   loading: boolean
   data: T | null
 }
 
 interface IState {
-  tags: Loadable<ITag[]>
   totalNoteCount: number | null
   notes: Loadable<INoteSearch[]>
   previewNote: Loadable<INote>
@@ -57,7 +57,6 @@ interface IState {
 }
 
 export const INITIAL_STATE: IState = {
-  tags: empty(),
   notes: empty(),
   currentNote: null,
   previewNote: empty(),
@@ -97,7 +96,8 @@ export const INITIAL_STATE: IState = {
 export const StateContext = createContext<IState>(INITIAL_STATE)
 
 export const StateProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tags, setTags] = useState<Loadable<ITag[]>>(empty())
+  const { reflectNoteTagsChange } = useTags()
+
   const [notes, setNotes] = useState<Loadable<INoteSearch[]>>(empty())
   const [reviewCount, setReviewCount] = useState<number | null>(null)
   const [questionsCount, setQuestionsCount] = useState<number | null>(null)
@@ -234,12 +234,9 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
       setNoteSaving(false)
 
       const newTags = updatedNote.tags
-      setTags({
-        loading: false,
-        data: updateTags(tags.data || [], oldTags, newTags),
-      })
+      reflectNoteTagsChange(oldTags, newTags)
     },
-    [fullNotes, notes.data, tags.data, getCurrentNote],
+    [fullNotes, notes.data, reflectNoteTagsChange, getCurrentNote],
   )
 
   const toggleFavCurrentNote = useCallback(async () => {
@@ -275,14 +272,11 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     setNotes({ loading: false, data: newNotes })
 
     if (n.tags.length > 0) {
-      setTags({
-        loading: false,
-        data: updateTags(tags.data || [], n.tags, []),
-      })
+      reflectNoteTagsChange(n.tags, [])
     }
 
     setFocusMode(false)
-  }, [notes.data, fullNotes, tags.data, getCurrentNote])
+  }, [notes.data, fullNotes, reflectNoteTagsChange, getCurrentNote])
 
   const addNewNote = useCallback(async () => {
     const newNote = await api.notes.create('# New note')
@@ -481,11 +475,6 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initialLoad = async () => {
-      // tags
-      setTags({ data: [], loading: true })
-      const tt = await api.tags.list()
-      setTags({ loading: false, data: tt })
-
       // counters
       const counts = await api.notes.counts()
       setTotalNoteCount(counts.total_notes)
@@ -498,7 +487,6 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   const value: IState = {
-    tags,
     reviewCount,
     questionsCount,
     notes,
@@ -538,7 +526,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   return <StateContext.Provider value={value}>{children}</StateContext.Provider>
 }
 
-function empty() {
+export function empty() {
   return {
     loading: false,
     data: null,

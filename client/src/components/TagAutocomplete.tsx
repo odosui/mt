@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { StateContext } from '../state/StateProvider'
+import React, { useEffect, useState } from 'react'
+import { useTags } from '../state/TagsProvider'
 
 interface TagAutocompleteProps {
   isVisible: boolean
@@ -16,7 +16,8 @@ const TagAutocomplete: React.FC<TagAutocompleteProps> = ({
   onSelect,
   onClose,
 }) => {
-  const { tags } = useContext(StateContext)
+  const { tags } = useTags()
+
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [filteredTags, setFilteredTags] = useState<string[]>([])
 
