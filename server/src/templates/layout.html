@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{metaDesc}}
+    <title>{{title}}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button
+      class="hamburger"
+      onclick="document.querySelector('.sidebar').classList.toggle('open')"
+      aria-label="Menu"
+    >
+      &#9776;
+    </button>
+    <nav class="sidebar">
+      <strong><a href="index.html" class="home-link">Home</a></strong>
+      {{sidebar}}
+    </nav>
+    <main class="main-content">{{content}}</main>
+  </body>
+</html>

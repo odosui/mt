@@ -1,3 +1,4 @@
+import { buildStaticSite } from "./build";
 import { startServer } from "./server";
 import { parseArgs } from "./utils/cmd";
 
@@ -10,15 +11,10 @@ async function main() {
   const mtHome: string = parsed[MT_HOME_GLAF] || process.env.MT_HOME;
 
   if (parsed[BUILD_FLAG]) {
-    build();
+    await buildStaticSite(mtHome);
   } else {
     startServer(mtHome);
   }
 }
 
 main();
-
-async function build() {
-  console.log("Building static site...");
-  // TODO: implement me
-}
