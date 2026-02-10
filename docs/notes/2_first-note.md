@@ -27,4 +27,6 @@ This is my first note in `mt`. I'm excited to use it!
 #intro
 ```
 
+![Your first note](2__note_01.png)
+
 A note can have a tag (like `#intro`) anywhere within it's body. While I prefer to put them at the end, you can put them anywhere. Once you click save, the note will, the tag list on the left will update and show you the new tag. In order to filter notes by tag, just click on the tag in the list.
