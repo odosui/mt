@@ -227,27 +227,27 @@ const Note: React.FC<{
 
       <div className="note-section">
         <div className="editor-place">
-          {!flashcardsVisible && !focusMode && (
+          {!focusMode && (
             <div
-              className="side-toggler flashcards-toggler"
+              className={`side-toggler flashcards-toggler ${flashcardsVisible ? 'active' : ''}`}
               onClick={toggleFlashcardsVisible}
             >
               <NoteIcon /> Flashcards
             </div>
           )}
 
-          {!imagesVisible && !focusMode && (
+          {!focusMode && (
             <div
-              className="side-toggler images-toggler"
+              className={`side-toggler images-toggler ${imagesVisible ? 'active' : ''}`}
               onClick={toggleImagesVisible}
             >
               <FileMediaIcon /> Images
             </div>
           )}
 
-          {!quizzesVisible && !focusMode && (
+          {!focusMode && (
             <div
-              className="side-toggler quizzes-toggler"
+              className={`side-toggler quizzes-toggler ${quizzesVisible ? 'active' : ''}`}
               onClick={toggleQuizzesVisible}
             >
               <BeakerIcon /> Quizzes

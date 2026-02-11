@@ -170,6 +170,13 @@
           &:hover {
             background-color: var(--color-note-area-bg-hover-intense);
           }
+          &.active {
+            background-color: var(--color-note-area-bg-hover-intense);
+            color: var(--color-note-area-text);
+            svg {
+              fill: var(--color-note-area-text);
+            }
+          }
         }
 
         .quizzes-toggler {
