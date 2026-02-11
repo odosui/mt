@@ -24,7 +24,7 @@ So let's create a simple note. Click on the pencil icon, and write something lik
 
 This is my first note in `mt`.
 
-## Why am I exited?
+## Why am I excited?
 
 1. Because it's a markdown note.
 2. I can link it to other notes.
@@ -35,11 +35,11 @@ This is my first note in `mt`.
 
 ![Your first note](2__note_01.png)
 
-A note can have a tag (like `#intro`) anywhere within it's body. While I prefer to put them at the end, you can put them anywhere. Once you click save, the note will, the tag list on the left will update and show you the new tag. In order to filter notes by tag, just click on the tag in the list.
+A note can have a tag (like `#intro`) anywhere within its body. While I prefer to put them at the end, you can put them anywhere. Once you click save, the tag list on the left will update and show you the new tag. In order to filter notes by tag, just click on the tag in the list.
 
 ## Linking notes
 
-Links are a first-class citizen in `mt`, and they are the key to build a good knowledge graph. A link to another note can be created like `[link to another note](123)`. Here `123` is the id of the note you want to link to. Ids are unique and sequential. You can check the ID of a note in the notes section.
+Links are a first-class citizen in `mt`, and they are the key to building a good knowledge graph. A link to another note can be created like `[link to another note](123)`. Here `123` is the id of the note you want to link to. Ids are unique and sequential. You can check the ID of a note in the notes section.
 
 Let's add a second note, and link it to the first one:
 
@@ -51,7 +51,7 @@ This is my second note.
 Here I'm going to reference [the first note](1).
 ```
 
-Once you add the link, you can click on it, and it will show up in a preview on the right. From that preview if required you can click on the "Edit" link, and it will take you to the note.
+Once you add the link, you can click on it, and it will show up in a preview on the right. From that preview, you can click on the "Edit" link, and it will take you to the note.
 
 ![A note preview](2__linked.png)
 
@@ -66,9 +66,9 @@ notes/1_hello_world.md
 notes/2_my_second_note.md
 ```
 
-So the note filename starts with the note id, followed by an underscore, and then a underscored version of the note title (first `#` header). You can edit the files in any other editor. Just make sure to not change the id, as some other notes might be linking to it.
+So the note filename starts with the note id, followed by an underscore, and then an underscored version of the note title (first `#` header). You can edit the files in any other editor. Just make sure to not change the id, as some other notes might be linking to it.
 
-You also might wanna initialize a `git` repo in this directory. I backup my notes to a private GitHub repository, and I can easily sync them across devices.
+You might also want to initialize a `git` repo in this directory. I back up my notes to a private GitHub repository, which makes it easy to sync them across devices.
 
 ### Changing the storage directory
 
@@ -78,5 +78,5 @@ It also comes handy, as you can have multiple knowledge bases, and you can switc
 
 ## Next
 
-Now, let's move on to the next chapter, and [learn how does the reviewing works](3).
+Now, let's move on to the next chapter and [learn how reviewing works](3).
 
