@@ -10,7 +10,6 @@ import {
   QuestionIcon,
   StarIcon,
   ThreeBarsIcon,
-  VersionsIcon,
   XIcon,
 } from '@primer/octicons-react'
 import * as React from 'react'
@@ -23,7 +22,6 @@ import EditSwitch from '../../ui/EditSwitch'
 import pubsub from '../../utils/pubsub'
 import Editor from '../Editor'
 import Preview from '../Preview'
-import ChangelogsModal from './ChangelogsModal'
 import Flashcards from './Flashcards'
 import HelpModal from './HelpModal'
 import Images from './Images'
@@ -45,7 +43,6 @@ const Note: React.FC<{
   const [reviewMenuOpen, setReviewMenuOpen] = useState(false)
   const [isPublishModalOpen, setIsPublishMenuOpen] = useState(false)
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false)
-  const [isChangelogsModalOpen, setIsChangelogsModalOpen] = useState(false)
   const [mode, setMode] = useState<'view' | 'edit'>('view')
 
   const [updatedBody, setUpdatedBody] = useState<string>('')
@@ -143,12 +140,6 @@ const Note: React.FC<{
     setMenuOpen(false)
   }
 
-  const handleOpenChangelogs: React.MouseEventHandler = (e) => {
-    e.preventDefault()
-    setIsChangelogsModalOpen(true)
-    setMenuOpen(false)
-  }
-
   const handleOpenHelp: React.MouseEventHandler = (e) => {
     e.preventDefault()
     setIsHelpModalOpen(true)
@@ -234,11 +225,6 @@ const Note: React.FC<{
         onClose={() => setIsHelpModalOpen(false)}
       />
 
-      <ChangelogsModal
-        open={isChangelogsModalOpen}
-        onClose={() => setIsChangelogsModalOpen(false)}
-        sid={currentNote.sid}
-      />
       <div className="note-section">
         <div className="editor-place">
           {!flashcardsVisible && !focusMode && (
@@ -297,10 +283,6 @@ const Note: React.FC<{
                 <div className="menu-item" onClick={handleOpenPublishMenu}>
                   <EyeIcon />
                   <span>Publish</span>
-                </div>
-                <div className="menu-item" onClick={handleOpenChangelogs}>
-                  <VersionsIcon />
-                  <span>Latest changes</span>
                 </div>
                 <div className="menu-item" onClick={handleOpenHelp}>
                   <QuestionIcon />
