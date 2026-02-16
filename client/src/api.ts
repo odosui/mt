@@ -119,6 +119,7 @@ export default {
       text: string,
       numberOfQuestions: number,
       extraInstructions?: string,
+      model?: string,
     ): Promise<Quiz> =>
       api('post', '/quizzes/generate', {
         note_id: noteId,
@@ -126,6 +127,7 @@ export default {
         text,
         number_of_questions: `${numberOfQuestions}`,
         extra_instructions: extraInstructions || '',
+        model: model || '',
       }),
     saveResult: (noteId: string, quizId: number, score: number): Promise<Quiz> =>
       api('post', `/quizzes/${noteId}/${quizId}/result`, { score }),

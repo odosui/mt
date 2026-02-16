@@ -40,12 +40,15 @@ export async function generateQuiz(
   text: string,
   numberOfQuestions: number,
   extraInstructions?: string,
+  model?: string,
 ): Promise<Result> {
   const extra = extraInstructions
     ? `\n\nAdditional instructions:\n${extraInstructions}\n`
     : "";
 
   const prompt = `Based on the following text, generate a quiz with exactly ${numberOfQuestions} multiple choice questions. Each question should have exactly 4 answers.
+
+    Take the important information from the text. We need to check not only facts, but also general understanding. Use whatever language is used in the text itself.
 
 Return ONLY a valid JSON array with no additional text. Nothing extra, because I'm going to use JSON.parse on it. Each object should have:
 - "question": the question text
@@ -57,7 +60,7 @@ ${text}
 
 JSON:`;
 
-  const response = await sendMessage("claude-haiku-4-5", prompt);
+  const response = await sendMessage(model || "claude-haiku-4-5", prompt);
 
   const cleaned = response
     .replace(/^```(?:json)?\s*\n?/, "")

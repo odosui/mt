@@ -497,6 +497,7 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
         const title = body.title;
         const noteId = body.note_id;
         const extraInstructions = body.extra_instructions;
+        const model = body.model;
 
         if (!text || !numberOfQuestions || !noteId) {
           return error(
@@ -518,6 +519,7 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
             text,
             numberOfQuestions,
             extraInstructions || undefined,
+            model || undefined,
           );
           if (err) {
             return error(500, err);

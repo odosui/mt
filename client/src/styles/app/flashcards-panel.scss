@@ -211,7 +211,8 @@
 
     textarea,
     input[type='text'],
-    input[type='number'] {
+    input[type='number'],
+    select {
       border: 1px solid var(--color-flashcards-panel-border);
       width: 100%;
       background: transparent;

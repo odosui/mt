@@ -8,6 +8,12 @@ import Spinner from '../../../ui/Spinner'
 const TEXT_MAX_LENGTH = 65536
 const MAX_QUESTIONS = 100
 
+const MODELS = [
+  { id: 'claude-haiku-4-5', label: 'Haiku 4.5' },
+  { id: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
+  { id: 'claude-opus-4-6', label: 'Opus 4.6' },
+]
+
 const QuizForm: React.FC<{
   noteId: number
   onGenerated: (quiz: Quiz) => void
@@ -16,6 +22,7 @@ const QuizForm: React.FC<{
   const [text, setText] = useState('')
   const [numberOfQuestions, setNumberOfQuestions] = useState(10)
   const [extraInstructions, setExtraInstructions] = useState('')
+  const [model, setModel] = useState(MODELS[0].id)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -46,6 +53,7 @@ const QuizForm: React.FC<{
         text.trim(),
         numberOfQuestions,
         extraInstructions.trim() || undefined,
+        model,
       )
       onGenerated(res)
       setTitle('')
@@ -104,6 +112,20 @@ const QuizForm: React.FC<{
             }
             required
           />
+        </div>
+        <div className="form-row">
+          <label htmlFor="quiz-model">Model</label>
+          <select
+            id="quiz-model"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+          >
+            {MODELS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-row">
           <label htmlFor="quiz-extra">Extra instructions (optional)</label>
