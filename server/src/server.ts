@@ -1,5 +1,5 @@
 import bodyParser from "body-parser";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import multer from "multer";
 import os from "os";
 import path from "path";
@@ -32,39 +32,19 @@ export async function startServer(mtHomeArg: string) {
   const noteStore = await createFSNotesStore(mtHome);
   const coreApi = createCoreApi(noteStore, mtHome);
 
-  // image upload endpoint (requires multipart handling)
-  const upload = multer({ storage: multer.memoryStorage() });
-  app.post(
-    "/api/note_images",
-    upload.single("image"),
-    async (req: any, res: any) => {
-      const noteId = req.body.note_sid;
-      const file = req.file;
-
-      if (!noteId || !file) {
-        return res
-          .status(400)
-          .json({ error: "Missing note_sid or image file" });
-      }
-
-      const { status, json } = await coreApi.images.upload(
-        noteId,
-        file.originalname,
-        file.buffer,
-      );
-      res.status(status).json(json);
-    },
-  );
-
   // mapping apis
+  const upload = multer({ storage: multer.memoryStorage() });
+
   for (const m of coreApi.routes) {
     const method = m.method.toLowerCase() as keyof Express;
+    const middlewares = m.multipart ? [upload.single("image")] : [];
 
-    app[method](m.path, async (req: any, res: any) => {
+    app[method](m.path, ...middlewares, async (req: Request, res: Response) => {
       const { status, json } = await m.handler({
         pathParams: req.params as Record<string, string>,
         query: req.query as Record<string, string>,
         body: req.body,
+        ...(req.file ? { file: req.file } : {}),
       });
       res.status(status).json(json);
     });

@@ -19,10 +19,12 @@ dayjs.extend(relativeTime);
 export type RouteConfig = {
   method: "get" | "post" | "patch" | "delete";
   path: string;
+  multipart?: boolean;
   handler: (params: {
     pathParams: Record<string, string>;
     query: Record<string, string>;
     body: any;
+    file?: { originalname: string; buffer: Buffer };
   }) => Promise<{ status: number; json: unknown }>;
 };
 
@@ -379,6 +381,18 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
       handler: async ({ query }) => await api.images.list(query.note_sid ?? ""),
     },
     {
+      method: "post",
+      path: "/api/note_images",
+      multipart: true,
+      handler: async ({ body, file }) => {
+        const noteId = body.note_sid;
+        if (!noteId || !file) {
+          return error(400, "Missing note_sid or image file");
+        }
+        return await api.images.upload(noteId, file.originalname, file.buffer);
+      },
+    },
+    {
       method: "delete",
       path: "/api/note_images/:id",
       handler: async ({ pathParams }) =>
@@ -625,8 +639,5 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
     },
   ];
 
-  return {
-    ...api,
-    routes,
-  };
+  return { routes };
 };
