@@ -3,7 +3,8 @@ import express, { Express, Request, Response } from "express";
 import multer from "multer";
 import os from "os";
 import path from "path";
-import { createCoreApi } from "./api/CoreApi";
+import { createApi } from "./api/api";
+import { createRoutes } from "./api/routes";
 import { createFSNotesStore } from "./components/notes/FSNotesStore";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -30,12 +31,12 @@ export async function startServer(mtHomeArg: string) {
 
   // init out app
   const noteStore = await createFSNotesStore(mtHome);
-  const coreApi = createCoreApi(noteStore, mtHome);
+  const routes = createRoutes(createApi(noteStore, mtHome));
 
   // mapping apis
   const upload = multer({ storage: multer.memoryStorage() });
 
-  for (const m of coreApi.routes) {
+  for (const m of routes) {
     const method = m.method.toLowerCase() as keyof Express;
     const middlewares = m.multipart ? [upload.single("image")] : [];
 
