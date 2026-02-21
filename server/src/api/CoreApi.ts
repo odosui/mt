@@ -1,21 +1,18 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { createFSMediaStore } from "../components/media/FSMediaStore";
-import { ImageMetas } from "../components/media/MediaStore";
-import { Note, NoteStore } from "../components/notes/NotesStore";
-import { extractSnippetWithContext } from "../components/notes/utils";
+import { NoteStore } from "../components/notes/NotesStore";
 import createQuestionsService from "../components/questions/QuestionService";
+import { generateFlashcards } from "../components/questions/flashcardgen";
 import { createFSQuizStore } from "../components/quizzes/QuizStore";
 import { generateQuiz } from "../components/quizzes/quizgen";
 import createReviewService from "../components/reviews/ReviewService";
-import {
-  nextReviewPoints,
-  noSkipReviewByTag,
-  requresReview,
-} from "../components/reviews/utils";
+import { noSkipReviewByTag, requresReview } from "../components/reviews/utils";
 import createSyncService from "../components/sync/SyncService";
 import { createTagsService } from "../components/tags/TagsService";
 import createTimelineService from "../components/timeline/TimelineService";
+import { error, ok, safe } from "./helpers";
+import { fullView, listView } from "./dto";
 dayjs.extend(relativeTime);
 
 // Route configuration type
@@ -142,6 +139,26 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
             return error(404, "Note not found");
           }
           await noteStore.updateNote(id, { favorite: false }, true);
+          return ok({ success: true });
+        });
+      },
+      pin: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          await noteStore.updateNote(id, { pinned: true }, true);
+          return ok({ success: true });
+        });
+      },
+      unpin: async (id: string) => {
+        return safe(async () => {
+          const note = await noteStore.getNote(id);
+          if (!note) {
+            return error(404, "Note not found");
+          }
+          await noteStore.updateNote(id, { pinned: false }, true);
           return ok({ success: true });
         });
       },
@@ -325,6 +342,18 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
       path: "/api/notes/:id/unfav",
       handler: async ({ pathParams }) =>
         await api.notes.unfav(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/pin",
+      handler: async ({ pathParams }) =>
+        await api.notes.pin(pathParams.id ?? ""),
+    },
+    {
+      method: "post",
+      path: "/api/notes/:id/unpin",
+      handler: async ({ pathParams }) =>
+        await api.notes.unpin(pathParams.id ?? ""),
     },
     {
       method: "post",
@@ -531,6 +560,23 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
     },
     {
       method: "post",
+      path: "/api/questions/ai",
+      handler: async ({ body }) => {
+        const text = body.text;
+        if (!text) {
+          return error(400, "Missing required field: text");
+        }
+        return safe(async () => {
+          const [cards, err] = await generateFlashcards(text);
+          if (err) {
+            return error(500, err);
+          }
+          return ok(cards);
+        });
+      },
+    },
+    {
+      method: "post",
       path: "/api/questions/del",
       handler: async ({ body }) => {
         const noteId = body.note_id;
@@ -558,7 +604,10 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
         }
 
         if (typeof score !== "number" || score < 0 || score > 100) {
-          return error(400, "Invalid score: must be a number between 0 and 100");
+          return error(
+            400,
+            "Invalid score: must be a number between 0 and 100",
+          );
         }
 
         return safe(async () => {
@@ -581,69 +630,3 @@ export const createCoreApi = (noteStore: NoteStore, mtHome: string) => {
     routes,
   };
 };
-
-// Helper function to handle error handling
-async function safe(op: () => Promise<{ status: number; json: unknown }>) {
-  try {
-    return await op();
-  } catch (e) {
-    console.error("API error:", e);
-    return error(500, "Unexpected error occurred");
-  }
-}
-
-// ===============
-// RESPONSES
-// ===============
-
-function ok(json: unknown) {
-  return {
-    status: 200,
-    json,
-  };
-}
-
-function error(status: number, message: string) {
-  return {
-    status,
-    json: { error: message },
-  };
-}
-
-// ===============
-// VIEWS
-// ===============
-
-function listView(n: Note, query?: string) {
-  return {
-    id: n.id,
-    level: n.level,
-    sid: parseInt(n.id, 10),
-    snippet: extractSnippetWithContext(n.body, query),
-    tags: n.tags,
-    updated_at_in_words: dayjs(n.updated_at).fromNow(),
-    favorite: n.favorite,
-  };
-}
-
-function fullView(n: Note, imageMetas: ImageMetas = {}) {
-  return {
-    ...listView(n), // fullView doesn't need query context
-    body: n.body,
-    updated_at: n.updated_at,
-    last_reviewed_at: n.last_reviewed_at,
-    created_at: n.created_at,
-    needs_review: requresReview(n) && noSkipReviewByTag(n),
-    upcoming_reviews_in_days: nextReviewPoints(n),
-    image_metas: imageMetas,
-
-    published: n.seo_published,
-    question_count: 0,
-    seo_description: n.seo_description || null,
-    seo_title: n.seo_title || null,
-    seo_category: n.seo_category || null,
-    seo_url: null,
-    sid: parseInt(n.id, 10),
-    slug: n.seo_slug || null,
-  };
-}

@@ -11,6 +11,7 @@ export type Note = {
   body: string;
   tags: string[];
   favorite: boolean;
+  pinned: boolean;
   flashcards: Flashcard[];
 
   // spaced repetition
