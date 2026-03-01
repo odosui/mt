@@ -1,5 +1,5 @@
-import React from 'react'
-import { Route, Routes } from 'slim-react-router'
+import React, { useEffect } from 'react'
+import { Route, Routes, useNavigate } from 'slim-react-router'
 import BottomNavigation from './mobile/BottomNavigation'
 import FlashCardsMobile from './mobile/FlashcardsMobile'
 import NoteMobile from './mobile/NoteMobile'
@@ -20,11 +20,20 @@ const MobileApp: React.FC = () => {
           <Route path="/app/flashcards" element={<FlashCardsMobile />} />
           <Route path="/app/timeline" element={<TimelineMobile />} />
           <Route path="/quiz/:id" element={<QuizPage />} />
+          <Route path="/" element={<Redirect to="/app/notes" />} />
         </Routes>
       </div>
       <BottomNavigation />
     </div>
   )
+}
+
+const Redirect: React.FC<{ to: string }> = ({ to }) => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate(to, { replace: true })
+  }, [to])
+  return null
 }
 
 export default MobileApp

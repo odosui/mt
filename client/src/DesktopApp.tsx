@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Route, Routes } from 'slim-react-router'
+import { useEffect } from 'react'
+import { Route, Routes, useNavigate } from 'slim-react-router'
 import Sidebar from './components/Sidebar'
 import FlashCards from './pages/FlashCards'
 import Notes from './pages/Notes'
@@ -22,9 +23,18 @@ const DesktopApp: React.FC = () => {
         <Route path="/app/quiz" element={<FlashCards />} />
         <Route path="/app/timeline" element={<Timeline />} />
         <Route path="/quiz/:id" element={<QuizPage />} />
+        <Route path="/" element={<Redirect to="/app/notes" />} />
       </Routes>
     </div>
   )
+}
+
+const Redirect: React.FC<{ to: string }> = ({ to }) => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate(to, { replace: true })
+  }, [to])
+  return null
 }
 
 export default DesktopApp
