@@ -21,7 +21,6 @@ const Editor: React.FC<Props> = ({
   onCancel,
   hasChanges,
 }) => {
-  console.log('initialText', initialText)
   const [value, setValue] = useState(initialText)
   const [selectionStart, setSelectionStart] = useState(0)
   const [selectionEnd, setSelectionEnd] = useState(0)

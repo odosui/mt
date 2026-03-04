@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Prism } from 'react-syntax-highlighter'
+import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import remarkGfm from 'remark-gfm'
 import CrossLink from './CrossLink'
@@ -175,9 +175,9 @@ function renderCode(aprops: any) {
 
   return (
     <div className="code-block">
-      <Prism style={theme as any} language={lang} {...props}>
+      <SyntaxHighlighter style={theme as any} language={lang} {...props}>
         {content}
-      </Prism>
+      </SyntaxHighlighter>
     </div>
   )
 }
