@@ -22,11 +22,11 @@ You can also create quizzes for yourself using AI (an API key is required).
 
 ### Documentation
 
-[Learn about mt](https://docs.mindthis.io/introduction.html)
-[Create your first note](https://docs.mindthis.io/create-first-note.html)
-[Reviewing](https://docs.mindthis.io/reviewing-notes.html)
-[Flashcards](https://docs.mindthis.io/flashcards.html)
-[Practical tips](https://docs.mindthis.io/what-makes-a-good-knowledge-graph.html)
+- [Learn about mt](https://docs.mindthis.io/introduction.html)
+- [Create your first note](https://docs.mindthis.io/create-first-note.html)
+- [Reviewing](https://docs.mindthis.io/reviewing-notes.html)
+- [Flashcards](https://docs.mindthis.io/flashcards.html)
+- [Practical tips](https://docs.mindthis.io/what-makes-a-good-knowledge-graph.html)
 
 ## Features
 
