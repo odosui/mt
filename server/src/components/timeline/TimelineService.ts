@@ -66,6 +66,20 @@ export function buildTimeline(timelineNotes: Note[]): TimelineItem[] {
     }
   }
 
+  // Sort chronologically: specific dates before their parent periods
+  // e.g. 2024-05-10 before 2024-05 before 2024
+  items.sort((a, b) => {
+    const padDate = (d: string) => {
+      const parts = d.split("-");
+      return [
+        parts[0],
+        parts[1] ?? "99",
+        parts[2] ?? "99",
+      ].join("-");
+    };
+    return padDate(a.date).localeCompare(padDate(b.date));
+  });
+
   return items;
 }
 

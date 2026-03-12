@@ -5,19 +5,19 @@ export function sorted(items: TimelineItem[]): TimelineItem[] {
   return items.sort((a, b) => {
     // if one of the date is just YYYY, then treat it as the end of the year
     // if one of the date is just YYYY-MM, then treat it as the end of the month
-    const [yearA, monthA = '12', dayA = '31'] = a.date.split('-')
-    const [yearB, monthB = '12', dayB = '31'] = b.date.split('-')
+    const [yearA, monthA, dayA] = a.date.split('-')
+    const [yearB, monthB, dayB] = b.date.split('-')
 
-    const dateA = new Date(
-      parseInt(yearA, 10),
-      parseInt(monthA, 10) - 1,
-      parseInt(dayA, 10),
-    )
-    const dateB = new Date(
-      parseInt(yearB, 10),
-      parseInt(monthB, 10) - 1,
-      parseInt(dayB, 10),
-    )
+    const yA = parseInt(yearA, 10)
+    const mA = monthA ? parseInt(monthA, 10) : 12
+    const dA = dayA ? parseInt(dayA, 10) : new Date(yA, mA, 0).getDate()
+
+    const yB = parseInt(yearB, 10)
+    const mB = monthB ? parseInt(monthB, 10) : 12
+    const dB = dayB ? parseInt(dayB, 10) : new Date(yB, mB, 0).getDate()
+
+    const dateA = new Date(yA, mA - 1, dA)
+    const dateB = new Date(yB, mB - 1, dB)
     return dateA.getTime() - dateB.getTime()
   })
 }
@@ -63,7 +63,7 @@ export function groupTimeline(
   const futureEvents: TimelineItem[] = []
 
   items.forEach((item) => {
-    const [year, month = '12', day = '31'] = item.date.split('-')
+    const [year, month, day] = item.date.split('-')
 
     if (!year) {
       console.warn('Item without a year:', item)
@@ -72,7 +72,10 @@ export function groupTimeline(
 
     const yearNum = parseInt(year, 10)
     const monthNum = month ? parseInt(month, 10) : 12
-    const dayNum = day ? parseInt(day, 10) : 31
+    // Use last day of the month when no day is specified
+    const dayNum = day
+      ? parseInt(day, 10)
+      : new Date(yearNum, monthNum, 0).getDate()
 
     const itemDate = new Date(yearNum, monthNum - 1, dayNum)
 
