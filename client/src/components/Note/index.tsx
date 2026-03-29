@@ -379,6 +379,7 @@ const Note: React.FC<{
               <Preview
                 markdown={currentNote.body}
                 imageMetas={currentNote.image_metas}
+                onCheckboxToggle={(updated) => saveCurrentNote(updated)}
               />
             )}
             {mode === 'edit' && (

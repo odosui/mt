@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -8,10 +8,22 @@ import Mermaid from './Mermaid'
 import HashTagPlugin from '../../utils/rehype/tag_plugin'
 import { IImageMetas } from '../../types'
 
+function toggleCheckbox(markdown: string, index: number): string {
+  const pattern = /- \[([ xX])\]/g
+  let count = 0
+  return markdown.replace(pattern, (match, check) => {
+    if (count++ === index) {
+      return check === ' ' ? '- [x]' : '- [ ]'
+    }
+    return match
+  })
+}
+
 const Preview: React.FC<{
   markdown: string
   imageMetas: IImageMetas
-}> = ({ markdown, imageMetas }) => {
+  onCheckboxToggle?: (updatedMarkdown: string) => void
+}> = ({ markdown, imageMetas, onCheckboxToggle }) => {
   const renderImage = useCallback(
     ({
       node: {
@@ -47,14 +59,42 @@ const Preview: React.FC<{
     [imageMetas],
   )
 
+  const checkboxIndex = useRef(0)
+
+  const renderInput = useCallback(
+    (props: any) => {
+      const { node, ...rest } = props
+      if (rest.type === 'checkbox') {
+        const idx = checkboxIndex.current++
+        return (
+          <input
+            {...rest}
+            disabled={!onCheckboxToggle}
+            onChange={() => {
+              if (onCheckboxToggle) {
+                onCheckboxToggle(toggleCheckbox(markdown, idx))
+              }
+            }}
+          />
+        )
+      }
+      return <input {...rest} />
+    },
+    [markdown, onCheckboxToggle],
+  )
+
+  // Reset checkbox counter before each render
+  checkboxIndex.current = 0
+
   const components = useMemo(() => {
     return {
       code: renderCode,
       a: renderLink,
       span: renderSpan,
       img: renderImage,
+      input: renderInput,
     }
-  }, [renderImage])
+  }, [renderImage, renderInput])
 
   return (
     <div className="note-preview">
