@@ -262,9 +262,14 @@ function readNote(id: string, content: string): Note {
           console.error(`Failed to parse a flashcard: ${line}`, e);
         }
       } else {
-        const [key, value] = line.split(":");
-        if (key && value) {
-          mt[key.trim()] = value.trim();
+        // splitting on the first colon
+        const ind = line.indexOf(":");
+        if (ind !== -1) {
+          const key = line.slice(0, ind).trim();
+          const value = line.slice(ind + 1).trim();
+          if (key && value) {
+            mt[key] = value;
+          }
         }
       }
     });
