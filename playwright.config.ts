@@ -7,7 +7,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   workers: 1,
-  reporter: process.env.CI ? "github" : "html",
+  reporter: process.env.CI ? [["github"], ["html"]] : "html",
   timeout: 10 * 1000,
   use: {
     baseURL: "http://localhost:3310",
