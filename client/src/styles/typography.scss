@@ -138,6 +138,43 @@
         margin-right: $unit1;
         font-weight: bold;
       }
+      &.task-list-item {
+        padding-left: $unit4;
+        position: relative;
+        &::before {
+          content: none;
+        }
+        input[type='checkbox'] {
+          appearance: none;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: $unit3;
+          height: $unit3;
+          border: 2px solid var(--subtle);
+          border-radius: $unit0;
+          margin: 0;
+          cursor: default;
+          transition: border-color 0.2s, background-color 0.2s;
+
+          &:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            &::after {
+              content: '';
+              position: absolute;
+              left: 50%;
+              top: 45%;
+              width: 5px;
+              height: 9px;
+              border: solid #fff;
+              border-width: 0 2px 2px 0;
+              transform: translate(-50%, -50%) rotate(45deg);
+            }
+          }
+        }
+      }
       &:last-child {
         margin-bottom: $unit3;
       }
