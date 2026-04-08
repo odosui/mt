@@ -108,43 +108,75 @@
     display: flex;
     height: 100%;
     gap: $unit4;
+    overflow: hidden;
 
     .tags-sidebar {
       width: $unit10;
       flex-shrink: 0;
-      height: fit-content;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
 
-      h3 {
-        margin: 0 0 $unit2 0;
-        font-size: $text3;
-        color: var(--color-flashcards-page-accent);
-        font-weight: 600;
+      .filter-section {
+        margin-bottom: $unit5;
+        flex-shrink: 0;
+
+        &:last-child {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+
+          .filter-title {
+            flex-shrink: 0;
+          }
+
+          .tag-list-scroll {
+            flex: 1;
+            overflow-y: auto;
+          }
+        }
+
+        .filter-title {
+          margin: 0 0 $unit2 $unit1;
+          font-size: $text0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: var(--color-flashcards-page-secondary);
+          font-weight: 500;
+        }
       }
 
-      .tag-list {
-        .tag-item {
-          display: flex;
-          align-items: center;
-          padding: $unit1 $unit2;
-          border-radius: $unit0;
-          cursor: pointer;
-          font-size: $text2;
-          color: var(--color-flashcards-page-secondary);
-          transition: all 0.1s ease;
+      .tag-item {
+        display: flex;
+        align-items: center;
+        padding: $unit0 $unit1;
+        margin-bottom: $unit0;
+        border-radius: $unit0;
+        cursor: pointer;
+        font-size: $text1;
+        color: var(--color-flashcards-page-secondary);
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
-          &:hover {
-            color: var(--color-flashcards-page-accent);
-          }
+        &:hover {
+          color: var(--color-flashcards-page-text);
+          background-color: var(--color-flashcards-page-bg-hover);
+        }
 
-          &.active {
-            color: var(--color-flashcards-page-accent);
-            font-weight: 500;
-          }
+        &.active {
+          color: var(--color-flashcards-page-accent);
+          background-color: var(--color-flashcards-page-bg-hover);
+          font-weight: 500;
+        }
 
-          svg {
-            fill: currentColor;
-            margin-right: $unit0;
-          }
+        svg {
+          fill: var(--color-flashcards-page-btn-text);
+          margin-right: $unit0;
+          flex-shrink: 0;
         }
       }
     }
@@ -152,6 +184,7 @@
     .cards-content {
       flex: 1;
       min-width: 0;
+      overflow-y: auto;
 
       .cards-header {
         display: flex;

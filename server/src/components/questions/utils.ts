@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 // # in SM-2 they had 1.3 for the hardest, and 2.5 for the easiest
 const REVIEW_COEFF = 1.5;
-const MAX_LEVEL = 15;
+export const MAX_LEVEL = 15;
 
 function daysForLevel(nextLevel: number): number {
   if (nextLevel === 1) {
@@ -25,7 +25,7 @@ export function daysTillNextReview(level: number, lastReviewed: string | null) {
   if (!lastReviewed) {
     return 0;
   }
-  const daysPassed = dayjs().diff(dayjs(lastReviewed), "day");
+  const daysPassed = dayjs().startOf("day").diff(dayjs(lastReviewed).startOf("day"), "day");
   const period = daysForLevel(level + 1);
   return period - daysPassed;
 }

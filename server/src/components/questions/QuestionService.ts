@@ -3,6 +3,7 @@ import {
   daysTillNextReview,
   daysTillReviewAfterCurrent,
   isReviewable,
+  MAX_LEVEL,
 } from "./utils";
 import dayjs from "dayjs";
 
@@ -65,21 +66,25 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
     await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
 
-    return asJson(fc);
+    return asJson(fc, note.tags);
   }
 
   async function getReviewableQuestions() {
     const notes = await noteStore.getNotes("", false, false);
-    const questions = notes.flatMap((note) => note.flashcards);
+    const questions = notes.flatMap((note) =>
+      note.flashcards.map((fc) => ({ fc, tags: note.tags })),
+    );
     return questions
-      .filter((q) => isReviewable(q.level, q.reviewed_at))
-      .map(asJson);
+      .filter((q) => isReviewable(q.fc.level, q.fc.reviewed_at))
+      .map((q) => asJson(q.fc, q.tags));
   }
 
   async function getAllQuestions() {
     const notes = await noteStore.getNotes("", false, false);
-    const questions = notes.flatMap((note) => note.flashcards);
-    return questions.map(asJson);
+    const questions = notes.flatMap((note) =>
+      note.flashcards.map((fc) => ({ fc, tags: note.tags })),
+    );
+    return questions.map((q) => asJson(q.fc, q.tags));
   }
 
   async function getQuestions(id: string) {
@@ -88,7 +93,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
       throw new Error(`Note with id ${id} not found`);
     }
 
-    return note.flashcards.map(asJson);
+    return note.flashcards.map((fc) => asJson(fc, note.tags));
   }
 
   async function updateQuestion(
@@ -113,7 +118,7 @@ const createQuestionsService = (noteStore: NoteStore) => {
     fc.answer = newAnswer;
     await noteStore.updateNote(noteId, { flashcards: note.flashcards }, true);
 
-    return asJson(fc);
+    return asJson(fc, note.tags);
   }
 
   async function deleteQuestion(noteId: string, question: string) {
@@ -145,15 +150,22 @@ const createQuestionsService = (noteStore: NoteStore) => {
   };
 };
 
-function asJson(fc: Flashcard) {
+function asJson(fc: Flashcard, tags: string[] = []) {
+  const completed = fc.level >= MAX_LEVEL;
   return {
     question: fc.question,
     answer: fc.answer,
     level: fc.level,
     reviewed_at: fc.reviewed_at,
-    days_till_review_after_current: daysTillReviewAfterCurrent(fc.level),
-    days_till_next_review: daysTillNextReview(fc.level ?? 0, fc.reviewed_at),
+    days_till_review_after_current: completed
+      ? null
+      : daysTillReviewAfterCurrent(fc.level),
+    days_till_next_review: completed
+      ? null
+      : daysTillNextReview(fc.level ?? 0, fc.reviewed_at),
+    completed,
     note_id: fc.note_id,
+    tags,
   };
 }
 

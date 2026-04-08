@@ -108,11 +108,13 @@ const QuestionCard: React.FC<{
             </div>
             <div className="card-view-question">{q.question}</div>
             <div className="card-view-info">
-              {q.days_till_next_review <= 0
-                ? 'review now'
-                : q.days_till_next_review === 1
-                  ? 'review tomorrow'
-                  : `review in ${q.days_till_next_review} days`}
+              {q.completed
+                ? 'completed'
+                : q.days_till_next_review != null && q.days_till_next_review <= 0
+                  ? 'review now'
+                  : q.days_till_next_review === 1
+                    ? 'review tomorrow'
+                    : `review in ${q.days_till_next_review} days`}
             </div>
           </div>
           <div className="back">{q.answer}</div>
