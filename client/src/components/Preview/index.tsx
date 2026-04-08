@@ -99,10 +99,10 @@ const Preview: React.FC<{
   return (
     <div className="note-preview">
       <ReactMarkdown
-        linkTarget="_blank"
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[HashTagPlugin]}
         components={components}
+        urlTransform={(url) => url}
       >
         {markdown}
       </ReactMarkdown>

@@ -7,7 +7,7 @@ import {
 } from '@primer/octicons-react'
 
 type Props = {
-  areaRef: RefObject<HTMLDivElement>
+  areaRef: RefObject<HTMLDivElement | null>
   onUseAsAnswer: (text: string) => void
   onUseAsQuestion: (text: string) => void
   onAskAI: (text: string) => void

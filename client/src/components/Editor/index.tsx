@@ -214,7 +214,7 @@ const Editor: React.FC<Props> = ({
         onChange={handleChange}
         onSelect={handleTextSelection}
         onKeyDown={handleKeyDown}
-        ref={(t) => (textareaRef.current = t)}
+        ref={(t) => { textareaRef.current = t }}
         minHeight={0}
       />
       <TagAutocomplete
