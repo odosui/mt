@@ -86,9 +86,10 @@ describe("daysTillNextReview", () => {
     });
 
     it("should handle partial day differences", () => {
-      // dayjs().diff() returns whole days, so partial days should round down
+      // daysTillNextReview uses startOf("day"), so 23 hours ago is yesterday for most of the day
       const almostOneDayAgo = dayjs().subtract(23, "hour").toISOString();
-      expect(daysTillNextReview(1, almostOneDayAgo)).toBe(1);
+      const isYesterday = dayjs().subtract(23, "hour").startOf("day").isBefore(dayjs().startOf("day"));
+      expect(daysTillNextReview(1, almostOneDayAgo)).toBe(isYesterday ? 0 : 1);
     });
 
     it("should return correct values for recently reviewed items", () => {
