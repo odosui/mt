@@ -88,7 +88,8 @@ const Preview: React.FC<{
 
   const components = useMemo(() => {
     return {
-      code: renderCode,
+      code: renderInlineCode,
+      pre: renderPreBlock,
       a: renderLink,
       span: renderSpan,
       img: renderImage,
@@ -118,27 +119,27 @@ function renderSpan({ node }: any) {
   }
 }
 
-function renderCode(aprops: any) {
-  const { inline, className, children, ...props } = aprops
+function renderInlineCode({ children, ...props }: any) {
+  return (
+    <code className="inline" {...props}>
+      {children}
+    </code>
+  )
+}
 
-  if (inline) {
-    return (
-      <code className="inline" {...props}>
-        {children}
-      </code>
-    )
-  }
+function renderPreBlock({ node }: any) {
+  const codeNode = node?.children?.find((c: any) => c.tagName === 'code')
+  const className = codeNode?.properties?.className?.[0] || ''
+  const content = String(
+    codeNode?.children?.[0]?.value || ''
+  ).replace(/\n$/, '')
 
-  const content = String(children).replace(/\n$/, '')
-
-  const match = /language-(\w+)/.exec(className || '')
+  const match = /language-(\w+)/.exec(className)
   const lang = match ? match[1] : 'none'
 
   if (content.trim() && lang === 'soundcloud') {
-    const c = props.node.children[0].value
-
     const meta = Object.fromEntries(
-      c.split('\n').map((p: string) => {
+      content.split('\n').map((p: string) => {
         const [key, value] = p.split(':')
         return [key, value?.trim() || '']
       }),
@@ -172,50 +173,39 @@ function renderCode(aprops: any) {
         ></div>
       </div>
     )
-    // } else {
-    //   return <div className="code-error">Mermaid parse error: ${res}</div>
-    // }
   }
 
   if (content.trim() && lang === 'mermaid') {
-    const props = parseProps(aprops.node.data?.meta)
-
-    // props to styles
+    const metaProps = parseProps(codeNode?.data?.meta)
 
     const styles: any = {}
 
-    if (props.width) {
-      styles.width = props.width
+    if (metaProps.width) {
+      styles.width = metaProps.width
     }
 
-    if (props.align) {
-      if (props.align === 'center') {
+    if (metaProps.align) {
+      if (metaProps.align === 'center') {
         styles.marginLeft = 'auto'
         styles.marginRight = 'auto'
-      } else if (props.align === 'left') {
+      } else if (metaProps.align === 'left') {
         styles.marginLeft = 0
         styles.marginRight = 'auto'
       } else {
-        console.error('Invalid align value', props.align)
+        console.error('Invalid align value', metaProps.align)
       }
     }
 
-    // const res = tryParsingMermaid(content)
-
-    // if (res === true) {
     return (
       <div className="mermaid" style={styles}>
         <Mermaid code={content} />
       </div>
     )
-    // } else {
-    //   return <div className="code-error">Mermaid parse error: ${res}</div>
-    // }
   }
 
   return (
     <div className="code-block">
-      <SyntaxHighlighter style={theme as any} language={lang} {...props}>
+      <SyntaxHighlighter style={theme as any} language={lang}>
         {content}
       </SyntaxHighlighter>
     </div>
