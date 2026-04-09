@@ -85,7 +85,7 @@
       flex-direction: row;
       text-align: center;
       vertical-align: middle;
-      background-color: var(--color-menu-bg-hover-intense);
+      background-color: var(--color-menu-accent);
       border-radius: $unit3;
       span {
         padding: $unit0 $unit1;
@@ -93,7 +93,7 @@
         margin: 0 auto;
         font-size: $text0;
         font-weight: bold;
-        color: var(--color-menu-accent);
+        color: var(--color-menu-bg);
       }
       &.secondary {
         background-color: transparent;
