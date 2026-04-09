@@ -206,9 +206,12 @@ function renderNotePage(
   layoutTemplate: string,
 ): string {
   const htmlContent = convertMarkdown(note.body, idToSlug);
+  const contentWithFooter =
+    htmlContent +
+    `\n<footer class="mt-footer">Built with <a href="https://github.com/odosui/mt/">mt</a></footer>\n`;
   return pageLayout(
     titleFor(note),
-    htmlContent,
+    contentWithFooter,
     allPages,
     layoutTemplate,
     slugFor(note),

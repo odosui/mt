@@ -352,3 +352,20 @@ body {
     padding: 3.5rem 1.2rem 2rem;
   }
 }
+
+.mt-footer {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--c-border);
+  font-size: 0.85rem;
+  color: var(--c-text-muted);
+}
+
+.mt-footer a {
+  color: var(--c-accent);
+  text-decoration: none;
+}
+
+.mt-footer a:hover {
+  text-decoration: underline;
+}
