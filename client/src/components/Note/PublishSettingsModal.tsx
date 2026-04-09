@@ -1,4 +1,3 @@
-import { LinkIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useContext, useState } from 'react'
 import { StateContext } from '../../state/StateProvider'
@@ -43,19 +42,6 @@ const PublishSettingsModal: React.FC<{
     >
       <div className="publish-form">
         <h2>Publish note</h2>
-        {note.published && note.seo_url ? (
-          <p className="link">
-            <LinkIcon />
-            <a href={note.seo_url} target="_blank" rel="noopener nofollow">
-              {note.seo_url}
-            </a>
-          </p>
-        ) : (
-          <p className="warning">
-            Publishing makes a note visible for anyone on the internet
-            (including search engines).
-          </p>
-        )}
 
         {
           <form>

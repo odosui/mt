@@ -55,25 +55,28 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
 
   // Clean generated files without deleting the entire directory
   await fs.mkdir(outDir, { recursive: true });
-  const existing = await fs.readdir(outDir);
-  for (const file of existing) {
-    const ext = path.extname(file).toLowerCase();
-    if (GEN_EXTS.has(ext)) {
-      await fs.rm(path.join(outDir, file), { force: true });
+  const existing = await fs.readdir(outDir, { withFileTypes: true });
+  for (const entry of existing) {
+    const fullPath = path.join(outDir, entry.name);
+    if (entry.isDirectory()) {
+      // Remove slug directories and media
+      await fs.rm(fullPath, { recursive: true, force: true });
+    } else {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (GEN_EXTS.has(ext)) {
+        await fs.rm(fullPath, { force: true });
+      }
     }
   }
-  // Clean media subdirectory
-  const outMedia = path.join(outDir, "media");
-  try {
-    await fs.rm(outMedia, { recursive: true, force: true });
-  } catch {}
 
   // Generate pages
   for (const note of published) {
     const slug = slugFor(note);
     const html = renderNotePage(note, published, idToSlug, layoutTemplate);
-    await fs.writeFile(path.join(outDir, `${slug}.html`), html, "utf-8");
-    console.log(`  ${slug}.html`);
+    const pageDir = path.join(outDir, slug);
+    await fs.mkdir(pageDir, { recursive: true });
+    await fs.writeFile(path.join(pageDir, "index.html"), html, "utf-8");
+    console.log(`  ${slug}/index.html`);
   }
 
   // Generate index page
@@ -104,7 +107,7 @@ function convertMarkdown(
       if (src.startsWith("http://") || src.startsWith("https://")) {
         return `![${alt}](${src})`;
       }
-      return `![${alt}](media/${src})`;
+      return `![${alt}](/media/${src})`;
     },
   );
 
@@ -114,7 +117,7 @@ function convertMarkdown(
     (_match, text, id) => {
       const slug = idToSlug[id];
       if (slug) {
-        return `[${text}](${slug}.html)`;
+        return `[${text}](/${slug}/)`;
       }
       return text; // unpublished note: render as plain text
     },
@@ -140,7 +143,7 @@ function sidebarHtml(pages: Note[], currentSlug?: string): string {
       const slug = slugFor(note);
       const isCurrent = slug === currentSlug;
       const cls = isCurrent ? ' class="current"' : "";
-      html += `  <li><a href="${slug}.html"${cls}>${escapeHtml(titleFor(note))}</a></li>\n`;
+      html += `  <li><a href="/${slug}/"${cls}>${escapeHtml(titleFor(note))}</a></li>\n`;
     }
     html += `</ul>\n`;
   }
@@ -198,7 +201,7 @@ function renderIndexPage(pages: Note[], layoutTemplate: string): string {
     for (const note of notes) {
       const slug = slugFor(note);
       content += `<article class="index-card">\n`;
-      content += `  <h3><a href="${slug}.html">${escapeHtml(titleFor(note))}</a></h3>\n`;
+      content += `  <h3><a href="/${slug}/">${escapeHtml(titleFor(note))}</a></h3>\n`;
       if (note.seo_description) {
         content += `  <p>${escapeHtml(note.seo_description)}</p>\n`;
       }

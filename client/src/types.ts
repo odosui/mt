@@ -19,13 +19,13 @@ export interface INote extends INoteSearch {
   updated_at: string
   created_at: string
   level: number | null
-  published: boolean
   slug: string | null
   upcoming_reviews_in_days: { level: number; days_left: number }[]
   question_count: number
   needs_review: boolean
   favorite: boolean
 
+  published: boolean
   seo_url: string | null
   seo_title: string | null
   seo_description: string | null
