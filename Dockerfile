@@ -4,7 +4,8 @@
 FROM node:24-alpine AS client-builder
 WORKDIR /app
 # Copy config.json for vite.config.ts
-COPY config.json tsconfig.base.json ./
+COPY config.json tsconfig.base.json package*.json ./
+RUN npm install
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
@@ -14,7 +15,8 @@ RUN npm run build
 # Stage 2: Build server
 FROM node:24-alpine AS server-builder
 WORKDIR /app
-COPY tsconfig.base.json ./
+COPY tsconfig.base.json package*.json ./
+RUN npm install
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install
