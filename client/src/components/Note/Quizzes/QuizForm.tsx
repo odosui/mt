@@ -12,7 +12,7 @@ const MODELS = [
   { id: 'claude-haiku-4-5', label: 'Haiku 4.5' },
   { id: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
   { id: 'claude-opus-4-6', label: 'Opus 4.6' },
-]
+] as const
 
 const QuizForm: React.FC<{
   noteId: number
@@ -22,11 +22,11 @@ const QuizForm: React.FC<{
   const [text, setText] = useState('')
   const [numberOfQuestions, setNumberOfQuestions] = useState(10)
   const [extraInstructions, setExtraInstructions] = useState('')
-  const [model, setModel] = useState(MODELS[0].id)
+  const [model, setModel] = useState<string>(MODELS[0].id)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit: React.FormEventHandler = async (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
     setError('')
 

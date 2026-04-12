@@ -131,7 +131,7 @@ const QuizPage: React.FC = () => {
 
   const item = quiz.items[currentIdx]
   const isRevealed = revealed[currentIdx]
-  const wasCorrect = isRevealed && selected[currentIdx] === item.correctIndex
+  const wasCorrect = isRevealed && selected[currentIdx] === item?.correctIndex
 
   return (
     <div className="quiz-page">
@@ -197,10 +197,10 @@ const QuizPage: React.FC = () => {
             <div className="qp-card-counter">
               Question {currentIdx + 1} of {quiz.items.length}
             </div>
-            <p className="qp-card-question">{item.question}</p>
+            <p className="qp-card-question">{item?.question}</p>
 
             <div className="qp-card-answers">
-              {item.answers.map((a, ai) => {
+              {item?.answers.map((a, ai) => {
                 let cls = 'qp-card-answer'
                 if (isRevealed) {
                   if (ai === item.correctIndex) cls += ' correct'
@@ -235,16 +235,18 @@ const QuizPage: React.FC = () => {
               })}
             </div>
 
-            {isRevealed && !wasCorrect && currentIdx < quiz.items.length - 1 && (
-              <div className="qp-card-feedback">
-                <button
-                  className="qp-btn qp-continue-btn"
-                  onClick={handleContinue}
-                >
-                  Continue
-                </button>
-              </div>
-            )}
+            {isRevealed &&
+              !wasCorrect &&
+              currentIdx < quiz.items.length - 1 && (
+                <div className="qp-card-feedback">
+                  <button
+                    className="qp-btn qp-continue-btn"
+                    onClick={handleContinue}
+                  >
+                    Continue
+                  </button>
+                </div>
+              )}
           </div>
         )}
       </div>

@@ -11,6 +11,8 @@ type Props = {
   onExitComplete?: () => void
 }
 
+const noop = () => {}
+
 const SidePanel = ({
   visible,
   toggleVisible,
@@ -21,7 +23,7 @@ const SidePanel = ({
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <AnimatePresence initial={false} onExitComplete={onExitComplete}>
+    <AnimatePresence initial={false} onExitComplete={onExitComplete || noop}>
       {visible && (
         <motion.div
           className="util-side-panel"

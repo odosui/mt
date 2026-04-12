@@ -8,11 +8,11 @@ export function sorted(items: TimelineItem[]): TimelineItem[] {
     const [yearA, monthA, dayA] = a.date.split('-')
     const [yearB, monthB, dayB] = b.date.split('-')
 
-    const yA = parseInt(yearA, 10)
+    const yA = parseInt(yearA ?? '', 10)
     const mA = monthA ? parseInt(monthA, 10) : 12
     const dA = dayA ? parseInt(dayA, 10) : new Date(yA, mA, 0).getDate()
 
-    const yB = parseInt(yearB, 10)
+    const yB = parseInt(yearB ?? '', 10)
     const mB = monthB ? parseInt(monthB, 10) : 12
     const dB = dayB ? parseInt(dayB, 10) : new Date(yB, mB, 0).getDate()
 

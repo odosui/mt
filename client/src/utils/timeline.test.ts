@@ -138,8 +138,8 @@ describe('groupTimeline', () => {
     // 2026-03-12 is Thursday, 2026-03-15 is Sunday — same week (Mon-Sun)
     const groups = groupTimeline(items)
     expect(groups.thisWeeksEvents).toHaveLength(1)
-    expect(groups.thisWeeksEvents[0]?.date).toBe('2026-03-15')
-    expect(groups.thisWeeksEvents[0]?.content).toContain('Project Hail Mary')
+    expect(groups.thisWeeksEvents?.[0]?.date).toBe('2026-03-15')
+    expect(groups.thisWeeksEvents?.[0]?.content).toContain('Project Hail Mary')
   })
 
   it('should place all April events in nextMonthsEvents', () => {
@@ -147,15 +147,15 @@ describe('groupTimeline', () => {
     // 11 specific 2026-04-XX dates + the partial 2026-04 date
     expect(groups.nextMonthsEvents).toHaveLength(12)
     expect(
-      groups.nextMonthsEvents.every((e) => e.date.startsWith('2026-04')),
+      groups.nextMonthsEvents?.every((e) => e.date.startsWith('2026-04')),
     ).toBe(true)
   })
 
   it('should place May events in secondNextMonthsEvents', () => {
     const groups = groupTimeline(items)
     expect(groups.secondNextMonthsEvents).toHaveLength(2)
-    expect(groups.secondNextMonthsEvents[0]?.date).toBe('2026-05-02')
-    expect(groups.secondNextMonthsEvents[1]?.date).toBe('2026-05-08')
+    expect(groups.secondNextMonthsEvents?.[0]?.date).toBe('2026-05-02')
+    expect(groups.secondNextMonthsEvents?.[1]?.date).toBe('2026-05-08')
   })
 
   it('should have empty buckets for unused groups', () => {
@@ -171,7 +171,7 @@ describe('groupTimeline', () => {
 
   it('should treat partial date 2026-04 as end of April (April 30)', () => {
     const groups = groupTimeline(items)
-    const partialDateItem = groups.nextMonthsEvents.find(
+    const partialDateItem = groups.nextMonthsEvents?.find(
       (e) => e.date === '2026-04',
     )
     expect(partialDateItem).toBeDefined()

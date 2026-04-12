@@ -331,7 +331,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
   }, [notes.data, getCurrentNote])
 
   const publishCurrentNote = useCallback(
-    async (slug: string, title: string, description: string, category: string) => {
+    async (
+      slug: string,
+      title: string,
+      description: string,
+      category: string,
+    ) => {
       const note = getCurrentNote()
       if (!note) {
         return
@@ -560,7 +565,7 @@ function replaceNote(notes: INoteSearch[], sid: number, note: INote) {
           ...n,
           snippet: note.snippet,
           tags: note.tags,
-          updated_at_in_words: note.updated_at_in_words,
+          updated_at_in_words: note.updated_at_in_words ?? '',
         }
       : n,
   )
