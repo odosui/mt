@@ -30,9 +30,26 @@ function titleFor(note: Note): string {
   return note.seo_title || extractTitle(note.body);
 }
 
+async function loadSettings(
+  mtHome: string,
+): Promise<Record<string, string>> {
+  try {
+    const raw = await fs.readFile(path.join(mtHome, "settings.json"), "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function googleAnalyticsSnippet(measurementId: string): string {
+  return `<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeAttr(measurementId)}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${escapeAttr(measurementId)}');</script>`;
+}
+
 export async function buildStaticSite(mtHome: string, outputDir: string) {
   const mediaDir = path.join(mtHome, "media");
   const outDir = path.resolve(outputDir);
+  const settings = await loadSettings(mtHome);
   const layoutTemplate = await loadLayoutTemplate();
 
   // Read all notes and filter to seo_published
@@ -69,10 +86,14 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
     }
   }
 
+  const analytics = settings.google_analytics_id
+    ? googleAnalyticsSnippet(settings.google_analytics_id)
+    : "";
+
   // Generate pages
   for (const note of published) {
     const slug = slugFor(note);
-    const html = renderNotePage(note, published, idToSlug, layoutTemplate);
+    const html = renderNotePage(note, published, idToSlug, layoutTemplate, analytics);
     const pageDir = path.join(outDir, slug);
     await fs.mkdir(pageDir, { recursive: true });
     await fs.writeFile(path.join(pageDir, "index.html"), html, "utf-8");
@@ -80,7 +101,7 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
   }
 
   // Generate index page
-  const indexHtml = renderIndexPage(published, layoutTemplate);
+  const indexHtml = renderIndexPage(published, layoutTemplate, analytics);
   await fs.writeFile(path.join(outDir, "index.html"), indexHtml, "utf-8");
   console.log("  index.html");
 
@@ -186,6 +207,7 @@ function pageLayout(
   layoutTemplate: string,
   currentSlug?: string,
   description?: string,
+  analytics?: string,
 ): string {
   const sidebar = sidebarHtml(pages, currentSlug);
   const metaDesc = description
@@ -195,6 +217,7 @@ function pageLayout(
   return layoutTemplate
     .replace("{{title}}", escapeHtml(title))
     .replace("{{metaDesc}}", metaDesc)
+    .replace("{{analytics}}", analytics || "")
     .replace("{{sidebar}}", sidebar)
     .replace("{{content}}", content);
 }
@@ -204,6 +227,7 @@ function renderNotePage(
   allPages: Note[],
   idToSlug: Record<string, string>,
   layoutTemplate: string,
+  analytics: string,
 ): string {
   const htmlContent = convertMarkdown(note.body, idToSlug);
   const contentWithFooter =
@@ -216,10 +240,11 @@ function renderNotePage(
     layoutTemplate,
     slugFor(note),
     note.seo_description,
+    analytics,
   );
 }
 
-function renderIndexPage(pages: Note[], layoutTemplate: string): string {
+function renderIndexPage(pages: Note[], layoutTemplate: string, analytics: string): string {
   const grouped: Record<string, Note[]> = {};
   for (const p of pages) {
     const cat = p.seo_category || "uncategorized";
@@ -241,7 +266,7 @@ function renderIndexPage(pages: Note[], layoutTemplate: string): string {
     }
   }
 
-  return pageLayout("Home", content, pages, layoutTemplate);
+  return pageLayout("Home", content, pages, layoutTemplate, undefined, undefined, analytics);
 }
 
 // --- Media copy ---
