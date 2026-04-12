@@ -1,10 +1,10 @@
 # Multi-stage build for mt application
 
 # Stage 1: Build client
-FROM node:20-alpine AS client-builder
+FROM node:24-alpine AS client-builder
 WORKDIR /app
 # Copy config.json for vite.config.ts
-COPY config.json ./
+COPY config.json tsconfig.base.json ./
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
@@ -12,7 +12,9 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2: Build server
-FROM node:20-alpine AS server-builder
+FROM node:24-alpine AS server-builder
+WORKDIR /app
+COPY tsconfig.base.json ./
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm install
@@ -20,7 +22,7 @@ COPY server/ ./
 RUN npm run build
 
 # Stage 3: Production image
-FROM node:20-alpine
+FROM node:24-alpine
 RUN apk add --no-cache git
 WORKDIR /app
 
