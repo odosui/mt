@@ -276,12 +276,6 @@
     border-radius: $unit0;
     background: var(--color-flashcards-panel-form-bg);
     border: 1px solid var(--color-flashcards-panel-border);
-    cursor: pointer;
-    transition: background-color 0.15s ease-out;
-
-    &:hover {
-      background: var(--color-flashcards-panel-bg-hover);
-    }
 
     .quiz-list-item-title {
       font-size: $text2;
@@ -303,25 +297,23 @@
 
     .quiz-list-item-chart {
       display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 22px;
+      align-items: center;
+      gap: 6px;
+      height: 14px;
       margin-top: $unit1;
       padding-right: $unit7;
 
       .quiz-list-item-bar-wrap {
-        flex: 1;
-        min-width: 3px;
-        max-width: 10px;
-        height: 100%;
         position: relative;
         display: flex;
-        align-items: flex-end;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
-          .quiz-list-item-bar {
+          .quiz-list-item-dot {
+            transform: scale(1.4);
             opacity: 1;
-            transform: scaleY(1.08);
+            box-shadow: 0 0 0 3px var(--color-flashcards-panel-bg-hover);
           }
           .quiz-list-item-bar-tooltip {
             opacity: 1;
@@ -331,14 +323,15 @@
         }
       }
 
-      .quiz-list-item-bar {
-        width: 100%;
-        border-radius: 2px 2px 0 0;
-        opacity: 0.75;
+      .quiz-list-item-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        opacity: 0.85;
         transition:
           opacity 0.15s ease-out,
-          transform 0.15s ease-out;
-        transform-origin: bottom;
+          transform 0.15s ease-out,
+          box-shadow 0.15s ease-out;
       }
 
       .quiz-list-item-bar-tooltip {
@@ -399,13 +392,13 @@
       font-weight: 500;
       color: var(--color-flashcards-panel-text-secondary-intense);
       text-decoration: none;
-      background: var(--color-flashcards-panel-bg-hover-intense);
+      background: var(--color-flashcards-panel-bg-hover);
       border: none;
       border-radius: $unit0;
       transition: background-color 0.15s ease-out;
 
       svg {
-        fill: var(--color-flashcards-panel-text-secondary-intense);
+        fill: var(--color-flashcards-panel-text-secondary);
       }
 
       &:hover {
