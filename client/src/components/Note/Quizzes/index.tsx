@@ -5,8 +5,9 @@ import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'slim-react-router'
 import api from '../../../api'
 import { StateContext } from '../../../state/StateProvider'
-import { Quiz } from '../../../types'
+import { Quiz, getLastQuizAttempt } from '../../../types'
 import SidePanel from '../../SidePanel'
+import AttemptsChart from './AttemptsChart'
 import QuizForm from './QuizForm'
 
 const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
@@ -64,24 +65,27 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
       {!showForm && (
         <>
           <div className="quiz-menu-list">
-            {quizzes.map((q) => (
+            {quizzes.map((q) => {
+              const lastAttempt = getLastQuizAttempt(q)
+              return (
               <div key={`${q.noteId}-${q.id}`} className="quiz-list-item">
                 <div className="quiz-list-item-title">{q.title}</div>
                 <div className="quiz-list-item-meta">
                   {q.items.length} questions
-                  {q.last_taken_at && (
+                  {lastAttempt && (
                     <>
                       {' · '}
                       <span className="quiz-list-item-score">
-                        {q.last_score}%
+                        {lastAttempt.score}%
                       </span>
                       {' · '}
-                      {formatDistanceToNow(new Date(q.last_taken_at), {
+                      {formatDistanceToNow(new Date(lastAttempt.taken_at), {
                         addSuffix: true,
                       })}
                     </>
                   )}
                 </div>
+                {q.attempts && <AttemptsChart attempts={q.attempts} />}
                 <a
                   href={`/quiz/${q.noteId}__${q.id}`}
                   className="quiz-list-item-take"
@@ -94,7 +98,8 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
                   Take
                 </a>
               </div>
-            ))}
+              )
+            })}
           </div>
 
           {quizzes.length === 0 && (

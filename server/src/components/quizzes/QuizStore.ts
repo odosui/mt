@@ -7,15 +7,32 @@ export type QuizItem = {
   correctIndex: number;
 };
 
+export type QuizAttempt = {
+  taken_at: string;
+  score: number;
+};
+
 export type Quiz = {
   id: number;
   noteId: string;
   title: string;
   items: QuizItem[];
   created_at: string;
+  attempts?: QuizAttempt[];
   last_taken_at?: string;
   last_score?: number;
 };
+
+function normalizeAttempts(quiz: Quiz): Quiz {
+  if (Array.isArray(quiz.attempts)) return quiz;
+  if (quiz.last_taken_at && typeof quiz.last_score === "number") {
+    return {
+      ...quiz,
+      attempts: [{ taken_at: quiz.last_taken_at, score: quiz.last_score }],
+    };
+  }
+  return { ...quiz, attempts: [] };
+}
 
 export interface QuizStore {
   listByNote(noteId: string): Promise<Quiz[]>;
@@ -63,7 +80,7 @@ export function createFSQuizStore(mtHome: string): QuizStore {
       const filePath = path.join(quizzesDir, file);
       const content = await fs.readFile(filePath, "utf-8");
       try {
-        quizzes.push(JSON.parse(content));
+        quizzes.push(normalizeAttempts(JSON.parse(content)));
       } catch {
         console.warn(`Skipping invalid quiz file: ${file}`);
       }
@@ -100,7 +117,7 @@ export function createFSQuizStore(mtHome: string): QuizStore {
     const filePath = path.join(quizzesDir, quizFilename(noteId, quizId));
     try {
       const content = await fs.readFile(filePath, "utf-8");
-      return JSON.parse(content);
+      return normalizeAttempts(JSON.parse(content));
     } catch {
       return null;
     }
@@ -116,7 +133,10 @@ export function createFSQuizStore(mtHome: string): QuizStore {
       return null;
     }
 
-    quiz.last_taken_at = new Date().toISOString();
+    const taken_at = new Date().toISOString();
+    const attempts = Array.isArray(quiz.attempts) ? quiz.attempts : [];
+    quiz.attempts = [...attempts, { taken_at, score }];
+    quiz.last_taken_at = taken_at;
     quiz.last_score = score;
 
     const filePath = path.join(quizzesDir, quizFilename(noteId, quizId));

@@ -71,14 +71,30 @@ export type QuizItem = {
   correctIndex: number
 }
 
+export type QuizAttempt = {
+  taken_at: string
+  score: number
+}
+
 export type Quiz = {
   id: number
   noteId: string
   title: string
   items: QuizItem[]
   created_at: string
+  attempts?: QuizAttempt[]
   last_taken_at?: string
   last_score?: number
+}
+
+export function getLastQuizAttempt(quiz: Quiz): QuizAttempt | null {
+  if (Array.isArray(quiz.attempts) && quiz.attempts.length > 0) {
+    return quiz.attempts[quiz.attempts.length - 1]
+  }
+  if (quiz.last_taken_at && typeof quiz.last_score === 'number') {
+    return { taken_at: quiz.last_taken_at, score: quiz.last_score }
+  }
+  return null
 }
 
 export type INoteImage = {
