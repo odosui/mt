@@ -89,7 +89,7 @@ export type Quiz = {
 
 export function getLastQuizAttempt(quiz: Quiz): QuizAttempt | null {
   if (Array.isArray(quiz.attempts) && quiz.attempts.length > 0) {
-    return quiz.attempts[quiz.attempts.length - 1]
+    return quiz.attempts[quiz.attempts.length - 1] ?? null
   }
   if (quiz.last_taken_at && typeof quiz.last_score === 'number') {
     return { taken_at: quiz.last_taken_at, score: quiz.last_score }
