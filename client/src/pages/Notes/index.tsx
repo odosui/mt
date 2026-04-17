@@ -1,4 +1,4 @@
-import { PencilIcon, PinIcon, SearchIcon } from '@primer/octicons-react'
+import { PinIcon, PlusIcon, SearchIcon } from '@primer/octicons-react'
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'slim-react-router'
@@ -176,13 +176,13 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
             />
           </div>
           <div className="newNote" onClick={handleAddNewNote}>
-            <PencilIcon />
+            <PlusIcon />
           </div>
         </div>
         <div className="notes-items">
           {!notes.loading && (!notes.data || notes.data.length === 0) && (
             <div className="no-results">
-              Click the pencil icon to add your first note.
+              Click the plus icon to add your first note.
             </div>
           )}
           {(pinnedFirst || []).map((note, ind) => (
@@ -236,7 +236,7 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
           notes.data?.length === 0 && (
             <div className="placeholder">
               <Button
-                icon={<PencilIcon />}
+                icon={<PlusIcon />}
                 onClick={handleAddNewNote}
                 style={{ margin: 'auto' }}
               >

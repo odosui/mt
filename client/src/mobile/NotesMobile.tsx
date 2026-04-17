@@ -37,7 +37,7 @@ const NotesMobile: React.FC<{ review: boolean }> = ({ review = false }) => {
 
         {!notes.loading && (!notes.data || notes.data.length === 0) && (
           <div className="no-results">
-            Click the pencil icon to add your first note.
+            Click the plus icon to add your first note.
           </div>
         )}
         {(notes.data || []).map((note, ind) => (
