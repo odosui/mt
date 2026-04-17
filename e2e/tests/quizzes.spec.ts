@@ -1,5 +1,5 @@
-import { expect, test, Page } from "@playwright/test";
-import { newNoteBtn, noteTA, saveBtn, noteItem } from "./helpers";
+import { expect, Page, test } from "@playwright/test";
+import { newNoteBtn, noteItem, noteTA, saveBtn } from "./helpers";
 
 const quizzesToggler = (p: Page) => p.locator(".quizzes-toggler");
 const quizzesPanel = (p: Page) => p.locator(".quizzes-panel");
@@ -8,8 +8,6 @@ const quizForm = (p: Page) => p.locator(".quiz-menu-form");
 const quizTitle = (p: Page) => p.locator("#quiz-title");
 const quizText = (p: Page) => p.locator("#quiz-text");
 const quizNum = (p: Page) => p.locator("#quiz-num");
-const quizModel = (p: Page) => p.locator("#quiz-model");
-const quizExtra = (p: Page) => p.locator("#quiz-extra");
 const generateBtn = (p: Page) => quizForm(p).locator('button[type="submit"]');
 const quizListItem = (p: Page, title: string) =>
   p.locator(".quiz-list-item-title", { hasText: title });
@@ -40,6 +38,12 @@ test.describe("Quizzes", () => {
     await p.goto("/app/notes");
     await createNote(p, "# Quiz Note\n\nSome content");
     await expect(noteItem(p, "Quiz Note")).toBeVisible();
+
+    // Button should not show count badge when there are no quizzes
+    await expect(quizzesToggler(p)).toContainText("Quizzes");
+    await expect(
+      quizzesToggler(p).locator(".side-toggler-badge"),
+    ).not.toBeVisible();
 
     // Open panel — should show empty state
     await quizzesToggler(p).click();
@@ -92,6 +96,14 @@ test.describe("Quizzes", () => {
     // After completion — back to list with new quiz
     await expect(quizListItem(p, "My E2E Quiz")).toBeVisible({ timeout: 5000 });
     await expect(quizForm(p)).not.toBeVisible();
+
+    // Button should now show the quiz count badge
+    await expect(
+      quizzesToggler(p).locator(".side-toggler-badge"),
+    ).toBeVisible();
+    await expect(quizzesToggler(p).locator(".side-toggler-badge")).toHaveText(
+      "1",
+    );
   });
 
   test("F2: show error on generation failure", async ({ page: p }) => {

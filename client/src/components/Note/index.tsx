@@ -46,6 +46,7 @@ const Note: React.FC<{
   const [mode, setMode] = useState<'view' | 'edit'>('view')
 
   const [updatedBody, setUpdatedBody] = useState<string>('')
+  const [quizCount, setQuizCount] = useState(0)
 
   const handleChange = (changed: string) => {
     setUpdatedBody(changed)
@@ -251,6 +252,7 @@ const Note: React.FC<{
               onClick={toggleQuizzesVisible}
             >
               <BeakerIcon /> Quizzes
+              {quizCount > 0 && <span className="side-toggler-badge">{quizCount}</span>}
             </div>
           )}
 
@@ -396,7 +398,7 @@ const Note: React.FC<{
         </div>
         {!focusMode && <Flashcards noteId={currentNote.id} />}
         {!focusMode && <Images noteSid={currentNote.sid} />}
-        {!focusMode && <Quizzes noteId={currentNote.id} />}
+        {!focusMode && <Quizzes noteId={currentNote.id} onCountChange={setQuizCount} />}
       </div>
     </div>
   )

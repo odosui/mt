@@ -10,7 +10,7 @@ import SidePanel from '../../SidePanel'
 import AttemptsChart from './AttemptsChart'
 import QuizForm from './QuizForm'
 
-const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
+const Quizzes: React.FC<{ noteId: number; onCountChange?: (count: number) => void }> = ({ noteId, onCountChange }) => {
   const { quizzesVisible, toggleQuizzesVisible } = useContext(StateContext)
   const navigate = useNavigate()
 
@@ -25,8 +25,12 @@ const Quizzes: React.FC<{ noteId: number }> = ({ noteId }) => {
     loadQuizzes()
   }, [noteId])
 
+  useEffect(() => {
+    onCountChange?.(quizzes.length)
+  }, [quizzes.length])
+
   const handleGenerated = (quiz: Quiz) => {
-    setQuizzes([quiz, ...quizzes])
+    setQuizzes((prev) => [quiz, ...prev])
     setShowForm(false)
   }
 

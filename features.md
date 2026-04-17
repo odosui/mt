@@ -1,10 +1,18 @@
 # Features
 
+## How to work on this repo
+
+The flow is very simple. You start buy reading this file. You also run `git diff features.md` to see what's new - this is what I expect you to implement.
+
+1. You start by writing e2e tests for the new features, or updating the current ones. Make sure, you try to only see whatever users sees on the page (so mimize direct dom access by classes and ids). Also make sure everything that can be tested during one run should be tested, so don't multiply "tests". After finished, they should be failing, because the features are not implemented yet.
+
+2. Now you can start implementing. Make sure you are following the best practices. I like my code to be simple, splited into smaller components or functions when it does make sense. For CSS make sure you are using variables $unit1, $unit2 etc.
+
 ## Quizzes
 
 - [x] F1: User can view the quizzes for a given note by clicking on the "Quizzes" button.
 
-It's going to open the right panel with a list of quizzes. When there are not quizzes, the placeholder is shown saying "No quizzes yet.".
+It's going to open the right panel with a list of quizzes. When there are not quizzes, the placeholder is shown saying "No quizzes yet.". The quizzes button is hanging on the right side of the note, and it also contains the count of quizzes for that note.
 
 - [x] F2: User can create a quiz for a given note by clicking on the "+" button within the quizzes panel.
 

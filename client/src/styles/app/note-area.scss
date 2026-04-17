@@ -177,6 +177,21 @@
               fill: var(--color-note-area-text);
             }
           }
+          .side-toggler-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: $unit3;
+            height: $unit3;
+            padding: 0 $unit0;
+            margin-left: $unit1;
+            border-radius: $unit1;
+            background-color: var(--color-note-area-text-secondary-darker);
+            color: var(--color-note-area-bg);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+          }
         }
 
         .quizzes-toggler {

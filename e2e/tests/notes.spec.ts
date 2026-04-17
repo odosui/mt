@@ -19,7 +19,7 @@ test.describe("Notes", () => {
     await expect(page.locator("aside")).toContainText("KNOWLEDGE BASE");
     await page.locator("aside").getByRole("link", { name: /Notes/ }).click();
     await expect(page.locator(".notes-items")).toContainText(
-      "Click the pencil icon to add your first note.",
+      "Click the plus icon to add your first note.",
     );
     await expect(
       page
