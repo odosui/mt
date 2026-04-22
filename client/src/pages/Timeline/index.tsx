@@ -3,6 +3,7 @@ import api from '../../api'
 import { TimelineItem } from '../../types'
 import {
   extractYears,
+  formatMonth,
   formatMonthYear,
   groupTimeline,
   sorted,
@@ -99,11 +100,21 @@ const Timeline = () => {
           )}
 
           {thisMonthsEvents && thisMonthsEvents.length > 0 && (
-            <TimelineGroup events={thisMonthsEvents} title="This Month" />
+            <TimelineGroup
+              events={thisMonthsEvents}
+              title={`This Month (${formatMonth(
+                thisMonthsEvents[0]?.date ?? '',
+              )})`}
+            />
           )}
 
           {nextMonthsEvents && nextMonthsEvents.length > 0 && (
-            <TimelineGroup events={nextMonthsEvents} title="Next Month" />
+            <TimelineGroup
+              events={nextMonthsEvents}
+              title={`Next Month (${formatMonth(
+                nextMonthsEvents[0]?.date ?? '',
+              )})`}
+            />
           )}
 
           {secondNextMonthsEvents && secondNextMonthsEvents.length > 0 && (

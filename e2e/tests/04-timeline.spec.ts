@@ -2,6 +2,8 @@ import { expect, test } from "@playwright/test";
 import {
   createNote,
   dateOffset,
+  firstOfNextMonthPlus,
+  monthNameOf,
   notesLink,
   timelineEventCard,
   timelineGroup,
@@ -35,9 +37,10 @@ test.describe("Timeline", () => {
     await expect(p.getByText("2099-12-25", { exact: true })).toBeVisible();
 
     // Hovering the date reveals a relative-time tooltip (via title attr)
-    await expect(
-      p.getByText("2099-12-25", { exact: true }),
-    ).toHaveAttribute("title", /years|months|days/);
+    await expect(p.getByText("2099-12-25", { exact: true })).toHaveAttribute(
+      "title",
+      /years|months|days/,
+    );
 
     // Each event links back to the source note
     const noteLink = p.getByRole("link", { name: "Holidays" }).first();
@@ -53,10 +56,12 @@ test.describe("Timeline", () => {
 
     const today = dateOffset(0);
     const tomorrow = dateOffset(1);
+    const nextMonthDate = firstOfNextMonthPlus(15);
+    const nextMonthName = monthNameOf(nextMonthDate);
 
     await createNote(
       p,
-      `# Schedule\n\n${today} Standup today\n${tomorrow} Standup tomorrow\n2099-06-15 Far future trip\n2000-01-01 Old retro\n\n#timeline`,
+      `# Schedule\n\n${today} Standup today\n${tomorrow} Standup tomorrow\n${nextMonthDate} Dentist visit\n2099-06-15 Far future trip\n2000-01-01 Old retro\n\n#timeline`,
     );
 
     await timelineLink(p).click();
@@ -67,6 +72,11 @@ test.describe("Timeline", () => {
     ).toBeVisible();
     await expect(
       timelineGroup(p, /^Tomorrow/).getByText("Standup tomorrow"),
+    ).toBeVisible();
+    await expect(
+      timelineGroup(p, `Next Month (${nextMonthName})`).getByText(
+        "Dentist visit",
+      ),
     ).toBeVisible();
     await expect(
       timelineGroup(p, /^Future Events/).getByText("Far future trip"),

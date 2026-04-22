@@ -198,3 +198,10 @@ export function formatMonthYear(date: string): string {
   const itemDate = new Date(year, month - 1, 1)
   return format(itemDate, 'MMMM yyyy')
 }
+
+export function formatMonth(date: string): string {
+  const [year, month] = date.split('-').map((d) => parseInt(d, 10))
+  if (!year || !month) return ''
+  const itemDate = new Date(year, month - 1, 1)
+  return format(itemDate, 'MMMM')
+}

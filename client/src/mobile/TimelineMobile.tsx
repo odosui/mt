@@ -6,6 +6,7 @@ import { TimelineItem } from '../types'
 import Spinner from '../ui/Spinner'
 import {
   extractYears,
+  formatMonth,
   groupTimeline,
   humanDays,
   sorted,
@@ -108,11 +109,21 @@ const TimelineMobile = () => {
           )}
 
           {thisMonthsEvents && thisMonthsEvents.length > 0 && (
-            <ItemGroup events={thisMonthsEvents} title="This Month" />
+            <ItemGroup
+              events={thisMonthsEvents}
+              title={`This Month (${formatMonth(
+                thisMonthsEvents[0]?.date ?? '',
+              )})`}
+            />
           )}
 
           {nextMonthsEvents && nextMonthsEvents.length > 0 && (
-            <ItemGroup events={nextMonthsEvents} title="Next Month" />
+            <ItemGroup
+              events={nextMonthsEvents}
+              title={`Next Month (${formatMonth(
+                nextMonthsEvents[0]?.date ?? '',
+              )})`}
+            />
           )}
 
           {thisYearsEvents && thisYearsEvents.length > 0 && (

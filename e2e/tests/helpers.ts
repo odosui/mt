@@ -88,6 +88,28 @@ export function dateOffset(days: number): string {
   return `${y}-${m}-${day}`;
 }
 
+// Returns YYYY-MM-DD for (first of next calendar month) + `days`.
+// Picking days >= 15 guarantees the result lands in the "Next Month"
+// section, regardless of what weekday/day-of-month it's run on.
+export function firstOfNextMonthPlus(days: number): string {
+  const d = new Date();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+// Full English month name for a YYYY-MM-DD date string.
+export function monthNameOf(date: string): string {
+  const [y, m, d] = date.split("-").map((v) => parseInt(v, 10));
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1).toLocaleString("en-US", {
+    month: "long",
+  });
+}
+
 // Helpers
 
 export async function createNote(p: Page, content: string) {

@@ -40,7 +40,7 @@ Any note with the tag #timeline (case-insensitive) contributes events to the tim
 
 - [x] F7: Events are grouped chronologically into time-period sections.
 
-Events are split into the following groups (only non-empty groups are rendered): Passed Events, Today, Tomorrow, This Week, Next Week, This Month, Next Month, the two months after that (shown as "Month YYYY"), This Year (YYYY), Next Year (YYYY), and Future Events. On mobile the +2/+3 month sections are omitted and Passed/Future are pushed to the bottom. On desktop, each group can be collapsed/expanded by clicking its title.
+Events are split into the following groups (only non-empty groups are rendered): Passed Events, Today, Tomorrow, This Week, Next Week, This Month (MonthName), Next Month (MonthName), the two months after that (shown as "Month YYYY"), This Year (YYYY), Next Year (YYYY), and Future Events. The "This Month" and "Next Month" headings include the full month name in parentheses — e.g. "This Month (June)", "Next Month (July)". On mobile the +2/+3 month sections are omitted and Passed/Future are pushed to the bottom. On desktop, each group can be collapsed/expanded by clicking its title.
 
 - [x] F8: User can filter the timeline by year.
 
