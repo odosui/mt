@@ -55,6 +55,39 @@ export function flashcardsPanel(p: Page) {
   return p.locator(".flashcards-panel");
 }
 
+// Timeline locators
+
+export function timelineLink(p: Page) {
+  return p.locator("aside").getByRole("link", { name: /Timeline/ });
+}
+
+export function notesLink(p: Page) {
+  return p.locator("aside").getByRole("link", { name: /Notes/ });
+}
+
+// Section wrapping a timeline group, identified by its heading text.
+export function timelineGroup(p: Page, title: string | RegExp) {
+  return p
+    .getByRole("heading", { level: 2, name: title })
+    .locator("xpath=..");
+}
+
+// Card wrapping a single event — used when we need to inspect inline styling
+// like the per-note border color.
+export function timelineEventCard(p: Page, content: string) {
+  return p.locator(".timeline-item-content").filter({ hasText: content });
+}
+
+// Returns YYYY-MM-DD string offset from today by `days` (negative for past).
+export function dateOffset(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 // Helpers
 
 export async function createNote(p: Page, content: string) {

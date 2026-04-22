@@ -27,3 +27,25 @@ The flashcards buttons is hanging on the right side along with the quizzes butto
 - [x] F4: User can create flashcards for a given note by clicking on the "+" button within the flashcards panel.
 
 When user clicks that buttons a form appear with question, answer, and a checkbox "Add Reverse". Once added the card or two cards (when add reverse checked) appear in the list.
+
+## Timeline
+
+- [x] F5: User can open timeline by clicking on the "Timeline" from the left side menu.
+
+Timeline is a place where all timeline events are organized. When there are no events at all, "No activity yet" is shown.
+
+- [x] F6: Timeline events are collected from notes tagged with #timeline.
+
+Any note with the tag #timeline (case-insensitive) contributes events to the timeline. An event is any line within such a note that starts with a date in the format YYYY-MM-DD, YYYY-MM, or YYYY, followed by a space and the event content. Each event is rendered with its raw date, the markdown content, and a link back to its source note. Hovering the date shows a relative ("in 3 days") tooltip.
+
+- [x] F7: Events are grouped chronologically into time-period sections.
+
+Events are split into the following groups (only non-empty groups are rendered): Passed Events, Today, Tomorrow, This Week, Next Week, This Month, Next Month, the two months after that (shown as "Month YYYY"), This Year (YYYY), Next Year (YYYY), and Future Events. On mobile the +2/+3 month sections are omitted and Passed/Future are pushed to the bottom. On desktop, each group can be collapsed/expanded by clicking its title.
+
+- [x] F8: User can filter the timeline by year.
+
+At the top of the timeline there is a year filter: an "ALL" button plus one button per year that has events. Selecting a year filters items to dates starting with that year.
+
+- [x] F9: User can color-code timeline events via a #color tag on the source note.
+
+When the source note has a `#color=<value>` tag (case-insensitive), that color is used as the left border of every event card from that note; otherwise a default gray border is used.
