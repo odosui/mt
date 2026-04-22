@@ -42,7 +42,26 @@ export function favBtn(p: Page) {
   return p.locator('.menu-action[title*="favorites"]');
 }
 
+// Area locators — scoping helpers for note panels
+export function noteArea(p: Page) {
+  return p.locator(".note-area");
+}
+
+export function quizzesPanel(p: Page) {
+  return p.locator(".quizzes-panel");
+}
+
+export function flashcardsPanel(p: Page) {
+  return p.locator(".flashcards-panel");
+}
+
 // Helpers
+
+export async function createNote(p: Page, content: string) {
+  await newNoteBtn(p).click();
+  await noteTA(p).fill(content);
+  await saveBtn(p).click();
+}
 
 export async function expectTag(page: Page, tag: string, count: number) {
   await expect(
