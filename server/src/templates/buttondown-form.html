@@ -1,0 +1,31 @@
+<aside class="bd-subscribe">
+  <div class="bd-subscribe-inner">
+    <h3 class="bd-subscribe-title">{{title}}</h3>
+    <p class="bd-subscribe-sub">No spam. Unsubscribe anytime.</p>
+    <form
+      action="https://buttondown.com/api/emails/embed-subscribe/{{handle}}"
+      method="post"
+      class="embeddable-buttondown-form bd-subscribe-form"
+      target="popupwindow"
+      onsubmit="window.open('https://buttondown.com/{{handle}}', 'popupwindow')"
+    >
+      <label for="bd-email" class="bd-subscribe-label">Enter your email</label>
+      <div class="bd-subscribe-row">
+        <input
+          type="email"
+          name="email"
+          id="bd-email"
+          placeholder="you@example.com"
+          required
+          class="bd-subscribe-input"
+        />
+        <input type="submit" value="Subscribe" class="bd-subscribe-btn" />
+      </div>
+      <p class="bd-subscribe-powered">
+        <a href="https://buttondown.com/refer/{{handle}}" target="_blank" rel="noopener">
+          Powered by Buttondown.
+        </a>
+      </p>
+    </form>
+  </div>
+</aside>

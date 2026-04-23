@@ -22,6 +22,19 @@ async function loadLayoutTemplate(): Promise<string> {
   return fs.readFile(path.join(TEMPLATES_DIR, "layout.html"), "utf-8");
 }
 
+async function loadButtondownForm(
+  handle: string,
+  title: string,
+): Promise<string> {
+  const template = await fs.readFile(
+    path.join(TEMPLATES_DIR, "buttondown-form.html"),
+    "utf-8",
+  );
+  return template
+    .replace(/\{\{handle\}\}/g, escapeAttr(handle))
+    .replace(/\{\{title\}\}/g, escapeHtml(title));
+}
+
 function slugFor(note: Note): string {
   return note.seo_slug || snakeCased(extractTitle(note.body));
 }
@@ -90,10 +103,24 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
     ? googleAnalyticsSnippet(settings.google_analytics_id)
     : "";
 
+  const buttondownForm = settings.buttondown_handle
+    ? await loadButtondownForm(
+        settings.buttondown_handle,
+        settings.buttondown_title || "Get new posts in your inbox",
+      )
+    : "";
+
   // Generate pages
   for (const note of published) {
     const slug = slugFor(note);
-    const html = renderNotePage(note, published, idToSlug, layoutTemplate, analytics);
+    const html = renderNotePage(
+      note,
+      published,
+      idToSlug,
+      layoutTemplate,
+      analytics,
+      buttondownForm,
+    );
     const pageDir = path.join(outDir, slug);
     await fs.mkdir(pageDir, { recursive: true });
     await fs.writeFile(path.join(pageDir, "index.html"), html, "utf-8");
@@ -228,10 +255,12 @@ function renderNotePage(
   idToSlug: Record<string, string>,
   layoutTemplate: string,
   analytics: string,
+  buttondownForm: string,
 ): string {
   const htmlContent = convertMarkdown(note.body, idToSlug);
   const contentWithFooter =
     htmlContent +
+    (buttondownForm ? `\n${buttondownForm}\n` : "") +
     `\n<footer class="mt-footer">Built with <a href="https://github.com/odosui/mt/">mt</a></footer>\n`;
   return pageLayout(
     titleFor(note),
