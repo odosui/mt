@@ -53,3 +53,9 @@ At the top of the timeline there is a year filter: an "ALL" button plus one butt
 - [x] F9: User can color-code timeline events via a #color tag on the source note.
 
 When the source note has a `#color=<value>` tag (case-insensitive), that color is used as the left border of every event card from that note; otherwise a default gray border is used.
+
+## Settings
+
+- [x] F11: User can view current version and latest commit hash in Settings
+
+When user go to Settings in ui, it should see the current version. The version propagates from package.json. Both in dev mode and in production via docker. It should also show the latest commit hash.

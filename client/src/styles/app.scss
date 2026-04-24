@@ -248,6 +248,21 @@ body,
     margin-bottom: 50px;
   }
 
+  .settings-info-row {
+    display: flex;
+    gap: $unit2;
+    margin-bottom: $unit2;
+    font-size: $text4;
+
+    .settings-label {
+      color: var(--lighter);
+    }
+
+    .settings-value {
+      color: var(--textColor);
+    }
+  }
+
   .form-field {
     margin-bottom: $unit4;
 
