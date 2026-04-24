@@ -70,4 +70,33 @@ test.describe("Flashcards", () => {
     const cards = flashcardsPanel(p).locator(".flashcard");
     await expect(cards).toHaveCount(2);
   });
+
+  test("F10: clicking a flashcard flips it and shows the answer", async ({
+    page: p,
+  }) => {
+    await p.goto("/app/notes");
+    await createNote(p, "# Flip Note\n\nContent for flip test");
+    await expect(noteItem(p, "Flip Note")).toBeVisible();
+
+    // Open flashcards panel and create a card
+    await noteArea(p).getByText("Flashcards", { exact: true }).click();
+    await flashcardsPanel(p).getByRole("link").first().click();
+
+    const question = "What is React?";
+    const answer = "A JavaScript library for building UIs";
+
+    await p.getByLabel("Question").fill(question);
+    await p.getByLabel("Answer").fill(answer);
+    await p.getByRole("button", { name: "Add card" }).click();
+
+    // Card should show the question on the front
+    const card = flashcardsPanel(p).locator(".flashcard").first();
+    await expect(card.locator(".card-view-question")).toHaveText(question);
+
+    // Click the card to flip it
+    await card.locator(".front").click();
+
+    // The back (answer) should now be visible
+    await expect(card.locator(".back")).toHaveText(answer);
+  });
 });

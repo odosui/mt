@@ -28,6 +28,10 @@ The flashcards buttons is hanging on the right side along with the quizzes butto
 
 When user clicks that buttons a form appear with question, answer, and a checkbox "Add Reverse". Once added the card or two cards (when add reverse checked) appear in the list.
 
+- [x] F10: User can view the other side of a flashcard
+
+When user clicks on a flashcard, it flips and shows the other side with an answer.
+
 ## Timeline
 
 - [x] F5: User can open timeline by clicking on the "Timeline" from the left side menu.
