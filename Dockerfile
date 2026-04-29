@@ -2,6 +2,8 @@
 
 # Stage 1: Build client
 FROM node:24-alpine AS client-builder
+ARG GIT_COMMIT=""
+ENV GIT_COMMIT=$GIT_COMMIT
 WORKDIR /app
 # Copy config.json for vite.config.ts
 COPY config.json tsconfig.base.json package*.json ./

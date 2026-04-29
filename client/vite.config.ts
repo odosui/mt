@@ -17,9 +17,10 @@ const APP_VERSION = rootPackage.version
 
 // Get current git commit hash
 const GIT_COMMIT =
-  process.env.NODE_ENV === 'production'
+  process.env.GIT_COMMIT ||
+  (process.env.NODE_ENV === 'production'
     ? execSync('git rev-parse HEAD', { cwd: '..' }).toString().trim()
-    : ''
+    : '')
 
 export default defineConfig({
   plugins: [react()],
