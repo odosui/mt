@@ -1,21 +1,20 @@
-@import './reset';
-@import './vars';
-@import './breakpoints';
-@import './transitions';
-@import './app/elements';
-
-@import './typography';
-@import './mobile';
-@import './app/sidebar';
-@import './app/notes';
-@import './app/note-area';
-@import './app/flashcards-panel';
-@import './app/hovering-preview';
-@import './app/flashcards-page';
-@import './app/quiz-page';
-@import './components/tag-autocomplete';
-@import './components/theme-toggle';
-@import './app/git';
+@use './vars' as *;
+@use './breakpoints' as *;
+@use './reset';
+@use './transitions';
+@use './app/elements';
+@use './typography';
+@use './mobile';
+@use './app/sidebar';
+@use './app/notes';
+@use './app/note-area';
+@use './app/flashcards-panel';
+@use './app/hovering-preview';
+@use './app/flashcards-page';
+@use './app/quiz-page';
+@use './components/tag-autocomplete';
+@use './components/theme-toggle';
+@use './app/git';
 
 .desktop-app {
   display: flex;

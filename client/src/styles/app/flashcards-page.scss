@@ -1,3 +1,5 @@
+@use '../vars' as *;
+
 .flashcards-page {
   padding: $unit4;
   background-color: var(--color-flashcards-page-bg);

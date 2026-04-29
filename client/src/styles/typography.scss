@@ -1,4 +1,4 @@
-@import './vars';
+@use './vars' as *;
 
 .note-preview {
   width: 100%;

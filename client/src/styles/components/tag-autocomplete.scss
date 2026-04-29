@@ -1,4 +1,4 @@
-@import '../vars';
+@use '../vars' as *;
 
 .tag-autocomplete {
   background-color: var(--color-note-area-bg);

@@ -1,3 +1,5 @@
+@use '../vars' as *;
+
 .util-side-panel {
   width: $unit12;
   overflow-y: scroll;

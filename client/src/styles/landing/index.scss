@@ -1,6 +1,6 @@
-@import '../reset';
-@import '../breakpoints';
-@import '../vars';
+@use '../vars' as *;
+@use '../breakpoints' as *;
+@use '../reset';
 
 html {
   scroll-behavior: smooth;
