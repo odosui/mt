@@ -32,6 +32,19 @@ When user clicks that buttons a form appear with question, answer, and a checkbo
 
 When user clicks on a flashcard, it flips and shows the other side with an answer.
 
+- [x] F12: Flashcards are scheduled with minute-precision spaced repetition.
+
+Each flashcard has a `level` (0–15). After reviewing the answer the user grades the card with "Again" (level → 0) or "Good" (level += 1). The next review interval is derived from the new level:
+
+- level 1 → 1 minute
+- level 2 → 10 minutes
+- level 3 → 1 day
+- level 4 → 2 days
+- level 5 → 3 days
+- level 6+ → `floor(1.5 × previous interval)`
+
+This lets newly learned or just-failed cards reappear within the same session (1m / 10m learning steps) before graduating to day-scale intervals. A card at level 15 is considered "completed" and is no longer surfaced for review. The "Good" button shows the interval that will follow the next successful review (e.g. `1m`, `10m`, `1d`, `5d`). The Flashcards page lists every due card and refetches the queue once it has been worked through.
+
 ## Timeline
 
 - [x] F5: User can open timeline by clicking on the "Timeline" from the left side menu.
