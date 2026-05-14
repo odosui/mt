@@ -1,6 +1,9 @@
 # mt 💡
 
 [![CI](https://github.com/odosui/mt/actions/workflows/ci.yml/badge.svg)](https://github.com/odosui/mt/actions/workflows/ci.yml)
+[![Docker version](https://img.shields.io/docker/v/hiquest/mt?sort=semver&label=docker)](https://hub.docker.com/r/hiquest/mt)
+[![Docker pulls](https://img.shields.io/docker/pulls/hiquest/mt)](https://hub.docker.com/r/hiquest/mt)
+[![Image size](https://img.shields.io/docker/image-size/hiquest/mt/latest)](https://hub.docker.com/r/hiquest/mt)
 
 Knowledge management meets spaced repetition.
 
