@@ -5,6 +5,7 @@ import { StateContext } from '../state/StateProvider'
 import { Question } from '../types'
 import AutoresizableTextarea from '../ui/AutoresizableTextarea'
 import { PencilIcon, XIcon } from '@primer/octicons-react'
+import { minutesTill } from '../utils/dates'
 
 const SHOW_ANSWER_FOR = 3000
 
@@ -110,11 +111,9 @@ const QuestionCard: React.FC<{
             <div className="card-view-info">
               {q.completed
                 ? 'completed'
-                : q.days_till_next_review != null && q.days_till_next_review <= 0
-                  ? 'review now'
-                  : q.days_till_next_review === 1
-                    ? 'review tomorrow'
-                    : `review in ${q.days_till_next_review} days`}
+                : q.minutes_till_next_review != null
+                  ? minutesTill(q.minutes_till_next_review)
+                  : ''}
             </div>
           </div>
           <div className="back">{q.answer}</div>

@@ -1,100 +1,82 @@
 import dayjs from "dayjs";
 import { describe, expect, it } from "vitest";
-import { daysTillNextReview } from "./utils";
+import { isReviewable, minutesTillNextReview } from "./utils";
 
-describe("daysTillNextReview", () => {
+const MIN_PER_DAY = 60 * 24;
+
+describe("minutesTillNextReview", () => {
   describe("when lastReviewed is null", () => {
-    it("should return 0 for any level", () => {
-      expect(daysTillNextReview(0, null)).toBe(0);
-      expect(daysTillNextReview(5, null)).toBe(0);
-      expect(daysTillNextReview(10, null)).toBe(0);
+    it("returns 0 for any level", () => {
+      expect(minutesTillNextReview(0, null)).toBe(0);
+      expect(minutesTillNextReview(5, null)).toBe(0);
+      expect(minutesTillNextReview(10, null)).toBe(0);
     });
   });
 
-  describe("level 0 (first review)", () => {
-    it("should return 0 when reviewed today", () => {
-      expect(daysTillNextReview(0, new Date().toISOString())).toBe(0);
+  describe("learning steps (low levels)", () => {
+    it("level 0 -> 1: 1 minute after current review", () => {
+      expect(minutesTillNextReview(0, dayjs().toISOString())).toBe(1);
     });
 
-    it("should return negative days when overdue", () => {
-      const threeDaysAgo = dayjs().subtract(3, "day").toISOString();
-      expect(daysTillNextReview(0, threeDaysAgo)).toBe(-3);
-    });
-  });
-
-  describe("level 1", () => {
-    it("should return 1 when reviewed today", () => {
-      expect(daysTillNextReview(1, new Date().toISOString())).toBe(1);
+    it("level 1 -> 2: 10 minutes after current review", () => {
+      expect(minutesTillNextReview(1, dayjs().toISOString())).toBe(10);
     });
 
-    it("should return 0 when reviewed yesterday", () => {
-      const yesterday = dayjs().subtract(1, "day").toISOString();
-      expect(daysTillNextReview(1, yesterday)).toBe(0);
+    it("level 1 is due ~10 minutes after lastReviewed", () => {
+      const elevenMinAgo = dayjs().subtract(11, "minute").toISOString();
+      expect(minutesTillNextReview(1, elevenMinAgo)).toBeLessThanOrEqual(0);
     });
 
-    it("should return negative when overdue", () => {
-      const twoDaysAgo = dayjs().subtract(2, "day").toISOString();
-      expect(daysTillNextReview(1, twoDaysAgo)).toBe(-1);
+    it("level 1 not yet due 5 minutes after review", () => {
+      const fiveMinAgo = dayjs().subtract(5, "minute").toISOString();
+      expect(minutesTillNextReview(1, fiveMinAgo)).toBeGreaterThan(0);
     });
   });
 
-  describe("level 2", () => {
-    it("should return 2 when reviewed today", () => {
-      expect(daysTillNextReview(2, new Date().toISOString())).toBe(2);
+  describe("graduated intervals (days)", () => {
+    it("level 2 -> 3: 1 day", () => {
+      expect(minutesTillNextReview(2, dayjs().toISOString())).toBe(MIN_PER_DAY);
     });
 
-    it("should return 1 when reviewed 1 day ago", () => {
-      const oneDayAgo = dayjs().subtract(1, "day").toISOString();
-      expect(daysTillNextReview(2, oneDayAgo)).toBe(1);
+    it("level 3 -> 4: 2 days", () => {
+      expect(minutesTillNextReview(3, dayjs().toISOString())).toBe(2 * MIN_PER_DAY);
     });
 
-    it("should return -1 when reviewed 3 days ago", () => {
-      const threeDaysAgo = dayjs().subtract(3, "day").toISOString();
-      expect(daysTillNextReview(2, threeDaysAgo)).toBe(-1);
-    });
-  });
-
-  describe("spaced repetition progression", () => {
-    it("should follow increasing intervals at higher levels", () => {
-      const today = new Date().toISOString();
-
-      // Level 3: should be 3 days (floor(1.5 * 2))
-      expect(daysTillNextReview(3, today)).toBe(3);
-
-      // Level 4: should be 4 days (floor(1.5 * 3))
-      expect(daysTillNextReview(4, today)).toBe(4);
-
-      // Level 5: should be 6 days (floor(1.5 * 4))
-      expect(daysTillNextReview(5, today)).toBe(6);
-
-      // Level 6: should be 9 days (floor(1.5 * 6))
-      expect(daysTillNextReview(6, today)).toBe(9);
+    it("level 4 -> 5: 3 days", () => {
+      expect(minutesTillNextReview(4, dayjs().toISOString())).toBe(3 * MIN_PER_DAY);
     });
 
-    it("should handle high levels correctly", () => {
-      const today = new Date().toISOString();
-      expect(daysTillNextReview(10, today)).toBe(42);
-      expect(daysTillNextReview(15, today)).toBe(316);
+    it("level 5 -> 6: 4.5 days (3d * 1.5)", () => {
+      expect(minutesTillNextReview(5, dayjs().toISOString())).toBe(
+        Math.floor(1.5 * 3 * MIN_PER_DAY),
+      );
     });
   });
 
-  describe("edge cases with time", () => {
-    it("should handle reviews from far in the past", () => {
-      const sixMonthsAgo = dayjs().subtract(180, "day").toISOString();
-      expect(daysTillNextReview(3, sixMonthsAgo)).toBeLessThan(0);
-      expect(daysTillNextReview(3, sixMonthsAgo)).toBe(-177);
+  describe("overdue", () => {
+    it("returns negative when graduated card is past due", () => {
+      const tenDaysAgo = dayjs().subtract(10, "day").toISOString();
+      expect(minutesTillNextReview(3, tenDaysAgo)).toBeLessThan(0);
     });
+  });
+});
 
-    it("should handle partial day differences", () => {
-      // daysTillNextReview uses startOf("day"), so 23 hours ago is yesterday for most of the day
-      const almostOneDayAgo = dayjs().subtract(23, "hour").toISOString();
-      const isYesterday = dayjs().subtract(23, "hour").startOf("day").isBefore(dayjs().startOf("day"));
-      expect(daysTillNextReview(1, almostOneDayAgo)).toBe(isYesterday ? 0 : 1);
-    });
+describe("isReviewable", () => {
+  it("brand-new card is reviewable", () => {
+    expect(isReviewable(0, null)).toBe(true);
+  });
 
-    it("should return correct values for recently reviewed items", () => {
-      const oneHourAgo = dayjs().subtract(1, "hour").toISOString();
-      expect(daysTillNextReview(5, oneHourAgo)).toBe(6);
-    });
+  it("just-reviewed learning card is not reviewable yet", () => {
+    expect(isReviewable(1, dayjs().toISOString())).toBe(false);
+  });
+
+  it("learning card is reviewable after 10 minutes", () => {
+    const elevenMinAgo = dayjs().subtract(11, "minute").toISOString();
+    expect(isReviewable(1, elevenMinAgo)).toBe(true);
+  });
+
+  it("MAX_LEVEL card is never reviewable", () => {
+    const longAgo = dayjs().subtract(1000, "day").toISOString();
+    expect(isReviewable(15, longAgo)).toBe(false);
   });
 });

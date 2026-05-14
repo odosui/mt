@@ -5,6 +5,7 @@ import api from '../api'
 import { StateContext } from '../state/StateProvider'
 import { Question } from '../types'
 import Button from '../ui/Button'
+import { formatInterval } from '../utils/dates'
 
 const Flashcard: React.FC<{
   q: Question
@@ -64,7 +65,7 @@ const Flashcard: React.FC<{
               AGAIN
             </Button>
             <Button className="good" icon={<CheckIcon />} onClick={handleGood}>
-              GOOD - {q.days_till_review_after_current}d
+              GOOD{q.minutes_till_review_after_current != null && ` - ${formatInterval(q.minutes_till_review_after_current)}`}
             </Button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { Flashcard, NoteStore } from "../notes/NotesStore";
 import {
-  daysTillNextReview,
-  daysTillReviewAfterCurrent,
+  minutesTillNextReview,
+  minutesTillReviewAfterCurrent,
   isReviewable,
   MAX_LEVEL,
 } from "./utils";
@@ -157,12 +157,12 @@ function asJson(fc: Flashcard, tags: string[] = []) {
     answer: fc.answer,
     level: fc.level,
     reviewed_at: fc.reviewed_at,
-    days_till_review_after_current: completed
+    minutes_till_review_after_current: completed
       ? null
-      : daysTillReviewAfterCurrent(fc.level),
-    days_till_next_review: completed
+      : minutesTillReviewAfterCurrent(fc.level),
+    minutes_till_next_review: completed
       ? null
-      : daysTillNextReview(fc.level ?? 0, fc.reviewed_at),
+      : minutesTillNextReview(fc.level ?? 0, fc.reviewed_at),
     completed,
     note_id: fc.note_id,
     tags,

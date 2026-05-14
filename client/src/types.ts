@@ -58,8 +58,8 @@ export interface ReviewLog {
 export interface Question {
   question: string
   answer: string
-  days_till_review_after_current: number | null
-  days_till_next_review: number | null
+  minutes_till_review_after_current: number | null
+  minutes_till_next_review: number | null
   completed: boolean
   tags: string[]
   note_id: string
