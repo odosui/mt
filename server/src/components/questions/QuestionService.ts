@@ -71,10 +71,8 @@ const createQuestionsService = (noteStore: NoteStore) => {
 
   async function getReviewableQuestions() {
     const notes = await noteStore.getNotes("", false, false);
-    const questions = notes.flatMap((note) =>
-      note.flashcards.map((fc) => ({ fc, tags: note.tags })),
-    );
-    return questions
+    return notes
+      .flatMap((n) => n.flashcards.map((fc) => ({ fc, tags: n.tags })))
       .filter((q) => isReviewable(q.fc.level, q.fc.reviewed_at))
       .map((q) => asJson(q.fc, q.tags));
   }
