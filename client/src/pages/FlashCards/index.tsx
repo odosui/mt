@@ -21,7 +21,7 @@ const FlashCards: React.FC = () => {
     }
   }
 
-  const handleGood = () => {
+  const advance = () => {
     const [, ...rest] = questions
     if (rest.length === 0) {
       loadData()
@@ -30,12 +30,12 @@ const FlashCards: React.FC = () => {
     }
   }
 
+  const handleGood = () => {
+    advance()
+  }
+
   const handleBad = () => {
-    const [first, ...rest] = questions
-    if (!first) {
-      return
-    }
-    setQuestions([...rest, first])
+    advance()
   }
 
   useEffect(() => {
