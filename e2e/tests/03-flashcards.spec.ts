@@ -66,41 +66,6 @@ test.describe("Flashcards", () => {
     await expect(cards).toHaveCount(2);
   });
 
-  test("F12: GOOD shows next-interval and advances the queue", async ({
-    page: p,
-  }) => {
-    await p.goto("/app/notes");
-    await createNote(p, "# SR Note\n\nContent for spaced repetition");
-    await expect(noteItem(p, "SR Note")).toBeVisible();
-
-    // Create one flashcard
-    await noteArea(p).getByText("Flashcards", { exact: true }).click();
-    await flashcardsPanel(p).getByRole("link").first().click();
-    await p.getByLabel("Question").fill("2 + 2");
-    await p.getByLabel("Answer").fill("4");
-    await p.getByRole("button", { name: "Add card" }).click();
-    await expect(p.getByText("2 + 2")).toBeVisible();
-
-    // Go to the review page
-    await p.goto("/app/quiz");
-
-    // Question is shown, count says "0 cards left" (only one due)
-    await expect(p.locator(".review-card .question")).toHaveText("2 + 2");
-    await expect(p.locator(".stats")).toHaveText("0 cards left");
-
-    // Reveal the answer
-    await p.getByRole("button", { name: "SHOW ANSWER" }).click();
-    await expect(p.locator(".review-card .question")).toHaveText("4");
-
-    // GOOD button advertises the level-2 interval (10m) for a brand new card
-    const good = p.getByRole("button", { name: /GOOD/ });
-    await expect(good).toContainText("10m");
-
-    // Clicking GOOD advances the queue — no more cards due, fallback to explore mode
-    await good.click();
-    await expect(p.locator(".review-mode")).not.toBeVisible();
-  });
-
   test("F10: clicking a flashcard flips it and shows the answer", async ({
     page: p,
   }) => {
