@@ -83,14 +83,13 @@
     left: 0;
     right: 0;
     bottom: 0;
+    height: $unit7;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     border-top: 1px solid var(--borderColor);
-    display: flex;
     align-items: center;
     background-color: var(--color-note-area-bg);
     padding: 0 $unit3;
-    align-items: center;
     .item {
       display: flex;
       flex-direction: column;
@@ -98,38 +97,48 @@
       justify-content: center;
       text-decoration: none;
       height: 100%;
-      padding: $unit1 0 $unit3 0;
-      position: relative;
+      flex: 1;
+      padding: $unit1 0;
       gap: $unit1;
-      svg {
-        fill: var(--subtle);
-        font-size: $text5;
+      .icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg {
+          fill: var(--color-notes-text-secondary);
+          font-size: $text5;
+        }
       }
       .title {
-        color: var(--subtle);
+        color: var(--color-notes-text-secondary);
         font-size: $text1;
       }
       .counter {
         font-weight: 600;
         font-size: $text0;
+        line-height: 1;
         color: var(--accentText);
         background-color: var(--accent);
-        border-radius: 50%;
+        border-radius: $unit3;
         min-width: $unit3;
         height: $unit3;
+        padding: 0 4px;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: $unit0;
-        right: -$unit1;
+        top: -$unit1;
+        left: 60%;
+        border: 2px solid var(--color-note-area-bg);
       }
       &.active {
         .title {
           color: var(--accent);
           font-weight: 500;
         }
-        svg {
+        .icon svg {
           fill: var(--accent);
         }
       }

@@ -33,14 +33,14 @@ const Note: React.FC = () => {
       {noteLoading && <Spinner />}
       {!noteLoading && note && (
         <>
-          <div className="mobile-note-top-header">
-            {note.needs_review && (
+          {note.needs_review && (
+            <div className="mobile-note-top-header">
               <Button onClick={handleReview}>
                 <CheckIcon />
                 Mark Reviewed
               </Button>
-            )}
-          </div>
+            </div>
+          )}
           <div className="note-section">
             <div className="editor-place">
               <div className="note-editor-body" ref={previewRef}>

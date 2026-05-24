@@ -1,9 +1,7 @@
 import {
   CalendarIcon,
-  GearIcon,
   HomeIcon,
   NoteIcon,
-  SignOutIcon,
   SyncIcon,
 } from '@primer/octicons-react'
 import * as React from 'react'
@@ -23,15 +21,13 @@ const MobildBottomNavigation: React.FC = () => {
         icon={<SyncIcon />}
         counter={reviewCount || 0}
       />
+      <NavItem path="/app/timeline" title="Timeline" icon={<CalendarIcon />} />
       <NavItem
         path="/app/flashcards"
         title="Cards"
         icon={<NoteIcon />}
         counter={questionsCount || 0}
       />
-      <NavItem path="/app/timeline" title="Timeline" icon={<CalendarIcon />} />
-      <NavItem path="/app/settings" title="Settings" icon={<GearIcon />} />
-      <NavItem path="/app/logout" title="Log out" icon={<SignOutIcon />} />
     </div>
   )
 }
@@ -46,13 +42,13 @@ const NavItem: React.FC<{
   const { pathname } = location
   return (
     <NavLink to={path} className={cl(pathname, path)}>
-      {icon}
-      <div className={`title ${counter && counter > 0 ? 'with-counter' : ''}`}>
-        {title}
+      <div className="icon">
+        {icon}
         {counter !== undefined && counter > 0 && (
-          <span className="counter">{counter}</span>
+          <span className="counter">{counter > 99 ? '99+' : counter}</span>
         )}
       </div>
+      <div className="title">{title}</div>
     </NavLink>
   )
 }
