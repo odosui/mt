@@ -27,7 +27,7 @@
     left: 0;
     right: 0;
     top: $unit7;
-    bottom: $unit7;
+    bottom: calc(#{$unit7} + env(safe-area-inset-bottom));
     overflow-y: auto;
   }
 
@@ -83,63 +83,91 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: $unit7;
+    height: calc(#{$unit7} + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
     display: flex;
     justify-content: space-around;
+    align-items: stretch;
     border-top: 1px solid var(--borderColor);
-    align-items: center;
     background-color: var(--color-note-area-bg);
-    padding: 0 $unit3;
+    box-shadow: 0 -4px 16px -8px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+
     .item {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      height: 100%;
       flex: 1;
+      gap: $unit0;
       padding: $unit1 0;
-      gap: $unit1;
+      -webkit-tap-highlight-color: transparent;
+
       .icon {
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: $unit6;
+        height: $unit5;
+        border-radius: $unit6;
+        transition:
+          background-color 0.18s ease,
+          transform 0.18s ease;
         svg {
           fill: var(--color-notes-text-secondary);
-          font-size: $text5;
+          font-size: $text4;
+          transition: fill 0.18s ease;
         }
       }
+
       .title {
         color: var(--color-notes-text-secondary);
-        font-size: $text1;
-      }
-      .counter {
-        font-weight: 600;
         font-size: $text0;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        transition: color 0.18s ease;
+      }
+
+      .counter {
+        font-weight: 700;
+        font-size: 11px;
         line-height: 1;
         color: var(--accentText);
         background-color: var(--accent);
         border-radius: $unit3;
-        min-width: $unit3;
-        height: $unit3;
-        padding: 0 4px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: -$unit1;
-        left: 60%;
+        top: -2px;
+        left: 58%;
         border: 2px solid var(--color-note-area-bg);
       }
+
+      &:active .icon {
+        transform: scale(0.92);
+      }
+
       &.active {
+        .icon {
+          background-color: color-mix(
+            in srgb,
+            var(--accent) 16%,
+            transparent
+          );
+          svg {
+            fill: var(--accent);
+          }
+        }
         .title {
           color: var(--accent);
-          font-weight: 500;
-        }
-        .icon svg {
-          fill: var(--accent);
+          font-weight: 600;
         }
       }
     }
