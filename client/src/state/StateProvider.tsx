@@ -268,7 +268,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     }
     await api.notes.del(n.sid)
 
-    const newNotes = (notes.data || []).filter((n) => n.sid !== n.sid)
+    const newNotes = (notes.data || []).filter((note) => note.sid !== n.sid)
     delete fullNotes.current[n.sid]
     setNotes({ loading: false, data: newNotes })
 

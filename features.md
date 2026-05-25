@@ -72,3 +72,9 @@ When the source note has a `#color=<value>` tag (case-insensitive), that color i
 - [x] F11: User can view current version and latest commit hash in Settings
 
 When user go to Settings in ui, it should see the current version. The version propagates from package.json. Both in dev mode and in production via docker. It should also show the latest commit hash.
+
+## Notes
+
+- [x] F13: User can delete a note.
+
+User clicks on the hamburger menu in the top tight corner, and then selects "Delete note". A confirmation dialog appears, and if user confirms, the note is deleted, and the list of notes is updated accordingly.

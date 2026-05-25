@@ -70,8 +70,16 @@ test.describe("Notes", () => {
     await expect(noteItem(p, "Modified Content")).not.toBeVisible();
   });
 
-  test("should delete a note", async ({ page: p }) => {
+  test("F13: delete a note", async ({ page: p }) => {
     await p.goto("/app/notes");
+
+    // Create a note we'll keep, to ensure the list isn't wiped on delete.
+    await newNoteBtn(p).click();
+    await noteTA(p).fill(
+      "# Note to Keep\n\nThis note should survive the deletion \n\n #keep",
+    );
+    await saveBtn(p).click();
+    await expect(noteItem(p, "Note to Keep")).toBeVisible();
 
     await newNoteBtn(p).click();
     await noteTA(p).fill(
@@ -95,6 +103,10 @@ test.describe("Notes", () => {
     await expect(tagItem(p, "temp")).not.toBeVisible({
       timeout: 20000,
     });
+
+    // The other note must still be in the list — deleting one note must not
+    // empty the entire list.
+    await expect(noteItem(p, "Note to Keep")).toBeVisible();
   });
 
   test("should filter by tag", async ({ page: p }) => {
