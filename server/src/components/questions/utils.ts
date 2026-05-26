@@ -13,7 +13,7 @@ function minutesForLevel(nextLevel: number): number {
   if (nextLevel === 3) return 1 * MINUTES_PER_DAY;
   if (nextLevel === 4) return 2 * MINUTES_PER_DAY;
   if (nextLevel === 5) return 3 * MINUTES_PER_DAY;
-  return Math.floor(REVIEW_COEFF * minutesForLevel(nextLevel - 1));
+  return Math.round(REVIEW_COEFF * minutesForLevel(nextLevel - 1));
 }
 
 export function minutesTillReviewAfterCurrent(currentLevel: number) {

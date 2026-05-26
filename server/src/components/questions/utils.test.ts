@@ -48,7 +48,7 @@ describe("minutesTillNextReview", () => {
 
     it("level 5 -> 6: 4.5 days (3d * 1.5)", () => {
       expect(minutesTillNextReview(5, dayjs().toISOString())).toBe(
-        Math.floor(1.5 * 3 * MIN_PER_DAY),
+        Math.round(1.5 * 3 * MIN_PER_DAY),
       );
     });
   });
