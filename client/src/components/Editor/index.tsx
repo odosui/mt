@@ -3,6 +3,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import AutoresizableTextarea from '../../ui/AutoresizableTextarea'
 import { TRANSFORMATIONS } from './transformations'
 import TagAutocomplete from '../TagAutocomplete'
+import { getCaretCoordinates } from '../../utils/caret'
 
 type Props = {
   initialText: string
@@ -46,46 +47,56 @@ const Editor: React.FC<Props> = ({
     }, 0)
   }
 
-  const getCaretPosition = useCallback(
-    (textarea: HTMLTextAreaElement, position: number) => {
-      const textBeforeCaret = textarea.value.substring(0, position)
-      const lines = textBeforeCaret.split('\n')
-      const currentLine = lines.length - 1
-      const charInLine = lines[currentLine]?.length || 0
-
-      const lineHeight = parseInt(getComputedStyle(textarea).lineHeight)
-      const top = currentLine * lineHeight + textarea.offsetTop + 20
-      const left = charInLine * 8 + textarea.offsetLeft + 10
-
-      return { top, left }
-    },
-    [],
-  )
-
   const detectHashtagTyping = useCallback((text: string, cursorPos: number) => {
-    const textBeforeCursor = text.substring(0, cursorPos)
-    const lastHashIndex = textBeforeCursor.lastIndexOf('#')
+    const before = text.substring(0, cursorPos)
+    const lastHash = before.lastIndexOf('#')
+    if (lastHash === -1) return null
 
-    if (lastHashIndex === -1) return null
-
-    const textAfterHash = textBeforeCursor.substring(lastHashIndex + 1)
-    const hasSpaceAfterHash =
-      textAfterHash.includes(' ') || textAfterHash.includes('\n')
-
-    if (hasSpaceAfterHash) return null
-
-    return {
-      query: textAfterHash,
-      position: lastHashIndex,
+    // The '#' must be at the start of the text or preceded by whitespace —
+    // this filters out URL fragments (foo.com#bar), preprocessor directives
+    // (#include), and other in-word '#' characters.
+    if (lastHash > 0) {
+      const prev = before[lastHash - 1]
+      if (prev && !/\s/.test(prev)) return null
     }
+
+    const afterHash = before.substring(lastHash + 1)
+    // A space after '#' means it's a markdown heading, not a tag.
+    if (afterHash.includes(' ') || afterHash.includes('\n')) return null
+
+    return { query: afterHash, position: lastHash }
   }, [])
+
+  const updateAutocomplete = useCallback(
+    (text: string, cursorPos: number) => {
+      const match = detectHashtagTyping(text, cursorPos)
+      if (match && textareaRef.current) {
+        const caret = getCaretCoordinates(textareaRef.current, cursorPos)
+        setAutocompleteVisible(true)
+        setAutocompleteQuery(match.query)
+        setAutocompletePosition({
+          top: caret.top + caret.height,
+          left: caret.left,
+        })
+        setHashPosition(match.position)
+      } else {
+        setAutocompleteVisible(false)
+      }
+    },
+    [detectHashtagTyping],
+  )
 
   const handleTagSelect = useCallback(
     (tag: string) => {
-      if (!textareaRef.current) return
+      const textarea = textareaRef.current
+      if (!textarea) return
 
-      const beforeHash = value.substring(0, hashPosition)
-      const afterCursor = value.substring(selectionStart)
+      // Read live text/cursor from the DOM — React state may be stale
+      // (e.g. fast typing between change and select).
+      const text = textarea.value
+      const cursorPos = textarea.selectionStart
+      const beforeHash = text.substring(0, hashPosition)
+      const afterCursor = text.substring(cursorPos)
       const newValue = beforeHash + '#' + tag + ' ' + afterCursor
       const newCursorPos = hashPosition + tag.length + 2
 
@@ -100,7 +111,7 @@ const Editor: React.FC<Props> = ({
         }
       }, 0)
     },
-    [value, hashPosition, selectionStart, onChange],
+    [hashPosition, onChange],
   )
 
   const closeAutocomplete = useCallback(() => {
@@ -112,19 +123,9 @@ const Editor: React.FC<Props> = ({
       const { selectionStart, selectionEnd } = e.target
       setSelectionStart(selectionStart)
       setSelectionEnd(selectionEnd)
-
-      const hashtagMatch = detectHashtagTyping(e.target.value, selectionStart)
-      if (hashtagMatch && textareaRef.current) {
-        const position = getCaretPosition(textareaRef.current, selectionStart)
-        setAutocompleteVisible(true)
-        setAutocompleteQuery(hashtagMatch.query)
-        setAutocompletePosition(position)
-        setHashPosition(hashtagMatch.position)
-      } else {
-        setAutocompleteVisible(false)
-      }
+      updateAutocomplete(e.target.value, selectionStart)
     },
-    [detectHashtagTyping, getCaretPosition],
+    [updateAutocomplete],
   )
 
   const handleKeyDown = useCallback(
@@ -191,20 +192,9 @@ const Editor: React.FC<Props> = ({
       (v) => {
         setValue(v.target.value)
         onChange(v.target.value)
-
-        const cursorPos = v.target.selectionStart
-        const hashtagMatch = detectHashtagTyping(v.target.value, cursorPos)
-        if (hashtagMatch && textareaRef.current) {
-          const position = getCaretPosition(textareaRef.current, cursorPos)
-          setAutocompleteVisible(true)
-          setAutocompleteQuery(hashtagMatch.query)
-          setAutocompletePosition(position)
-          setHashPosition(hashtagMatch.position)
-        } else {
-          setAutocompleteVisible(false)
-        }
+        updateAutocomplete(v.target.value, v.target.selectionStart)
       },
-      [detectHashtagTyping, getCaretPosition],
+      [onChange, updateAutocomplete],
     )
 
   return (

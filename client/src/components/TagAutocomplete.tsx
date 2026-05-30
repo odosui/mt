@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTags } from '../state/TagsProvider'
 
 interface TagAutocompleteProps {
@@ -8,6 +8,8 @@ interface TagAutocompleteProps {
   onSelect: (tag: string) => void
   onClose: () => void
 }
+
+const MAX_RESULTS = 10
 
 const TagAutocomplete: React.FC<TagAutocompleteProps> = ({
   isVisible,
@@ -20,23 +22,32 @@ const TagAutocomplete: React.FC<TagAutocompleteProps> = ({
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [filteredTags, setFilteredTags] = useState<string[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [adjusted, setAdjusted] = useState(position)
 
   useEffect(() => {
-    if (!tags.data) return
+    if (!tags.data) {
+      setFilteredTags([])
+      return
+    }
 
-    const filtered = tags.data
-      .filter((tag) => tag.title.toLowerCase().includes(query.toLowerCase()))
+    const q = query.toLowerCase()
+    const matches = tags.data
       .map((tag) => tag.title)
-      .slice(0, 10)
+      .filter((title) => title.toLowerCase().startsWith(q))
+      .slice(0, MAX_RESULTS)
 
-    setFilteredTags(filtered)
+    setFilteredTags(matches)
     setSelectedIndex(0)
   }, [query, tags.data])
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isVisible) return
+  const active = isVisible && filteredTags.length > 0
 
+  useEffect(() => {
+    if (!active) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault()
@@ -51,11 +62,14 @@ const TagAutocomplete: React.FC<TagAutocompleteProps> = ({
           )
           break
         case 'Enter':
-          e.preventDefault()
-          if (filteredTags[selectedIndex]) {
-            onSelect(filteredTags[selectedIndex])
+        case 'Tab': {
+          const pick = filteredTags[selectedIndex]
+          if (pick) {
+            e.preventDefault()
+            onSelect(pick)
           }
           break
+        }
         case 'Escape':
           e.preventDefault()
           onClose()
@@ -65,28 +79,62 @@ const TagAutocomplete: React.FC<TagAutocompleteProps> = ({
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isVisible, filteredTags, selectedIndex, onSelect, onClose])
+  }, [active, filteredTags, selectedIndex, onSelect, onClose])
 
-  if (!isVisible || filteredTags.length === 0) {
-    return null
-  }
+  // Clamp to viewport; flip above caret if not enough room below.
+  useLayoutEffect(() => {
+    if (!active || !containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const margin = 8
+    let top = position.top
+    let left = position.left
+
+    if (top + rect.height > window.innerHeight - margin) {
+      // Flip: place above caret line (approx 20px line height).
+      const flipped = position.top - rect.height - 24
+      if (flipped >= margin) top = flipped
+      else top = window.innerHeight - rect.height - margin
+    }
+    if (left + rect.width > window.innerWidth - margin) {
+      left = Math.max(margin, window.innerWidth - rect.width - margin)
+    }
+    setAdjusted({ top, left })
+  }, [active, position.top, position.left, filteredTags.length])
+
+  // Scroll the selected item into view on keyboard navigation.
+  useLayoutEffect(() => {
+    const el = itemRefs.current[selectedIndex]
+    if (el) el.scrollIntoView({ block: 'nearest' })
+  }, [selectedIndex])
+
+  if (!active) return null
 
   return (
     <div
+      ref={containerRef}
       className="tag-autocomplete"
       style={{
-        position: 'absolute',
-        top: position.top,
-        left: position.left,
+        position: 'fixed',
+        top: adjusted.top,
+        left: adjusted.left,
         zIndex: 1000,
       }}
     >
       {filteredTags.map((tag, index) => (
         <div
           key={tag}
+          ref={(el) => {
+            itemRefs.current[index] = el
+          }}
           className={`tag-autocomplete-item ${index === selectedIndex ? 'selected' : ''}`}
-          onClick={() => onSelect(tag)}
-          onMouseEnter={() => setSelectedIndex(index)}
+          // mousedown (not click) so the textarea doesn't blur first
+          onMouseDown={(e) => {
+            e.preventDefault()
+            onSelect(tag)
+          }}
+          // mousemove (not mouseenter) avoids stealing focus from the
+          // keyboard when the cursor merely happens to overlap the list.
+          onMouseMove={() => setSelectedIndex(index)}
         >
           #{tag}
         </div>
