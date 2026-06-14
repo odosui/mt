@@ -129,15 +129,24 @@
 
   ul {
     margin: 0 0 0 0;
+    padding: 0;
     list-style: none;
     li {
       margin-bottom: $unit1;
       line-height: 150%;
+      position: relative;
       &::before {
-        color: var(--accent);
+        position: absolute;
+        left: -$unit5;
+        color: var(--subtle);
         content: '–';
-        margin-right: $unit1;
         font-weight: bold;
+        transition: color 0.2s;
+      }
+      &:hover {
+        &::before {
+          color: var(--accent);
+        }
       }
       &.task-list-item {
         padding-left: $unit4;

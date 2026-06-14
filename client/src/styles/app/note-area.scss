@@ -56,6 +56,13 @@
               .left {
                 display: flex;
                 align-items: center;
+                .note-id {
+                  font-family: 'Fira Code', monospace;
+                  font-size: 11px;
+                  color: var(--color-note-area-text-secondary-darker);
+                  margin-right: $unit2;
+                  user-select: all;
+                }
               }
               .right {
                 align-items: center;
@@ -252,6 +259,29 @@
   width: 100%;
   flex: 1;
   overflow-y: scroll;
+
+  .note-view-transition {
+    width: 100%;
+    max-width: $unit14;
+    display: flex;
+    justify-content: center;
+    animation: note-view-in 0.28s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  @keyframes note-view-in {
+    from {
+      opacity: 0;
+      transform: translateY($unit3);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   .editor-ac {
     width: 100%;

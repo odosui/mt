@@ -297,6 +297,7 @@ const Note: React.FC<{
               </DropdownMenu>
               <div className="inside">
                 <div className="left">
+                  <div className="note-id">#{currentNote.sid}</div>
                   <div className="edit-toggle">
                     <EditSwitch
                       value={mode}
@@ -378,11 +379,13 @@ const Note: React.FC<{
 
           <div className="note-editor-body" ref={previewRef}>
             {mode === 'view' && (
-              <Preview
-                markdown={currentNote.body}
-                imageMetas={currentNote.image_metas}
-                onCheckboxToggle={(updated) => saveCurrentNote(updated)}
-              />
+              <div className="note-view-transition" key={currentNote.sid}>
+                <Preview
+                  markdown={currentNote.body}
+                  imageMetas={currentNote.image_metas}
+                  onCheckboxToggle={(updated) => saveCurrentNote(updated)}
+                />
+              </div>
             )}
             {mode === 'edit' && (
               <Editor
