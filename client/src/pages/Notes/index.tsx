@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'slim-react-router'
 import HoveringPreview from '../../components/HoveringPreview'
 import Note from '../../components/Note'
+import { useNoteListNavigation } from '../../hooks/useNoteListNavigation'
 import { StateContext } from '../../state/StateProvider'
 import Button from '../../ui/Button'
 import debounce from '../../utils/debounce'
@@ -160,7 +161,15 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
     switchNote(parseInt(sidLoc))
   }, [sidLoc, switchNote])
 
-  const pinnedFirst = (notes.data ?? []).sort(sortPinnedFirst)
+  const pinnedFirst = (notes.data ?? []).slice().sort(sortPinnedFirst)
+
+  // Ctrl+J / Ctrl+K step through the list
+  const { selectedSid } = useNoteListNavigation({
+    notes: pinnedFirst,
+    activeSid: sidLoc,
+    navToNote,
+    canSwitch: !(currentNote !== null && noteSaving),
+  })
 
   return (
     <div className="page">
@@ -188,9 +197,10 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
           {(pinnedFirst || []).map((note, ind) => (
             <div
               className={`item ${
-                sidLoc && note.sid === parseInt(sidLoc) ? 'active' : ''
+                selectedSid !== null && note.sid === selectedSid ? 'active' : ''
               } ${note.pinned ? ' pinned' : ''} `}
               key={note.id}
+              data-sid={note.sid}
               onClick={() => selectNote(ind)}
             >
               <div className="note-head">
