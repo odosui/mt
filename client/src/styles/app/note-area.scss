@@ -150,6 +150,39 @@
               }
             }
           }
+
+          // "Hold M to mark as reviewed": a progress sweep fills the button
+          // while the key is held, then the review is triggered.
+          .review-btn {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+
+            &::before {
+              content: '';
+              position: absolute;
+              left: 0;
+              top: 0;
+              bottom: 0;
+              width: 0;
+              z-index: -1;
+              background-color: var(--color-note-area-accent);
+              opacity: 0.25;
+            }
+
+            &.holding::before {
+              animation: review-hold-fill 1s linear forwards;
+            }
+          }
+
+          @keyframes review-hold-fill {
+            from {
+              width: 0;
+            }
+            to {
+              width: 100%;
+            }
+          }
         }
 
         .side-toggler {

@@ -15,6 +15,7 @@ import {
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'slim-react-router'
+import { useHoldKey } from '../../hooks/useHoldKey'
 import { StateContext } from '../../state/StateProvider'
 import Button from '../../ui/Button'
 import DropdownMenu from '../../ui/DropdownMenu'
@@ -92,12 +93,47 @@ const Note: React.FC<{
     setMenuOpen(false)
   }
 
-  const handleReview: React.MouseEventHandler = async () => {
+  const handleReview = async () => {
     markReviewedCurrentNote()
     if (onReview) {
       onReview()
     }
   }
+
+  // Hold "m" to mark the current note as reviewed.
+  const { holding: holdingReview } = useHoldKey({
+    key: 'm',
+    durationMs: 1000,
+    onComplete: handleReview,
+    enabled: !!currentNote?.needs_review && mode === 'view',
+  })
+
+  // Press "e" to switch into edit mode.
+  useEffect(() => {
+    if (mode !== 'view') {
+      return
+    }
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'e' || e.repeat || e.metaKey || e.ctrlKey || e.altKey) {
+        return
+      }
+      const el = e.target as HTMLElement | null
+      if (
+        el &&
+        (el.tagName === 'INPUT' ||
+          el.tagName === 'TEXTAREA' ||
+          el.isContentEditable)
+      ) {
+        return
+      }
+      e.preventDefault()
+      setMode('edit')
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [mode])
 
   const handleMenuToggle: React.MouseEventHandler = (e) => {
     e.preventDefault()
@@ -252,7 +288,9 @@ const Note: React.FC<{
               onClick={toggleQuizzesVisible}
             >
               <BeakerIcon /> Quizzes
-              {quizCount > 0 && <span className="side-toggler-badge">{quizCount}</span>}
+              {quizCount > 0 && (
+                <span className="side-toggler-badge">{quizCount}</span>
+              )}
             </div>
           )}
 
@@ -312,7 +350,10 @@ const Note: React.FC<{
                     <Button
                       icon={<CheckIcon />}
                       onClick={handleReview}
-                      className="lite-btn review-btn pending"
+                      className={`lite-btn review-btn pending ${
+                        holdingReview ? 'holding' : ''
+                      }`}
+                      title="Hold M to mark as reviewed"
                     >
                       mark as reviewed
                     </Button>
@@ -401,7 +442,9 @@ const Note: React.FC<{
         </div>
         {!focusMode && <Flashcards noteId={currentNote.id} />}
         {!focusMode && <Images noteSid={currentNote.sid} />}
-        {!focusMode && <Quizzes noteId={currentNote.id} onCountChange={setQuizCount} />}
+        {!focusMode && (
+          <Quizzes noteId={currentNote.id} onCountChange={setQuizCount} />
+        )}
       </div>
     </div>
   )
