@@ -10,8 +10,8 @@ const MAX_QUESTIONS = 100
 
 const MODELS = [
   { id: 'claude-haiku-4-5', label: 'Haiku 4.5' },
-  { id: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
-  { id: 'claude-opus-4-6', label: 'Opus 4.6' },
+  { id: 'claude-sonnet-4-6', label: 'Sonnet 4.6' },
+  { id: 'claude-opus-4-8', label: 'Opus 4.8' },
 ] as const
 
 const QuizForm: React.FC<{
