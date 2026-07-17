@@ -22,8 +22,11 @@ const TimelineGroup = ({ events, title }: Props) => {
         </span>
       </h2>
       <div className="timeline-items-container">
-        {events.map((item) => (
-          <div className="timeline-item" key={item.date + item.content}>
+        {events.map((item, ind) => (
+          <div
+            className="timeline-item"
+            key={`${item.note_sid}-${item.date}-${ind}`}
+          >
             <span className="timeline-item-date" title={humanDays(item.date)}>
               {item.date}
             </span>

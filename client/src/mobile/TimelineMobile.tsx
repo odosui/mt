@@ -6,11 +6,9 @@ import { TimelineItem } from '../types'
 import Spinner from '../ui/Spinner'
 import {
   extractYears,
-  formatMonth,
   groupTimeline,
   humanDays,
   sorted,
-  takeYear,
 } from '../utils/timeline'
 
 const ALL_YEARS = 'ALL'
@@ -42,17 +40,7 @@ const TimelineMobile = () => {
       ? items
       : items.filter((item) => item.date.startsWith(yearFilter))
 
-  const {
-    passedEvents,
-    todaysEvents,
-    tomorrowsEvents,
-    thisWeeksEvents,
-    thisMonthsEvents,
-    nextMonthsEvents,
-    thisYearsEvents,
-    nextYearsEvents,
-    futureEvents,
-  } = groupTimeline(filteredItems)
+  const groups = groupTimeline(filteredItems)
 
   if (loading) {
     return (
@@ -96,57 +84,13 @@ const TimelineMobile = () => {
             <div className="timeline-empty">No activity yet</div>
           )}
 
-          {todaysEvents && todaysEvents.length > 0 && (
-            <ItemGroup events={todaysEvents} title="Today" />
-          )}
-
-          {tomorrowsEvents && tomorrowsEvents.length > 0 && (
-            <ItemGroup events={tomorrowsEvents} title="Tomorrow" />
-          )}
-
-          {thisWeeksEvents && thisWeeksEvents.length > 0 && (
-            <ItemGroup events={thisWeeksEvents} title="This Week" />
-          )}
-
-          {thisMonthsEvents && thisMonthsEvents.length > 0 && (
+          {groups.map((group) => (
             <ItemGroup
-              events={thisMonthsEvents}
-              title={`This Month (${formatMonth(
-                thisMonthsEvents[0]?.date ?? '',
-              )})`}
+              key={group.key}
+              events={group.events}
+              title={group.title}
             />
-          )}
-
-          {nextMonthsEvents && nextMonthsEvents.length > 0 && (
-            <ItemGroup
-              events={nextMonthsEvents}
-              title={`Next Month (${formatMonth(
-                nextMonthsEvents[0]?.date ?? '',
-              )})`}
-            />
-          )}
-
-          {thisYearsEvents && thisYearsEvents.length > 0 && (
-            <ItemGroup
-              events={thisYearsEvents}
-              title={`This Year (${takeYear(thisYearsEvents[0]?.date ?? '')})`}
-            />
-          )}
-
-          {nextYearsEvents && nextYearsEvents.length > 0 && (
-            <ItemGroup
-              events={nextYearsEvents}
-              title={`Next Year (${takeYear(nextYearsEvents[0]?.date ?? '')})`}
-            />
-          )}
-
-          {passedEvents && passedEvents.length > 0 && (
-            <ItemGroup events={passedEvents} title="Passed Events" />
-          )}
-
-          {futureEvents && futureEvents.length > 0 && (
-            <ItemGroup events={futureEvents} title="Future Events" />
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -165,8 +109,11 @@ function ItemGroup({
   return (
     <div className="timeline-group">
       <h2>{title}</h2>
-      {events.map((item) => (
-        <div className="timeline-item" key={item.date + item.content}>
+      {events.map((item, ind) => (
+        <div
+          className="timeline-item"
+          key={`${item.note_sid}-${item.date}-${ind}`}
+        >
           <span className="timeline-item-date" title={humanDays(item.date)}>
             {item.date}
           </span>

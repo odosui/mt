@@ -32,21 +32,17 @@ export function extractYears(items: TimelineItem[]): string[] {
   return Array.from(years).sort((a, b) => parseInt(a) - parseInt(b))
 }
 
-// this function groups items in the following categories:
-// - passed events
-// - today's events
-// - tomorrow's events
-// - this week's events
-// - next week's events
-// - this month's events
-// - next month's events
-// - second next month's events
-// - third next month's events
-// - this year's events
-// - future events
-export function groupTimeline(
-  items: TimelineItem[],
-): Record<string, TimelineItem[]> {
+export type TimelineEventGroup = {
+  key: string
+  title: string
+  events: TimelineItem[]
+}
+
+// Groups items into ordered categories (passed, today, tomorrow, this week,
+// next week, this/next/+2/+3 month, this/next year, future). Only non-empty
+// groups are returned, in chronological display order, with their titles —
+// views should render the result as-is.
+export function groupTimeline(items: TimelineItem[]): TimelineEventGroup[] {
   const today = new Date()
 
   const passedEvents: TimelineItem[] = []
@@ -78,8 +74,6 @@ export function groupTimeline(
       : new Date(yearNum, monthNum, 0).getDate()
 
     const itemDate = new Date(yearNum, monthNum - 1, dayNum)
-
-    console.log(item.date, itemDate.toDateString(), today.toDateString())
 
     if (itemDate.toDateString() === today.toDateString()) {
       todaysEvents.push(item)
@@ -159,20 +153,56 @@ export function groupTimeline(
     }
   })
 
-  return {
-    passedEvents,
-    todaysEvents,
-    tomorrowsEvents,
-    thisWeeksEvents,
-    nextWeeksEvents,
-    thisMonthsEvents,
-    nextMonthsEvents,
-    secondNextMonthsEvents,
-    thirdNextMonthsEvents,
-    thisYearsEvents,
-    nextYearsEvents,
-    futureEvents,
-  }
+  const groups: {
+    key: string
+    events: TimelineItem[]
+    title: (firstDate: string) => string
+  }[] = [
+    { key: 'passed', events: passedEvents, title: () => 'Passed Events' },
+    { key: 'today', events: todaysEvents, title: () => 'Today' },
+    { key: 'tomorrow', events: tomorrowsEvents, title: () => 'Tomorrow' },
+    { key: 'this-week', events: thisWeeksEvents, title: () => 'This Week' },
+    { key: 'next-week', events: nextWeeksEvents, title: () => 'Next Week' },
+    {
+      key: 'this-month',
+      events: thisMonthsEvents,
+      title: (d) => `This Month (${formatMonth(d)})`,
+    },
+    {
+      key: 'next-month',
+      events: nextMonthsEvents,
+      title: (d) => `Next Month (${formatMonth(d)})`,
+    },
+    {
+      key: 'second-next-month',
+      events: secondNextMonthsEvents,
+      title: (d) => formatMonthYear(d),
+    },
+    {
+      key: 'third-next-month',
+      events: thirdNextMonthsEvents,
+      title: (d) => formatMonthYear(d),
+    },
+    {
+      key: 'this-year',
+      events: thisYearsEvents,
+      title: (d) => `This Year (${takeYear(d)})`,
+    },
+    {
+      key: 'next-year',
+      events: nextYearsEvents,
+      title: (d) => `Next Year (${takeYear(d)})`,
+    },
+    { key: 'future', events: futureEvents, title: () => 'Future Events' },
+  ]
+
+  return groups
+    .filter((g) => g.events.length > 0)
+    .map((g) => ({
+      key: g.key,
+      title: g.title(g.events[0]?.date ?? ''),
+      events: g.events,
+    }))
 }
 
 // date is either 2025 or 2025-01 or 2025-01-01
@@ -187,19 +217,19 @@ export function humanDays(date: string): string {
   })
 }
 
-export function takeYear(date: string): string {
+function takeYear(date: string): string {
   const year = date.split('-')[0]
   return year ? year : 'Unknown Year'
 }
 
-export function formatMonthYear(date: string): string {
+function formatMonthYear(date: string): string {
   const [year, month] = date.split('-').map((d) => parseInt(d, 10))
   if (!year || !month) return ''
   const itemDate = new Date(year, month - 1, 1)
   return format(itemDate, 'MMMM yyyy')
 }
 
-export function formatMonth(date: string): string {
+function formatMonth(date: string): string {
   const [year, month] = date.split('-').map((d) => parseInt(d, 10))
   if (!year || !month) return ''
   const itemDate = new Date(year, month - 1, 1)

@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../../api'
 import { TimelineItem } from '../../types'
-import {
-  extractYears,
-  formatMonth,
-  formatMonthYear,
-  groupTimeline,
-  sorted,
-  takeYear,
-} from '../../utils/timeline'
+import { extractYears, groupTimeline, sorted } from '../../utils/timeline'
 import TimelineGroup from './TimelineGroup'
 
 const ALL_YEARS = 'ALL'
@@ -33,20 +26,7 @@ const Timeline = () => {
       ? items
       : items.filter((item) => item.date.startsWith(yearFilter))
 
-  const {
-    passedEvents,
-    todaysEvents,
-    tomorrowsEvents,
-    thisWeeksEvents,
-    nextWeeksEvents,
-    thisMonthsEvents,
-    nextMonthsEvents,
-    secondNextMonthsEvents,
-    thirdNextMonthsEvents,
-    thisYearsEvents,
-    nextYearsEvents,
-    futureEvents,
-  } = groupTimeline(filteredItems)
+  const groups = groupTimeline(filteredItems)
 
   return (
     <div className="timeline-page">
@@ -79,75 +59,13 @@ const Timeline = () => {
             <div className="timeline-empty">No activity yet</div>
           )}
 
-          {passedEvents && passedEvents.length > 0 && (
-            <TimelineGroup events={passedEvents} title="Passed Events" />
-          )}
-
-          {todaysEvents && todaysEvents.length > 0 && (
-            <TimelineGroup events={todaysEvents} title="Today" />
-          )}
-
-          {tomorrowsEvents && tomorrowsEvents.length > 0 && (
-            <TimelineGroup events={tomorrowsEvents} title="Tomorrow" />
-          )}
-
-          {thisWeeksEvents && thisWeeksEvents.length > 0 && (
-            <TimelineGroup events={thisWeeksEvents} title="This Week" />
-          )}
-
-          {nextWeeksEvents && nextWeeksEvents.length > 0 && (
-            <TimelineGroup events={nextWeeksEvents} title="Next Week" />
-          )}
-
-          {thisMonthsEvents && thisMonthsEvents.length > 0 && (
+          {groups.map((group) => (
             <TimelineGroup
-              events={thisMonthsEvents}
-              title={`This Month (${formatMonth(
-                thisMonthsEvents[0]?.date ?? '',
-              )})`}
+              key={group.key}
+              events={group.events}
+              title={group.title}
             />
-          )}
-
-          {nextMonthsEvents && nextMonthsEvents.length > 0 && (
-            <TimelineGroup
-              events={nextMonthsEvents}
-              title={`Next Month (${formatMonth(
-                nextMonthsEvents[0]?.date ?? '',
-              )})`}
-            />
-          )}
-
-          {secondNextMonthsEvents && secondNextMonthsEvents.length > 0 && (
-            <TimelineGroup
-              events={secondNextMonthsEvents}
-              title={formatMonthYear(secondNextMonthsEvents[0]?.date ?? '')}
-            />
-          )}
-
-          {thirdNextMonthsEvents && thirdNextMonthsEvents.length > 0 && (
-            <TimelineGroup
-              events={thirdNextMonthsEvents}
-              title={formatMonthYear(thirdNextMonthsEvents[0]?.date ?? '')}
-            />
-          )}
-
-          {thisYearsEvents && thisYearsEvents.length > 0 && (
-            <TimelineGroup
-              events={thisYearsEvents}
-              title={`This Year (${takeYear(thisYearsEvents[0]?.date ?? '')})`}
-            />
-          )}
-
-          {nextYearsEvents && nextYearsEvents.length > 0 && (
-            <TimelineGroup
-              events={nextYearsEvents}
-              title={`Next Year (${takeYear(nextYearsEvents[0]?.date ?? '')})`}
-            />
-          )}
-
-          {futureEvents && futureEvents.length > 0 && (
-            <TimelineGroup events={futureEvents} title="Future Events" />
-          )}
+          ))}
         </div>
       </div>
     </div>
