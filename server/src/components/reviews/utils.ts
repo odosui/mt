@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Note } from "../notes/NotesStore";
+import { type Note } from "../notes/NotesStore.ts";
 
 // in days
 const LEVEL_PERIODS = [

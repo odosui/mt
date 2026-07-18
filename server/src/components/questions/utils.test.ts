@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { describe, expect, it } from "vitest";
-import { isReviewable, minutesTillNextReview } from "./utils";
+import { isReviewable, minutesTillNextReview } from "./utils.ts";
 
 const MIN_PER_DAY = 60 * 24;
 

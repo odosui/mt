@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createTagsService } from "./TagsService";
-import { Note, NoteStore } from "../notes/NotesStore";
+import { createTagsService } from "./TagsService.ts";
+import { Note, NoteStore } from "../notes/NotesStore.ts";
 
 const n = (id: string, tags: string[]): Note => ({
   id,

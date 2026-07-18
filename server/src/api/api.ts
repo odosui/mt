@@ -1,18 +1,18 @@
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { createFSMediaStore } from "../components/media/FSMediaStore";
-import { NoteStore } from "../components/notes/NotesStore";
-import createQuestionsService from "../components/questions/QuestionService";
-import { generateFlashcards } from "../components/questions/flashcardgen";
-import { createFSQuizStore } from "../components/quizzes/QuizStore";
-import { generateQuiz } from "../components/quizzes/quizgen";
-import createReviewService from "../components/reviews/ReviewService";
-import { noSkipReviewByTag, requresReview } from "../components/reviews/utils";
-import createSyncService from "../components/sync/SyncService";
-import { createTagsService } from "../components/tags/TagsService";
-import createTimelineService from "../components/timeline/TimelineService";
-import { error, ok, safe } from "./helpers";
-import { fullView, listView } from "./dto";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+import { createFSMediaStore } from "../components/media/FSMediaStore.ts";
+import { type NoteStore } from "../components/notes/NotesStore.ts";
+import createQuestionsService from "../components/questions/QuestionService.ts";
+import { generateFlashcards } from "../components/questions/flashcardgen.ts";
+import { createFSQuizStore } from "../components/quizzes/QuizStore.ts";
+import { generateQuiz } from "../components/quizzes/quizgen.ts";
+import createReviewService from "../components/reviews/ReviewService.ts";
+import { noSkipReviewByTag, requresReview } from "../components/reviews/utils.ts";
+import createSyncService from "../components/sync/SyncService.ts";
+import { createTagsService } from "../components/tags/TagsService.ts";
+import createTimelineService from "../components/timeline/TimelineService.ts";
+import { error, ok, safe } from "./helpers.ts";
+import { fullView, listView } from "./dto.ts";
 
 dayjs.extend(relativeTime);
 

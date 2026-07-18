@@ -1,11 +1,11 @@
 import bodyParser from "body-parser";
-import express, { Express, Request, Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import multer from "multer";
 import os from "os";
 import path from "path";
-import { createApi } from "./api/api";
-import { createRoutes } from "./api/routes";
-import { createFSNotesStore } from "./components/notes/FSNotesStore";
+import { createApi } from "./api/api.ts";
+import { createRoutes } from "./api/routes.ts";
+import { createFSNotesStore } from "./components/notes/FSNotesStore.ts";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 const PORT = process.env.MT_PORT || 3000;
@@ -53,7 +53,7 @@ export async function startServer(mtHomeArg: string) {
 
   // serve static files in production
   if (NODE_ENV === "production") {
-    const clientBuildPath = path.join(__dirname, "../../client/dist");
+    const clientBuildPath = path.join(import.meta.dirname, "../../client/dist");
     app.use(express.static(clientBuildPath));
 
     // handle SPA routing - all non-API routes return index.html

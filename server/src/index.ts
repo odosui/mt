@@ -1,6 +1,6 @@
-import { buildStaticSite } from "./build";
-import { startServer } from "./server";
-import { parseArgs } from "./utils/cmd";
+import { buildStaticSite } from "./build.ts";
+import { startServer } from "./server.ts";
+import { parseArgs } from "./utils/cmd.ts";
 
 const BUILD_FLAG = "build-static-site";
 const MT_HOME_GLAF = "mt-home";

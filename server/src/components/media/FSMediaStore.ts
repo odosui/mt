@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { ImageMeta, ImageMetas, MediaStore, NoteImage } from "./MediaStore";
+import { type ImageMeta, type ImageMetas, type MediaStore, type NoteImage } from "./MediaStore.ts";
 
 const MEDIA_DIR_NAME = "media";
 

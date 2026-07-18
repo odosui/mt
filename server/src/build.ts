@@ -1,11 +1,11 @@
 import fs from "fs/promises";
 import { marked } from "marked";
 import path from "path";
-import { createFSNotesStore } from "./components/notes/FSNotesStore";
-import { Note } from "./components/notes/NotesStore";
-import { extractTitle, snakeCased } from "./components/notes/utils";
+import { createFSNotesStore } from "./components/notes/FSNotesStore.ts";
+import { type Note } from "./components/notes/NotesStore.ts";
+import { extractTitle, snakeCased } from "./components/notes/utils.ts";
 
-const TEMPLATES_DIR = path.join(__dirname, "templates");
+const TEMPLATES_DIR = path.join(import.meta.dirname, "templates");
 
 const GEN_EXTS = new Set([
   ".html",

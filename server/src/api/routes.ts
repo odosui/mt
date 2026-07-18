@@ -1,5 +1,5 @@
-import { error } from "./helpers";
-import { Api } from "./api";
+import { error } from "./helpers.ts";
+import { type Api } from "./api.ts";
 
 export type RouteConfig = {
   method: "get" | "post" | "patch" | "delete";

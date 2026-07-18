@@ -1,10 +1,10 @@
-import { Flashcard, NoteStore } from "../notes/NotesStore";
+import { type Flashcard, type NoteStore } from "../notes/NotesStore.ts";
 import {
   minutesTillNextReview,
   minutesTillReviewAfterCurrent,
   isReviewable,
   MAX_LEVEL,
-} from "./utils";
+} from "./utils.ts";
 import dayjs from "dayjs";
 
 const createQuestionsService = (noteStore: NoteStore) => {

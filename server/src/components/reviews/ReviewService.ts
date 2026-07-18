@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { NoteStore } from "../notes/NotesStore";
+import { type NoteStore } from "../notes/NotesStore.ts";
 
 const createReviewService = (noteStore: NoteStore) => {
   async function reviewNote(id: string) {

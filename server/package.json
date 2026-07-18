@@ -2,6 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
@@ -18,9 +19,7 @@
     "@types/express": "^5.0.5",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.9.2",
-    "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.6.2"
+    "nodemon": "^3.1.0"
   },
   "dependencies": {
     "body-parser": "^2.2.0",

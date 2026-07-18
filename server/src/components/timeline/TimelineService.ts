@@ -1,5 +1,5 @@
-import { Note, NoteStore } from "../notes/NotesStore";
-import { extractTitle } from "../notes/utils";
+import { type Note, type NoteStore } from "../notes/NotesStore.ts";
+import { extractTitle } from "../notes/utils.ts";
 
 export type TimelineItem = {
   date: string;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildTimeline } from "./TimelineService";
-import { Note } from "../notes/NotesStore";
+import { buildTimeline } from "./TimelineService.ts";
+import { Note } from "../notes/NotesStore.ts";
 
 // helper function to create a note
 const n = (id: string, body: string, tags: string[] = []): Note => ({

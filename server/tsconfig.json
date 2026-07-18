@@ -4,6 +4,9 @@
     "target": "es2016",
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
     "types": ["node"],
     "rootDir": "./src",
     "outDir": "./dist"

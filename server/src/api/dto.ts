@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
-import { ImageMetas } from "../components/media/MediaStore";
-import { Note } from "../components/notes/NotesStore";
-import { extractSnippetWithContext } from "../components/notes/utils";
+import { type ImageMetas } from "../components/media/MediaStore.ts";
+import { type Note } from "../components/notes/NotesStore.ts";
+import { extractSnippetWithContext } from "../components/notes/utils.ts";
 import {
   nextReviewPoints,
   noSkipReviewByTag,
   requresReview,
-} from "../components/reviews/utils";
+} from "../components/reviews/utils.ts";
 
 // ===============
 // Notes

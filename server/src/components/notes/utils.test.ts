@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractSnippetWithContext, extractTitle, snakeCased } from "./utils";
+import { extractSnippetWithContext, extractTitle, snakeCased } from "./utils.ts";
 
 describe("extractTitle", () => {
   it("should extract the first non-empty line", () => {

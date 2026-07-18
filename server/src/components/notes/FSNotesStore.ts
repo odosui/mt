@@ -2,9 +2,9 @@ import dayjs from "dayjs";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import { noSkipReviewByTag, requresReview } from "../reviews/utils";
-import { Flashcard, Note, NoteStore } from "./NotesStore";
-import { extractTitle, noteFilename } from "./utils";
+import { noSkipReviewByTag, requresReview } from "../reviews/utils.ts";
+import { type Flashcard, type Note, type NoteStore } from "./NotesStore.ts";
+import { extractTitle, noteFilename } from "./utils.ts";
 
 function getDefaultMTHome() {
   const homeDir = os.homedir();

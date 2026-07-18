@@ -1,4 +1,4 @@
-import { sendMessage } from "../ai/Anthropic";
+import { sendMessage } from "../ai/Anthropic.ts";
 
 type QuizItem = {
   question: string;

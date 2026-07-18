@@ -1,4 +1,4 @@
-import { parseArgs } from "./cmd";
+import { parseArgs } from "./cmd.ts";
 import { describe, it, expect } from "vitest";
 
 describe("parseArgs", () => {

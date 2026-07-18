@@ -1,4 +1,4 @@
-import { sendMessage } from "../ai/Anthropic";
+import { sendMessage } from "../ai/Anthropic.ts";
 
 const MODEL = "claude-haiku-4-5";
 

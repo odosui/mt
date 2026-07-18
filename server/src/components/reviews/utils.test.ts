@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { describe, expect, it } from "vitest";
-import { daysTillNextReview, nextReviewPoints, requresReview } from "./utils";
-import { Note } from "../notes/NotesStore";
+import { daysTillNextReview, nextReviewPoints, requresReview } from "./utils.ts";
+import { Note } from "../notes/NotesStore.ts";
 
 describe("daysTillNextReview", () => {
   describe("Level 0 (7 days period)", () => {

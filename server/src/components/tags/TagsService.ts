@@ -1,4 +1,4 @@
-import { NoteStore } from "../notes/NotesStore";
+import { type NoteStore } from "../notes/NotesStore.ts";
 
 type Tag = {
   id: string;
