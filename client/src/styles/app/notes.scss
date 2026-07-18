@@ -13,35 +13,45 @@
   .notes-bar {
     height: $notes-bar-height;
     display: flex;
-    border-bottom: 1px solid var(--color-notes-border);
-    padding: 0 0.5rem;
+    padding: 0 $unit2;
     justify-content: space-between;
     align-items: center;
+    gap: $unit1;
     z-index: 2;
     .search {
-      width: 88%;
+      flex: 1;
       display: flex;
       background: var(--color-notes-input-bg);
-      padding: 5px;
+      padding: 5px $unit1;
       align-items: center;
-      border-radius: 5px;
+      border-radius: $radius-sm;
+      transition: box-shadow 0.15s ease-out;
+      &:focus-within {
+        box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+      }
       input {
         width: 100%;
         border: 0;
-        font-size: 14px;
+        font-size: 13px;
         background-color: transparent;
         color: var(--color-notes-text);
+        &::placeholder {
+          color: var(--color-notes-text-secondary);
+        }
       }
       svg {
-        font-size: 16px;
-        margin-right: 8px;
+        font-size: 15px;
+        margin-right: 6px;
+        fill: var(--color-notes-text-secondary);
       }
     }
     .newNote {
       cursor: pointer;
+      display: flex;
+      align-items: center;
       svg {
         transition: fill 0.1s ease-in;
-        fill: #333;
+        fill: var(--color-notes-text-secondary);
         font-size: 22px;
       }
       &:hover {
@@ -56,18 +66,46 @@
     overflow-y: overlay;
     overflow-x: hidden;
     flex: 1;
+    padding: 0 $unit1 $unit1;
 
     .item {
-      padding: $unit1 $unit3;
+      padding: $unit1 $unit2;
       height: $unit8;
       cursor: pointer;
       transition: background-color 0.1s ease-out;
-      font-size: 14px;
-      border-bottom: 1px solid var(--color-notes-border);
+      font-size: 13px;
+      border-radius: $radius-md;
+      margin-bottom: 1px;
 
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      position: relative;
+
+      // hairline separator, inset like macOS lists
+      &::after {
+        content: '';
+        position: absolute;
+        left: $unit2;
+        right: $unit2;
+        bottom: 0;
+        border-bottom: 1px solid var(--color-notes-border);
+      }
+
+      &:hover,
+      &.active {
+        &::after {
+          border-bottom-color: transparent;
+        }
+      }
+
+      // also hide the divider sitting right above a highlighted item
+      &:has(+ .item:hover),
+      &:has(+ .item.active) {
+        &::after {
+          border-bottom-color: transparent;
+        }
+      }
 
       .icon-button {
         background: transparent;
@@ -89,13 +127,13 @@
           align-items: center;
           gap: $unit0;
           color: var(--color-notes-text-secondary);
-          font-size: $text0;
+          font-size: 11px;
           .sid {
-            font-size: $text0;
+            font-size: 11px;
             color: var(--color-notes-text-secondary);
           }
           .updated-at {
-            font-size: $text0;
+            font-size: 11px;
             color: var(--color-notes-text-secondary);
           }
         }
@@ -119,14 +157,13 @@
 
       &.active {
         background-color: var(--color-notes-bg-hover);
-        border-left: 3px solid var(--color-notes-accent);
-        padding-left: calc($unit3 - 3px);
+        box-shadow: var(--shadow-card);
       }
 
       .snippet {
         flex: 1;
         display: flex;
-        line-height: 140%;
+        line-height: 145%;
         font-size: 12px;
         overflow: hidden;
         flex-direction: column;
@@ -142,6 +179,7 @@
 
         mark {
           background: var(--color-notes-accent);
+          border-radius: 2px;
           color: white;
         }
       }
@@ -151,7 +189,7 @@
       padding: 2rem;
       text-align: center;
       color: var(--color-notes-text-secondary);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 150%;
     }
   }

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { atomDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { oneDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import remarkGfm from 'remark-gfm'
 import CrossLink from './CrossLink'
 import Mermaid from './Mermaid'

@@ -1,6 +1,30 @@
-$menu-width: 200px;
-$notes-width: 280px;
-$notes-bar-height: 38px;
+$menu-width: 220px;
+$notes-width: 290px;
+$notes-bar-height: 46px;
+
+// fonts — native system stack (SF Pro on macOS), mono for code
+$font-ui:
+  -apple-system,
+  BlinkMacSystemFont,
+  'SF Pro Text',
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  Arial,
+  sans-serif;
+$font-mono:
+  'Fira Code',
+  ui-monospace,
+  'SF Mono',
+  SFMono-Regular,
+  Menlo,
+  Consolas,
+  monospace;
+
+// corner radii
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
 
 $header-height: 0px;
 
@@ -36,10 +60,10 @@ $unit15: 768px;
 $unit16: 960px;
 $unit17: 1024px;
 
-$green: #63ab7b;
-$green-lighter: #4dc375;
+$green: #34c759;
+$green-lighter: #30d158;
 
-$red: #f76b6d;
-$red-lighter: #f78081;
+$red: #ff453a;
+$red-lighter: #ff6961;
 
-$bleackOrange: #e97451;
+$bleackOrange: #ff9500;

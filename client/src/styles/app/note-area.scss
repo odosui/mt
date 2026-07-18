@@ -32,9 +32,9 @@
           left: 0;
           right: 0;
           z-index: 2;
-          padding: 4px 0;
-          border-radius: 8px;
+          border-radius: $radius-md;
           background-color: var(--color-note-area-bg-hover);
+          border: 1px solid var(--borderColor);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -42,7 +42,7 @@
           margin-bottom: $unit4;
 
           .with-shadow {
-            box-shadow: 0px 0px 4px 2px #ccc;
+            box-shadow: var(--shadow-card);
           }
 
           .note-panel-inner {
@@ -57,7 +57,7 @@
                 display: flex;
                 align-items: center;
                 .note-id {
-                  font-family: 'Fira Code', monospace;
+                  font-family: $font-mono;
                   font-size: 11px;
                   color: var(--color-note-area-text-secondary-darker);
                   margin-right: $unit2;
@@ -120,13 +120,14 @@
 
           .lite-btn {
             background-color: transparent;
+            box-shadow: none;
             color: var(--color-note-area-accent);
             display: inline-flex;
             width: auto;
             padding: $unit0 $unit1;
-            letter-spacing: 0.7px;
+            letter-spacing: normal;
             margin-right: $unit0;
-            border-radius: $unit1;
+            border-radius: $radius-sm;
             transition: background-color 0.2s ease-in-out;
             svg {
               fill: var(--color-note-area-accent);
@@ -327,11 +328,11 @@
     max-width: $unit14;
     border: 0;
     resize: none;
-    line-height: 140%;
-    font-size: $text2;
+    line-height: 160%;
+    font-size: 15px;
     padding: 0;
     overflow-y: hidden;
-    font-family: 'Fira Code', monospace;
+    font-family: $font-mono;
     background-color: transparent;
     color: var(--color-text);
   }

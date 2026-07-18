@@ -24,172 +24,192 @@
 
 // colors
 
+// macOS-native palette: white canvas, neutral gray panels, hairline
+// borders, Apple system blue as the single accent.
 :root {
   // commons
-  --color-text: #1e293b;
-  --color-accent: #6366f1;
-  --color-scroll-thumb: rgba(0, 0, 0, 0.3);
-  --color-bg: #eef2f7;
-  --color-bg-hover: #e2e8f0;
-  --accent: #6366f1;
-  --accentHover: #818cf8;
-  --accentText: white;
-  --lighter: #94a3b8;
-  --subtle: #cbd5e1;
-  --danger: #ef4444;
-  --dangerHover: #f87171;
-  --borderColor: #cbd5e1;
-  --bgGray: #e2e8f0;
+  --color-text: #1d1d1f;
+  --color-accent: #0071e3;
+  --color-scroll-thumb: rgba(0, 0, 0, 0.25);
+  --color-bg: #f5f5f7;
+  --color-bg-hover: #e8e8ed;
+  --accent: #0071e3;
+  --accentHover: #1a82f0;
+  --accentText: #fff;
+  --lighter: #86868b;
+  --subtle: #d2d2d7;
+  --danger: #ff3b30;
+  --dangerHover: #ff6961;
+  --borderColor: rgba(0, 0, 0, 0.1);
+  --bgGray: #e8e8ed;
+  --shadow-menu:
+    0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 34px rgba(0, 0, 0, 0.14),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-modal:
+    0 0 0 1px rgba(0, 0, 0, 0.06), 0 24px 64px rgba(0, 0, 0, 0.22),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.05);
 
   // left sidebar / menu
-  --color-menu-bg: #0f172a;
-  --color-menu-bg-hover: #1e293b;
-  --color-menu-bg-hover-intense: #334155;
-  --color-menu-border: #cbd5e1;
-  --color-menu-accent: #fff;
-  --color-menu-text: #cbd5e1;
-  --color-menu-text-secondary: #94a3b8;
-  --color-menu-highlight: #334155;
-  --color-menu-input-text: #94a3b8;
+  --color-menu-bg: #e9e9ec;
+  --color-menu-bg-hover: rgba(0, 0, 0, 0.05);
+  --color-menu-bg-hover-intense: rgba(0, 0, 0, 0.09);
+  --color-menu-active-bg: rgba(0, 113, 227, 0.12);
+  --color-menu-border: rgba(0, 0, 0, 0.08);
+  --color-menu-accent: #0071e3;
+  --color-menu-text: #3a3a3f;
+  --color-menu-text-secondary: #86868b;
+  --color-menu-highlight: #ffe58f;
+  --color-menu-input-text: #86868b;
 
   // notes panel
-  --color-notes-bg: #eef2f7;
-  --color-notes-border: #b8c4d4;
-  --color-notes-text: #0f172a;
-  --color-notes-text-secondary: #475569;
+  --color-notes-bg: #f5f5f7;
+  --color-notes-border: rgba(0, 0, 0, 0.08);
+  --color-notes-text: #1d1d1f;
+  --color-notes-text-secondary: #86868b;
   --color-notes-bg-hover: #ffffff;
-  --color-notes-accent: #6366f1;
-  --color-notes-input-bg: #fff;
+  --color-notes-accent: #0071e3;
+  --color-notes-input-bg: #e8e8ed;
 
   // note area
   --color-note-area-bg: #fff;
-  --color-note-area-accent: #6366f1;
-  --color-note-area-text-secondary: #94a3b8;
-  --color-note-area-text-secondary-darker: #64748b;
-  --color-note-area-bg-hover: #f1f5f9;
-  --color-note-area-bg-hover-intense: #e2e8f0;
-  --color-note-area-bg-hover-intense-2: #cbd5e1;
+  --color-note-area-accent: #0071e3;
+  --color-note-area-text-secondary: #a1a1a6;
+  --color-note-area-text-secondary-darker: #6e6e73;
+  --color-note-area-bg-hover: #f5f5f7;
+  --color-note-area-bg-hover-intense: #e8e8ed;
+  --color-note-area-bg-hover-intense-2: #d2d2d7;
 
   // flashcards panel
-  --color-flashcards-panel-bg: #eef2f7;
-  --color-flashcards-panel-bg-hover: #e2e8f0;
-  --color-flashcards-panel-bg-hover-intense: #cbd5e1;
-  --color-flashcards-panel-border: #cbd5e1;
-  --color-flashcards-panel-text: #334155;
-  --color-flashcards-panel-text-secondary: #64748b;
-  --color-flashcards-panel-text-secondary-intense: #475569;
-  --color-flashcards-panel-accent: #6366f1;
-  --color-flashcards-panel-info-bg: #fefce8;
+  --color-flashcards-panel-bg: #f5f5f7;
+  --color-flashcards-panel-bg-hover: #e8e8ed;
+  --color-flashcards-panel-bg-hover-intense: #d2d2d7;
+  --color-flashcards-panel-border: rgba(0, 0, 0, 0.08);
+  --color-flashcards-panel-text: #1d1d1f;
+  --color-flashcards-panel-text-secondary: #86868b;
+  --color-flashcards-panel-text-secondary-intense: #6e6e73;
+  --color-flashcards-panel-accent: #0071e3;
+  --color-flashcards-panel-info-bg: #fff8e0;
   --color-flashcards-panel-form-bg: #fff;
-  --color-tooltip-bg: #1e293b;
-  --color-tooltip-text: #f8fafc;
+  --color-tooltip-bg: #1d1d1f;
+  --color-tooltip-text: #f5f5f7;
 
   // hovering preview
   --color-hovering-preview-bg: #fff;
-  --color-hovering-preview-bg-gray: #eef2f7;
-  --color-hovering-preview-bg-gray-hover: #e2e8f0;
-  --color-hovering-preview-accent: #6366f1;
-  --color-hovering-preview-accent-intense: #818cf8;
-  --color-hovering-preview-text: #1e293b;
+  --color-hovering-preview-bg-gray: #f5f5f7;
+  --color-hovering-preview-bg-gray-hover: #e8e8ed;
+  --color-hovering-preview-accent: #0071e3;
+  --color-hovering-preview-accent-intense: #1a82f0;
+  --color-hovering-preview-text: #1d1d1f;
 
   // flashcards-page
-  --color-flashcards-page-bg: #eef2f7;
-  --color-flashcards-page-bg-hover: #e2e8f0;
+  --color-flashcards-page-bg: #f5f5f7;
+  --color-flashcards-page-bg-hover: #e8e8ed;
   --color-flashcards-page-card-bg: #fff;
-  --color-flashcards-page-secondary: #64748b;
-  --color-flashcards-page-text: #1e293b;
-  --color-flashcards-page-btn-text: #475569;
-  --color-flashcards-page-accent: #6366f1;
+  --color-flashcards-page-secondary: #86868b;
+  --color-flashcards-page-text: #1d1d1f;
+  --color-flashcards-page-btn-text: #6e6e73;
+  --color-flashcards-page-accent: #0071e3;
 
   // note preview
-  --color-note-preview-error-bg: #fef2f2;
+  --color-note-preview-error-bg: #fdecea;
 
   // git
-  --color-git-changes: #f59e0b;
-  --color-git-clean: #22c55e;
+  --color-git-changes: #c77700;
+  --color-git-clean: #1f9d4d;
 }
 
 [data-theme='dark'] {
   // commons
-  --color-text: #f1f5f9;
-  --color-accent: #818cf8;
-  --color-scroll-thumb: rgba(255, 255, 255, 0.15);
-  --color-bg: #0f172a;
-  --color-bg-hover: #1e293b;
-  --accent: #818cf8;
-  --accentHover: #a5b4fc;
-  --accentText: #0f172a;
-  --lighter: #64748b;
-  --subtle: #334155;
-  --danger: #f87171;
-  --dangerHover: #fca5a5;
-  --borderColor: #1e293b;
-  --bgGray: #1e293b;
+  --color-text: #ededf0;
+  --color-accent: #409cff;
+  --color-scroll-thumb: rgba(255, 255, 255, 0.22);
+  --color-bg: #1e1e20;
+  --color-bg-hover: #2a2a2e;
+  --accent: #0a84ff;
+  --accentHover: #3395ff;
+  --accentText: #fff;
+  --lighter: #98989f;
+  --subtle: #3a3a3f;
+  --danger: #ff453a;
+  --dangerHover: #ff6961;
+  --borderColor: rgba(255, 255, 255, 0.1);
+  --bgGray: #2a2a2e;
+  --shadow-menu:
+    0 0 0 1px rgba(255, 255, 255, 0.08), 0 10px 34px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-modal:
+    0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 64px rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.25);
 
   // left sidebar / menu
-  --color-menu-bg: #020617;
-  --color-menu-bg-hover: #1e293b;
-  --color-menu-bg-hover-intense: #334155;
-  --color-menu-border: #1e293b;
-  --color-menu-accent: #818cf8;
-  --color-menu-text: #cbd5e1;
-  --color-menu-text-secondary: #64748b;
-  --color-menu-highlight: #334155;
-  --color-menu-input-text: #cbd5e1;
+  --color-menu-bg: #242427;
+  --color-menu-bg-hover: rgba(255, 255, 255, 0.06);
+  --color-menu-bg-hover-intense: rgba(255, 255, 255, 0.11);
+  --color-menu-active-bg: rgba(64, 156, 255, 0.2);
+  --color-menu-border: rgba(255, 255, 255, 0.08);
+  --color-menu-accent: #409cff;
+  --color-menu-text: #d4d4d9;
+  --color-menu-text-secondary: #85858c;
+  --color-menu-highlight: rgba(255, 214, 10, 0.35);
+  --color-menu-input-text: #85858c;
 
   // notes panel
-  --color-notes-bg: #0f172a;
-  --color-notes-border: #334155;
-  --color-notes-text: #f1f5f9;
-  --color-notes-text-secondary: #94a3b8;
-  --color-notes-bg-hover: #1e293b;
-  --color-notes-accent: #818cf8;
-  --color-notes-input-bg: #1e293b;
+  --color-notes-bg: #202023;
+  --color-notes-border: rgba(255, 255, 255, 0.08);
+  --color-notes-text: #ededf0;
+  --color-notes-text-secondary: #98989f;
+  --color-notes-bg-hover: #2c2c30;
+  --color-notes-accent: #409cff;
+  --color-notes-input-bg: #2a2a2e;
 
   // note area
-  --color-note-area-bg: #0f172a;
-  --color-note-area-accent: #818cf8;
-  --color-note-area-text-secondary: #475569;
-  --color-note-area-text-secondary-darker: #64748b;
-  --color-note-area-bg-hover: #1e293b;
-  --color-note-area-bg-hover-intense: #334155;
-  --color-note-area-bg-hover-intense-2: #475569;
+  --color-note-area-bg: #1e1e20;
+  --color-note-area-accent: #409cff;
+  --color-note-area-text-secondary: #6e6e76;
+  --color-note-area-text-secondary-darker: #98989f;
+  --color-note-area-bg-hover: #2a2a2e;
+  --color-note-area-bg-hover-intense: #38383e;
+  --color-note-area-bg-hover-intense-2: #48484f;
 
   // flashcards panel
-  --color-flashcards-panel-bg: #0f172a;
-  --color-flashcards-panel-bg-hover: #1e293b;
-  --color-flashcards-panel-bg-hover-intense: #334155;
-  --color-flashcards-panel-border: #1e293b;
-  --color-flashcards-panel-text: #f1f5f9;
-  --color-flashcards-panel-text-secondary: #475569;
-  --color-flashcards-panel-text-secondary-intense: #64748b;
-  --color-flashcards-panel-accent: #818cf8;
-  --color-flashcards-panel-info-bg: #422006;
-  --color-flashcards-panel-form-bg: #1e293b;
-  --color-tooltip-bg: #f1f5f9;
-  --color-tooltip-text: #0f172a;
+  --color-flashcards-panel-bg: #202023;
+  --color-flashcards-panel-bg-hover: #2a2a2e;
+  --color-flashcards-panel-bg-hover-intense: #38383e;
+  --color-flashcards-panel-border: rgba(255, 255, 255, 0.08);
+  --color-flashcards-panel-text: #ededf0;
+  --color-flashcards-panel-text-secondary: #6e6e76;
+  --color-flashcards-panel-text-secondary-intense: #98989f;
+  --color-flashcards-panel-accent: #409cff;
+  --color-flashcards-panel-info-bg: #3a2f14;
+  --color-flashcards-panel-form-bg: #2a2a2e;
+  --color-tooltip-bg: #ededf0;
+  --color-tooltip-text: #1d1d1f;
 
   // hovering preview
-  --color-hovering-preview-bg: #1e293b;
-  --color-hovering-preview-accent: #818cf8;
-  --color-hovering-preview-accent-intense: #a5b4fc;
-  --color-hovering-preview-text: #f1f5f9;
+  --color-hovering-preview-bg: #26262a;
+  --color-hovering-preview-bg-gray: #1e1e20;
+  --color-hovering-preview-bg-gray-hover: #2a2a2e;
+  --color-hovering-preview-accent: #409cff;
+  --color-hovering-preview-accent-intense: #6cb2ff;
+  --color-hovering-preview-text: #ededf0;
 
   // flashcards-page
-  --color-flashcards-page-bg: #0f172a;
-  --color-flashcards-page-bg-hover: #1e293b;
-  --color-flashcards-page-card-bg: #1e293b;
-  --color-flashcards-page-secondary: #475569;
-  --color-flashcards-page-text: #f1f5f9;
-  --color-flashcards-page-btn-text: #64748b;
-  --color-flashcards-page-accent: #818cf8;
+  --color-flashcards-page-bg: #1e1e20;
+  --color-flashcards-page-bg-hover: #2a2a2e;
+  --color-flashcards-page-card-bg: #2a2a2e;
+  --color-flashcards-page-secondary: #6e6e76;
+  --color-flashcards-page-text: #ededf0;
+  --color-flashcards-page-btn-text: #98989f;
+  --color-flashcards-page-accent: #409cff;
 
   // note preview
-  --color-note-preview-error-bg: #450a0a;
+  --color-note-preview-error-bg: #3b1d1b;
 
   // git
-  --color-git-changes: #f59e0b;
-  --color-git-clean: #22c55e;
+  --color-git-changes: #ffb340;
+  --color-git-clean: #30d158;
 }
 
 * {
@@ -198,10 +218,20 @@
 
 body,
 * {
-  font-family: 'Roboto', sans-serif;
+  font-family: $font-ui;
   color: var(--color-text);
   outline: none;
   box-sizing: border-box;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgba(10, 132, 255, 0.25);
 }
 
 // ============
@@ -211,14 +241,21 @@ body,
   &::-webkit-scrollbar {
     appearance: none;
     -webkit-appearance: none;
-    width: $unit0;
+    width: 6px;
     overflow: overlay;
   }
 
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   &::-webkit-scrollbar-thumb {
-    border-radius: $unit0;
+    border-radius: 6px;
+    background-color: transparent;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
     background-color: var(--color-scroll-thumb);
-    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -312,18 +349,16 @@ body,
   align-items: center;
   justify-content: center;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
 
   .generic-modal {
     position: relative;
     background-color: var(--color-note-area-bg);
     padding: $unit4;
-    border-radius: $unit1;
+    border-radius: $radius-lg;
     z-index: 11;
-    box-shadow:
-      0px 5px 5px -3px rgb(0 0 0 / 20%),
-      0px 8px 10px 1px rgb(0 0 0 / 14%),
-      0px 3px 14px 2px rgb(0 0 0 / 12%);
+    box-shadow: var(--shadow-modal);
 
     .generic-modal-content {
       max-width: $unit14;
@@ -515,16 +550,15 @@ body,
   perspective: 1000px;
   .inner {
     background-color: var(--color-flashcards-page-card-bg);
-    border-radius: $unit0;
+    border-radius: $radius-md;
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
     transition: transform 0.4s;
     transform-style: preserve-3d;
-    box-shadow:
-      rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border: 1px solid var(--borderColor);
+    box-shadow: var(--shadow-card);
 
     &.flipped {
       transform: rotateY(0.5turn);
@@ -659,17 +693,15 @@ body,
   position: absolute;
   background: var(--color-hovering-preview-bg);
   z-index: 5;
-  padding: $unit2 0;
-  border-radius: $unit1;
+  padding: $unit0;
+  border-radius: $radius-md;
   overflow: hidden;
-  box-shadow:
-    0px 5px 5px -3px rgb(0 0 0 / 20%),
-    0px 8px 10px 1px rgb(0 0 0 / 14%),
-    0px 3px 14px 2px rgb(0 0 0 / 12%);
+  box-shadow: var(--shadow-menu);
 
   .menu-item {
-    font-size: 14px;
+    font-size: 13px;
     padding: $unit1 $unit2;
+    border-radius: $radius-sm;
     display: flex;
     align-items: center;
     transition: background-color 0.1s ease-in-out;
@@ -681,17 +713,11 @@ body,
     span {
       font-weight: 400;
       color: var(--color-text);
-      font-size: 14px;
+      font-size: 13px;
     }
     cursor: pointer;
     &:hover {
       background-color: var(--bgGray);
-      // span {
-      //   color: var(--accent);
-      // }
-      // svg {
-      //   fill: var(--accent);
-      // }
     }
   }
 
@@ -952,10 +978,11 @@ body,
           }
           .timeline-item-content {
             flex: 1;
-            padding: $unit1;
+            padding: $unit1 $unit2;
             background-color: var(--color-note-area-bg);
-            border-radius: $unit1;
-            border: 1px solid var(--color-menu-border);
+            border-radius: $radius-md;
+            border: 1px solid var(--borderColor);
+            box-shadow: var(--shadow-card);
             p {
               margin: 0;
             }

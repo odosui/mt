@@ -6,7 +6,8 @@
   right: -100%;
   max-width: 100%;
   background-color: var(--color-hovering-preview-bg);
-  box-shadow: -2px 0px 10px 1px #aaaaaa;
+  border-left: 1px solid var(--borderColor);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
   top: 0;
   bottom: 0;
   position: fixed;

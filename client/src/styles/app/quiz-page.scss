@@ -87,11 +87,10 @@
 
   .qp-card {
     background: var(--color-note-area-bg);
-    border-radius: $unit2;
+    border-radius: $radius-lg;
     padding: $unit5 $unit4;
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      0 1px 2px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--borderColor);
+    box-shadow: var(--shadow-card);
   }
 
   .qp-card-counter {
@@ -164,30 +163,30 @@
     }
 
     &.correct {
-      background: rgba(39, 174, 96, 0.1);
-      border-color: #27ae60;
+      background: rgba(52, 199, 89, 0.12);
+      border-color: #34c759;
 
       .qp-card-answer-label {
-        background: #27ae60;
+        background: #34c759;
         color: #fff;
       }
 
       .qp-card-answer-icon {
-        fill: #27ae60;
+        fill: #34c759;
       }
     }
 
     &.wrong {
-      background: rgba(231, 76, 60, 0.1);
-      border-color: #e74c3c;
+      background: rgba(255, 59, 48, 0.12);
+      border-color: #ff3b30;
 
       .qp-card-answer-label {
-        background: #e74c3c;
+        background: #ff3b30;
         color: #fff;
       }
 
       .qp-card-answer-icon {
-        fill: #e74c3c;
+        fill: #ff3b30;
       }
     }
 
@@ -209,11 +208,11 @@
     gap: $unit2;
 
     &.correct {
-      color: #27ae60;
+      color: #34c759;
     }
 
     &.wrong {
-      color: #e74c3c;
+      color: #ff3b30;
     }
 
     .qp-continue-btn {
