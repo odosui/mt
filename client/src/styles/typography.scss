@@ -167,7 +167,9 @@
           border-radius: $unit0;
           margin: 0;
           cursor: pointer;
-          transition: border-color 0.2s, background-color 0.2s;
+          transition:
+            border-color 0.2s,
+            background-color 0.2s;
 
           &:checked {
             background-color: var(--accent);
@@ -205,8 +207,13 @@
 
       &::before {
         font-size: $text0;
+        font-variant-numeric: tabular-nums;
         position: absolute;
-        left: -$unit5;
+        left: -$unit6;
+        // baseline-align the smaller counter with the item's first line
+        top: 0.15em;
+        width: $unit4;
+        text-align: right;
         color: var(--subtle);
         content: counter(li-counter, decimal-leading-zero);
         transition: color 0.2s;
