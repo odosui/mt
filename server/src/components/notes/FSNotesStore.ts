@@ -1,3 +1,4 @@
+import { watch, type FSWatcher } from "fs";
 import dayjs from "dayjs";
 import fs from "fs/promises";
 import os from "os";
@@ -17,18 +18,117 @@ export async function createFSNotesStore(
   const mtHome = mtHomeArg || getDefaultMTHome();
   const notesDir = path.join(mtHome, "notes");
 
-  async function readn() {
-    const notes = await readNotes(notesDir);
-    return notes;
+  await fs.mkdir(notesDir, { recursive: true });
+
+  // In-memory cache of every note, keyed by id. Reads are served from here;
+  // writes always go through disk first (see updateNote) so a stale entry can
+  // never turn into a corrupted write.
+  let cache: Map<string, Note> | null = null;
+
+  // Ids whose file changed underneath us and needs re-reading.
+  const dirty = new Set<string>();
+
+  // Set when a file may have been added or removed, so the directory listing
+  // itself has to be reconciled.
+  let listStale = false;
+
+  // Dedupes concurrent warm-ups: a cold start with N parallel requests scans
+  // the corpus once, not N times.
+  let loading: Promise<Map<string, Note>> | null = null;
+
+  // When we cannot watch the directory we fall back to reading from disk on
+  // every call - slower, but never stale.
+  let watcher: FSWatcher | null = null;
+  let watching = false;
+
+  function onFileEvent(filename: string | null) {
+    listStale = true;
+    if (!filename) {
+      // No filename means we cannot tell what moved - drop everything.
+      cache = null;
+      dirty.clear();
+      return;
+    }
+    const id = extractIdFromFilename(filename);
+    if (id) {
+      dirty.add(id);
+    }
+  }
+
+  function startWatching() {
+    try {
+      watcher = watch(notesDir, { persistent: false }, (_event, filename) => {
+        onFileEvent(filename);
+      });
+      watcher.on("error", (e) => {
+        console.warn(
+          "mt: notes directory watcher failed, falling back to uncached reads",
+          e,
+        );
+        watcher = null;
+        watching = false;
+      });
+      watching = true;
+    } catch (e) {
+      console.warn(
+        "mt: could not watch the notes directory, falling back to uncached reads",
+        e,
+      );
+      watching = false;
+    }
+  }
+
+  startWatching();
+
+  // Bring `cache` up to date and return it.
+  async function load(): Promise<Map<string, Note>> {
+    // Without a watcher we have no way to learn about external edits, so the
+    // cache is not trustworthy - rescan every time (the original behaviour).
+    if (!watching) {
+      cache = null;
+      dirty.clear();
+      listStale = false;
+      return readNotes(notesDir);
+    }
+
+    if (cache && !listStale && dirty.size === 0) {
+      return cache;
+    }
+
+    if (loading) {
+      return loading;
+    }
+
+    loading = (async () => {
+      try {
+        // Take what we are about to handle and clear the flags *before*
+        // awaiting. Anything the watcher reports while we are reading gets
+        // re-flagged and picked up by the next load, instead of being wiped
+        // by a clear at the end.
+        const pending = new Set(dirty);
+        const pendingListStale = listStale;
+        for (const id of pending) {
+          dirty.delete(id);
+        }
+        listStale = false;
+
+        if (!cache) {
+          cache = await readNotes(notesDir);
+        } else {
+          await reconcile(notesDir, cache, pending, pendingListStale);
+        }
+        return cache;
+      } finally {
+        loading = null;
+      }
+    })();
+
+    return loading;
   }
 
   async function noteCounts() {
-    await fs.mkdir(notesDir, { recursive: true });
-    const files = await fs.readdir(notesDir);
-    const mdFiles = files.filter(
-      (f) => f.endsWith(".md") && extractIdFromFilename(f),
-    );
-    return { total_notes: mdFiles.length };
+    const notes = await load();
+    return { total_notes: notes.size };
   }
 
   async function getNotes(
@@ -37,9 +137,9 @@ export async function createFSNotesStore(
     favOnly: boolean,
     query?: string,
   ) {
-    const notes = await readn();
+    const notes = await load();
 
-    let res = Object.values(notes);
+    let res = [...notes.values()];
 
     // filter by text query
     if (query && query.trim()) {
@@ -70,17 +170,13 @@ export async function createFSNotesStore(
   }
 
   async function getNote(id: string) {
-    const files = await fs.readdir(notesDir);
-    const noteFile = findNoteFile(files, id);
-    if (!noteFile) {
-      return null;
-    }
-    const filePath = path.join(notesDir, noteFile);
-    const content = await fs.readFile(filePath, "utf-8");
-    return readNote(id, content);
+    const notes = await load();
+    return notes.get(id) ?? null;
   }
 
   async function createNote(body: string) {
+    // Deliberately read the directory rather than the cache: allocating the
+    // next id off a stale cache could hand out one that is already taken.
     const files = await fs.readdir(notesDir);
 
     // figuring out the next id
@@ -110,6 +206,7 @@ export async function createFSNotesStore(
     };
 
     await writeToDisk(notesDir, n);
+    cache?.set(id, n);
 
     return n;
   }
@@ -128,6 +225,9 @@ export async function createFSNotesStore(
       throw new Error(`Note with id ${id} not found`);
     }
 
+    // Always merge against what is actually on disk, never against the cache.
+    // An external edit (a git pull, the user's editor) between our last read
+    // and this write would otherwise be silently clobbered.
     const filePath = path.join(notesDir, oldFile);
     const content = await fs.readFile(filePath, "utf-8");
     const existingNote = readNote(id, content);
@@ -148,6 +248,7 @@ export async function createFSNotesStore(
     await fs.unlink(filePath);
 
     await writeToDisk(notesDir, n);
+    cache?.set(id, n);
     return n;
   }
 
@@ -159,6 +260,15 @@ export async function createFSNotesStore(
     }
 
     await fs.unlink(path.join(notesDir, noteFile));
+    cache?.delete(id);
+    dirty.delete(id);
+  }
+
+  function close() {
+    watcher?.close();
+    watcher = null;
+    watching = false;
+    cache = null;
   }
 
   return {
@@ -168,6 +278,7 @@ export async function createFSNotesStore(
     createNote,
     updateNote,
     deleteNote,
+    close,
   };
 }
 
@@ -217,7 +328,7 @@ async function writeToDisk(notesDir: string, note: Note) {
 }
 
 async function readNotes(notesDir: string) {
-  const notes: Record<string, Note> = {};
+  const notes = new Map<string, Note>();
 
   await fs.mkdir(notesDir, { recursive: true });
   const files = await fs.readdir(notesDir);
@@ -231,10 +342,56 @@ async function readNotes(notesDir: string) {
 
     const filePath = path.join(notesDir, file);
     const content = await fs.readFile(filePath, "utf-8");
-    notes[id] = readNote(id, content);
+    notes.set(id, readNote(id, content));
   }
 
   return notes;
+}
+
+// Bring an already-warm cache back in sync with disk by re-reading only what
+// changed, rather than rescanning the whole corpus. `dirty` is a snapshot owned
+// by the caller, not the live invalidation set.
+async function reconcile(
+  notesDir: string,
+  cache: Map<string, Note>,
+  dirty: Set<string>,
+  listStale: boolean,
+) {
+  const files = await fs.readdir(notesDir);
+
+  const filenameById = new Map<string, string>();
+  for (const f of files) {
+    if (!f.endsWith(".md")) continue;
+    const id = extractIdFromFilename(f);
+    if (id) {
+      filenameById.set(id, f);
+    }
+  }
+
+  if (listStale) {
+    // Files that disappeared (deleted, or renamed to a different id).
+    for (const id of [...cache.keys()]) {
+      if (!filenameById.has(id)) {
+        cache.delete(id);
+      }
+    }
+    // Files we have never seen before.
+    for (const id of filenameById.keys()) {
+      if (!cache.has(id)) {
+        dirty.add(id);
+      }
+    }
+  }
+
+  for (const id of [...dirty]) {
+    const file = filenameById.get(id);
+    if (!file) {
+      cache.delete(id);
+      continue;
+    }
+    const content = await fs.readFile(path.join(notesDir, file), "utf-8");
+    cache.set(id, readNote(id, content));
+  }
 }
 
 function readNote(id: string, content: string): Note {

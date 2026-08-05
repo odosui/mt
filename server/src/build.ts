@@ -68,6 +68,7 @@ export async function buildStaticSite(mtHome: string, outputDir: string) {
   // Read all notes and filter to seo_published
   const store = await createFSNotesStore(mtHome);
   const allNotes = await store.getNotes("", false, false);
+  store.close?.(); // one-shot command, no need to keep watching
   const published = allNotes
     .filter((n) => n.seo_published)
     .sort((a, b) => Number(a.id) - Number(b.id));

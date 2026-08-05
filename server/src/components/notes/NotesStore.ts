@@ -46,4 +46,8 @@ export interface NoteStore {
     skipUpdatedAt: boolean,
   ): Promise<Note>;
   deleteNote(id: string): Promise<void>;
+
+  // Releases any filesystem watchers. Optional so in-memory fakes (tests) and
+  // the static-site build path do not have to implement it.
+  close?(): void;
 }
