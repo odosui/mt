@@ -22,9 +22,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
-          npm install --prefix client
-          npm install --prefix server
+          npm ci
+          npm ci --prefix client
+          npm ci --prefix server
 
       - name: Check types - Client
         run: npm run check-types --prefix client
@@ -34,6 +34,9 @@ jobs:
 
       - name: Check types - Server
         run: npm run check-types --prefix server
+
+      - name: Lint - Server
+        run: npm run lint --prefix server
 
       - name: Run tests - Client
         run: npm run test --prefix client
@@ -56,9 +59,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
-          npm install --prefix client
-          npm install --prefix server
+          npm ci
+          npm ci --prefix client
+          npm ci --prefix server
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium

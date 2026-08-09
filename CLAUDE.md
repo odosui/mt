@@ -89,7 +89,7 @@ In development, Vite proxies `/media` requests to the server. The server URL is 
 
 ## CI Pipeline
 
-CI runs type checking, oxlint (client only), unit tests (both), then e2e tests, then pushes a Docker image to `hiquest/mt` on Docker Hub (main branch only). Node 22 in CI.
+CI runs type checking, oxlint (client and server), unit tests (both), then e2e tests, then pushes a Docker image to `hiquest/mt` on Docker Hub (only on pushed `v*` tags). Node 22 in CI.
 
 ## TypeScript
 

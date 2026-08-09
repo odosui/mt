@@ -3,10 +3,10 @@ import ReactMarkdown from 'react-markdown'
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import remarkGfm from 'remark-gfm'
+import { IImageMetas } from '../../types'
+import HashTagPlugin from '../../utils/rehype/tag_plugin'
 import CrossLink from './CrossLink'
 import Mermaid from './Mermaid'
-import HashTagPlugin from '../../utils/rehype/tag_plugin'
-import { IImageMetas } from '../../types'
 
 function toggleCheckbox(markdown: string, index: number): string {
   const pattern = /- \[([ xX])\]/g
@@ -63,7 +63,7 @@ const Preview: React.FC<{
 
   const renderInput = useCallback(
     (props: any) => {
-      const { node, ...rest } = props
+      const { node: _node, ...rest } = props
       if (rest.type === 'checkbox') {
         const idx = checkboxIndex.current++
         return (
@@ -130,9 +130,10 @@ function renderInlineCode({ children, ...props }: any) {
 function renderPreBlock({ node }: any) {
   const codeNode = node?.children?.find((c: any) => c.tagName === 'code')
   const className = codeNode?.properties?.className?.[0] || ''
-  const content = String(
-    codeNode?.children?.[0]?.value || ''
-  ).replace(/\n$/, '')
+  const content = String(codeNode?.children?.[0]?.value || '').replace(
+    /\n$/,
+    '',
+  )
 
   const match = /language-(\w+)/.exec(className)
   const lang = match ? match[1] : 'none'

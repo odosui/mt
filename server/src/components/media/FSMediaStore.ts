@@ -1,6 +1,11 @@
 import fs from "fs/promises";
 import path from "path";
-import { type ImageMeta, type ImageMetas, type MediaStore, type NoteImage } from "./MediaStore.ts";
+import {
+  type ImageMeta,
+  type ImageMetas,
+  type MediaStore,
+  type NoteImage,
+} from "./MediaStore.ts";
 
 const MEDIA_DIR_NAME = "media";
 
@@ -11,7 +16,7 @@ export function createFSMediaStore(mtHome: string): MediaStore {
     try {
       await fs.mkdir(mediaPath, { recursive: true });
     } catch (err) {
-      // Directory might already exist
+      console.error(`Failed to create media directory at ${mediaPath}:`, err);
     }
   }
 
@@ -32,7 +37,7 @@ export function createFSMediaStore(mtHome: string): MediaStore {
         }
       }
     } catch (err) {
-      // Media directory might not exist, return empty result
+      console.error(`Failed to read media directory at ${mediaPath}:`, err);
     }
 
     return result;
@@ -59,7 +64,7 @@ export function createFSMediaStore(mtHome: string): MediaStore {
         }
       }
     } catch (err) {
-      // Media directory might not exist, return empty result
+      console.error(`Failed to read media directory at ${mediaPath}:`, err);
     }
 
     return result;
