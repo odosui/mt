@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { lazy, Suspense, useCallback, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -6,7 +6,8 @@ import remarkGfm from 'remark-gfm'
 import { IImageMetas } from '../../types'
 import HashTagPlugin from '../../utils/rehype/tag_plugin'
 import CrossLink from './CrossLink'
-import Mermaid from './Mermaid'
+
+const Mermaid = lazy(() => import('./Mermaid'))
 
 function toggleCheckbox(markdown: string, index: number): string {
   const pattern = /- \[([ xX])\]/g
@@ -199,7 +200,9 @@ function renderPreBlock({ node }: any) {
 
     return (
       <div className="mermaid" style={styles}>
-        <Mermaid code={content} />
+        <Suspense fallback={null}>
+          <Mermaid code={content} />
+        </Suspense>
       </div>
     )
   }
