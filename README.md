@@ -12,7 +12,7 @@ Knowledge management meets spaced repetition.
 
 [Read the docs](https://docs.mindthis.io/)
 
-![MindThis showcase](media/main.png)
+![MindThis demo](media/demo.gif)
 
 ## Overview
 
