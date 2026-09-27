@@ -15,12 +15,21 @@ const apiServerUrl =
 const rootPackage = JSON.parse(fs.readFileSync('../package.json', 'utf8'))
 const APP_VERSION = rootPackage.version
 
-// Get current git commit hash
-const GIT_COMMIT =
-  process.env.GIT_COMMIT ||
-  (process.env.NODE_ENV === 'production'
-    ? execSync('git rev-parse HEAD', { cwd: '..' }).toString().trim()
-    : '')
+const GIT_COMMIT = process.env.GIT_COMMIT || currentCommit()
+
+// Empty when git or the repository is unavailable (e.g. inside a Docker build)
+function currentCommit() {
+  if (process.env.NODE_ENV !== 'production') {
+    return ''
+  }
+  try {
+    return execSync('git rev-parse HEAD', { cwd: '..', stdio: 'pipe' })
+      .toString()
+      .trim()
+  } catch {
+    return ''
+  }
+}
 
 export default defineConfig({
   plugins: [react()],
