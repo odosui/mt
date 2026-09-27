@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { childPath } from "../../utils/paths.ts";
 
 export type QuizItem = {
   question: string;
@@ -38,7 +39,11 @@ export interface QuizStore {
   listByNote(noteId: string): Promise<Quiz[]>;
   getOne(noteId: string, quizId: number): Promise<Quiz | null>;
   save(noteId: string, title: string, items: QuizItem[]): Promise<Quiz>;
-  saveResult(noteId: string, quizId: number, score: number): Promise<Quiz | null>;
+  saveResult(
+    noteId: string,
+    quizId: number,
+    score: number,
+  ): Promise<Quiz | null>;
 }
 
 export function createFSQuizStore(mtHome: string): QuizStore {
@@ -54,10 +59,7 @@ export function createFSQuizStore(mtHome: string): QuizStore {
     const prefix = `${noteId}__`;
     const ids = files
       .filter((f) => f.startsWith(prefix) && f.endsWith(".json"))
-      .map((f) => {
-        const m = f.match(new RegExp(`^${noteId}__(\\d+)\\.json$`));
-        return m ? parseInt(m?.[1] ?? "", 10) : 0;
-      })
+      .map((f) => parseInt(f.slice(prefix.length, -".json".length), 10))
       .filter((id) => id > 0);
 
     return ids.length > 0 ? Math.max(...ids) + 1 : 1;
@@ -104,18 +106,15 @@ export function createFSQuizStore(mtHome: string): QuizStore {
     };
 
     await ensureDir();
-    const filePath = path.join(quizzesDir, quizFilename(noteId, seqId));
+    const filePath = childPath(quizzesDir, quizFilename(noteId, seqId));
     await fs.writeFile(filePath, JSON.stringify(quiz, null, 2), "utf-8");
 
     return quiz;
   }
 
-  async function getOne(
-    noteId: string,
-    quizId: number,
-  ): Promise<Quiz | null> {
-    const filePath = path.join(quizzesDir, quizFilename(noteId, quizId));
+  async function getOne(noteId: string, quizId: number): Promise<Quiz | null> {
     try {
+      const filePath = childPath(quizzesDir, quizFilename(noteId, quizId));
       const content = await fs.readFile(filePath, "utf-8");
       return normalizeAttempts(JSON.parse(content));
     } catch {
@@ -139,7 +138,7 @@ export function createFSQuizStore(mtHome: string): QuizStore {
     quiz.last_taken_at = taken_at;
     quiz.last_score = score;
 
-    const filePath = path.join(quizzesDir, quizFilename(noteId, quizId));
+    const filePath = childPath(quizzesDir, quizFilename(noteId, quizId));
     await fs.writeFile(filePath, JSON.stringify(quiz, null, 2), "utf-8");
 
     return quiz;

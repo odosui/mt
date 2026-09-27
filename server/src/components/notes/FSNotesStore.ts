@@ -475,7 +475,7 @@ function compareByModifiedDateDesc(a: Note, b: Note) {
 }
 
 function findNoteFile(files: string[], id: string): string | undefined {
-  return files.find((f) => f.match(new RegExp(`^${id}(_|\\.)`)));
+  return files.find((f) => f.startsWith(`${id}_`) || f.startsWith(`${id}.`));
 }
 
 function extractIdFromFilename(filename: string): string | undefined {

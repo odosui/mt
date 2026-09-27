@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { childPath } from "../../utils/paths.ts";
 import {
   type ImageMeta,
   type ImageMetas,
@@ -79,7 +80,7 @@ export function createFSMediaStore(mtHome: string): MediaStore {
 
     const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
     const fullFilename = `${noteId}__${sanitizedFilename}`;
-    const filePath = path.join(mediaPath, fullFilename);
+    const filePath = childPath(mediaPath, fullFilename);
 
     await fs.writeFile(filePath, data);
     const stat = await fs.stat(filePath);
@@ -93,7 +94,7 @@ export function createFSMediaStore(mtHome: string): MediaStore {
   }
 
   async function deleteImage(imageId: string): Promise<void> {
-    const filePath = path.join(mediaPath, imageId);
+    const filePath = childPath(mediaPath, imageId);
     await fs.unlink(filePath);
   }
 

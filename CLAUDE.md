@@ -81,6 +81,7 @@ E2E tests auto-start a production server with a temporary `MT_HOME` directory.
 
 - `MT_HOME` — notes storage directory (default: `~/mt`)
 - `MT_PORT` — server port (default: 3000 dev, 3042 Docker)
+- `MT_HOST` — bind address (default: `127.0.0.1`; Docker image uses `0.0.0.0`). Set to `0.0.0.0` to reach the app from other devices
 - `ANTHROPIC_API_KEY` — enables AI quiz generation
 
 ### Dev Proxy

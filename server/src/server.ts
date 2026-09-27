@@ -4,11 +4,14 @@ import multer from "multer";
 import os from "os";
 import path from "path";
 import { createApi } from "./api/api.ts";
+import { rejectCrossOriginWrites } from "./api/crossOrigin.ts";
 import { createRoutes } from "./api/routes.ts";
 import { createFSNotesStore } from "./components/notes/FSNotesStore.ts";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-const PORT = process.env.MT_PORT || 3000;
+const PORT = Number(process.env.MT_PORT) || 3000;
+const HOST = process.env.MT_HOST || "127.0.0.1";
+const DEV_CLIENT_ORIGIN = "http://localhost:5173";
 
 function getDefaultMTHome() {
   return path.join(os.homedir(), "mt");
@@ -18,10 +21,12 @@ export async function startServer(mtHomeArg: string) {
   const mtHome = mtHomeArg || getDefaultMTHome();
   const app = express();
 
+  const isDev = NODE_ENV === "development";
+  app.use(rejectCrossOriginWrites(isDev ? [DEV_CLIENT_ORIGIN] : []));
   app.use(bodyParser.json());
 
   // allow CORS (only in development)
-  if (NODE_ENV === "development") {
+  if (isDev) {
     applyDevCors(app);
   }
 
@@ -63,19 +68,19 @@ export async function startServer(mtHomeArg: string) {
   }
 
   // start the server
-  app.listen(PORT, (err) => {
+  app.listen(PORT, HOST, (err) => {
     if (err) {
       console.error("Failed to start server:", err);
       return;
     }
 
-    console.log(`Server is running on port ${PORT} (${NODE_ENV} mode)`);
+    console.log(`Server is running on ${HOST}:${PORT} (${NODE_ENV} mode)`);
   });
 }
 
 function applyDevCors(app: Express) {
   app.use((_, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Origin", DEV_CLIENT_ORIGIN);
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header(
       "Access-Control-Allow-Methods",

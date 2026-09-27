@@ -1,5 +1,8 @@
 import { error } from "./helpers.ts";
 import { type Api } from "./api.ts";
+import { isImageId, isNoteId, isQuizId } from "./ids.ts";
+
+const invalidId = () => error(400, "Invalid id");
 
 export type RouteConfig = {
   method: "get" | "post" | "patch" | "delete";
@@ -45,7 +48,8 @@ export const createRoutes = (api: Api): RouteConfig[] => [
   {
     method: "get",
     path: "/api/notes/:id",
-    handler: async ({ pathParams }) => api.notes.get(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.get(id) : invalidId(),
   },
   {
     method: "post",
@@ -55,55 +59,64 @@ export const createRoutes = (api: Api): RouteConfig[] => [
   {
     method: "patch",
     path: "/api/notes/:id",
-    handler: async ({ pathParams, body }) =>
-      api.notes.update(pathParams.id ?? "", body.body),
+    handler: async ({ pathParams: { id }, body }) =>
+      isNoteId(id) ? api.notes.update(id, body.body) : invalidId(),
   },
   {
     method: "delete",
     path: "/api/notes/:id",
-    handler: async ({ pathParams }) => api.notes.delete(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.delete(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/fav",
-    handler: async ({ pathParams }) => api.notes.fav(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.fav(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/unfav",
-    handler: async ({ pathParams }) => api.notes.unfav(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.unfav(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/pin",
-    handler: async ({ pathParams }) => api.notes.pin(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.pin(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/unpin",
-    handler: async ({ pathParams }) => api.notes.unpin(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.unpin(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/publish",
-    handler: async ({ pathParams, body }) =>
-      api.notes.publish(
-        pathParams.id ?? "",
-        body.slug ?? "",
-        body.seo_title ?? "",
-        body.seo_description ?? "",
-        body.seo_category ?? "",
-      ),
+    handler: async ({ pathParams: { id }, body }) =>
+      isNoteId(id)
+        ? api.notes.publish(
+            id,
+            body.slug ?? "",
+            body.seo_title ?? "",
+            body.seo_description ?? "",
+            body.seo_category ?? "",
+          )
+        : invalidId(),
   },
   {
     method: "post",
     path: "/api/notes/:id/unpublish",
-    handler: async ({ pathParams }) => api.notes.unpublish(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.unpublish(id) : invalidId(),
   },
   {
     method: "get",
     path: "/api/note_images",
-    handler: async ({ query }) => api.images.list(query.note_sid ?? ""),
+    handler: async ({ query: { note_sid: noteId } }) =>
+      isNoteId(noteId) ? api.images.list(noteId) : invalidId(),
   },
   {
     method: "post",
@@ -112,25 +125,30 @@ export const createRoutes = (api: Api): RouteConfig[] => [
     handler: async ({ body, file }) => {
       const noteId = body.note_sid;
       if (!noteId || !file) return error(400, "Missing note_sid or image file");
+      if (!isNoteId(noteId)) return invalidId();
       return api.images.upload(noteId, file.originalname, file.buffer);
     },
   },
   {
     method: "delete",
     path: "/api/note_images/:id",
-    handler: async ({ pathParams }) => api.images.delete(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isImageId(id) ? api.images.delete(id) : invalidId(),
   },
   {
     method: "post",
     path: "/api/reviews/:id/done",
-    handler: async ({ pathParams }) => api.reviews.done(pathParams.id ?? ""),
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.reviews.done(id) : invalidId(),
   },
   {
     method: "get",
     path: "/api/questions",
     handler: async ({ query }) => {
       const { note_id: noteId, for_review } = query;
-      if (noteId) return api.questions.list(noteId);
+      if (noteId) {
+        return isNoteId(noteId) ? api.questions.list(noteId) : invalidId();
+      }
       if (for_review === "true") return api.questions.listReviewable();
       return api.questions.listAll();
     },
@@ -142,6 +160,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
       const { question, answer, note_id: noteId } = body;
       if (!noteId || !question || !answer)
         return error(400, "Missing required fields");
+      if (!isNoteId(noteId)) return invalidId();
       return api.questions.create(noteId, question, answer);
     },
   },
@@ -152,6 +171,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
       const { question, note_id: noteId, op } = body;
       if (!noteId || !question || !op)
         return error(400, "Missing required fields");
+      if (!isNoteId(noteId)) return invalidId();
       if (op !== "good" && op !== "bad")
         return error(400, "Invalid operation: must be 'good' or 'bad'");
       return api.questions.review(noteId, question, op);
@@ -169,6 +189,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
       } = body;
       if (!noteId || !oldQuestion || !question || !answer)
         return error(400, "Missing required fields");
+      if (!isNoteId(noteId)) return invalidId();
       return api.questions.update(noteId, oldQuestion, question, answer);
     },
   },
@@ -187,6 +208,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
     handler: async ({ body }) => {
       const { note_id: noteId, question } = body;
       if (!noteId || !question) return error(400, "Missing required fields");
+      if (!isNoteId(noteId)) return invalidId();
       return api.questions.delete(noteId, question);
     },
   },
@@ -196,6 +218,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
     handler: async ({ query }) => {
       const { note_id: noteId } = query;
       if (!noteId) return error(400, "Missing required field: note_id");
+      if (!isNoteId(noteId)) return invalidId();
       return api.quizzes.list(noteId);
     },
   },
@@ -206,6 +229,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
       const { noteId, quizId } = pathParams;
       if (!noteId || !quizId)
         return error(400, "Missing required params: noteId, quizId");
+      if (!isNoteId(noteId) || !isQuizId(quizId)) return invalidId();
       return api.quizzes.get(noteId, parseInt(quizId, 10));
     },
   },
@@ -226,6 +250,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
           400,
           "Missing required fields: text, number_of_questions, and note_id",
         );
+      if (!isNoteId(noteId)) return invalidId();
       if (numberOfQuestions < 1 || numberOfQuestions > 100)
         return error(400, "number_of_questions must be between 1 and 100");
       if (text.length > 65536)
@@ -248,6 +273,7 @@ export const createRoutes = (api: Api): RouteConfig[] => [
       const { score } = body;
       if (!noteId || !quizId)
         return error(400, "Missing required params: noteId, quizId");
+      if (!isNoteId(noteId) || !isQuizId(quizId)) return invalidId();
       if (typeof score !== "number" || score < 0 || score > 100)
         return error(400, "Invalid score: must be a number between 0 and 100");
       return api.quizzes.saveResult(noteId, parseInt(quizId, 10), score);

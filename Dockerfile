@@ -41,6 +41,7 @@ COPY --from=client-builder /app/client/dist ./client/dist
 # Set environment variables
 ENV NODE_ENV=production
 ENV MT_PORT=3042
+ENV MT_HOST=0.0.0.0
 ENV MT_HOME=/data/mt
 
 # Expose the port
