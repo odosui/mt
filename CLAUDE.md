@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**mt** is a knowledge management app with spaced repetition. Notes are markdown files stored on the local filesystem (default `~/mt`). The app has a React SPA frontend and an Express API backend, organized as a monorepo with `client/` and `server/` subdirectories.
+**MindThis** (`mt` for short) is a knowledge management app with spaced repetition. Notes are markdown files stored on the local filesystem (default `~/mt`). The app has a React SPA frontend and an Express API backend, organized as a monorepo with `client/` and `server/` subdirectories.
 
 The project is spec-driven approach with all the features described in 'features.md' being the single source of truth for everything we build.
 

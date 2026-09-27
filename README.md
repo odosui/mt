@@ -1,4 +1,4 @@
-# mt 💡
+# MindThis 💡
 
 [![CI](https://github.com/odosui/mt/actions/workflows/ci.yml/badge.svg)](https://github.com/odosui/mt/actions/workflows/ci.yml)
 [![Docker version](https://img.shields.io/docker/v/hiquest/mt?sort=semver&label=docker)](https://hub.docker.com/r/hiquest/mt)
@@ -8,15 +8,15 @@
 
 Knowledge management meets spaced repetition.
 
-**mt** helps you organize and retain knowledge over time.
+**MindThis** (`mt` for short) helps you organize and retain knowledge over time.
 
 [Read the docs](https://docs.mindthis.io/)
 
-![mt showcase](media/main.png)
+![MindThis showcase](media/main.png)
 
 ## Overview
 
-mt is built around **notes**, which are simple [markdown](https://en.wikipedia.org/wiki/Markdown) files stored locally on your computer.
+MindThis is built around **notes**, which are simple [markdown](https://en.wikipedia.org/wiki/Markdown) files stored locally on your computer.
 
 Notes pop up for **review** according to a predefined schedule (aka spaced repetition). Reviewing your notes helps you remember them better, gives you a chance to improve them, and update them with new relevant information.
 
@@ -26,7 +26,7 @@ You can also create quizzes for yourself using AI (an API key is required).
 
 ### Documentation
 
-- [Learn about mt](https://docs.mindthis.io/introduction.html)
+- [Learn about MindThis](https://docs.mindthis.io/introduction.html)
 - [Create your first note](https://docs.mindthis.io/create-first-note.html)
 - [Reviewing](https://docs.mindthis.io/reviewing-notes.html)
 - [Flashcards](https://docs.mindthis.io/flashcards.html)
@@ -48,7 +48,7 @@ A web version is coming soon.
 
 ## Installation (Docker)
 
-The easiest way to run mt is with Docker Compose.
+The easiest way to run MindThis is with Docker Compose.
 
 1. Download [`docker-compose.yml`](docker-compose.yml) from this repository.
 2. Optionally, set the `ANTHROPIC_API_KEY` variable to enable AI-powered features.
@@ -85,7 +85,7 @@ Open your browser and go to `http://localhost:8042`. Your notes will be stored i
 
 ### Optional: git integration
 
-Once you add a note you can initialize a git repository `git init` inside your `mt` home directory (`~/mt` by default). As for now, `mt` doesn't commit changes for you, so if you care about versioning, do it manually. I have a private GitHub repo where I push my changes to keep them backed up.
+Once you add a note you can initialize a git repository `git init` inside your `mt` home directory (`~/mt` by default). As for now, MindThis doesn't commit changes for you, so if you care about versioning, do it manually. I have a private GitHub repo where I push my changes to keep them backed up.
 
 ## Using a start up script (MacOS/Linux only)
 
@@ -111,4 +111,4 @@ AI usage is allowed. Just make sure you review the code before submitting.
 
 ## License
 
-mt is released under the [MIT License](LICENSE).
+MindThis is released under the [MIT License](LICENSE).

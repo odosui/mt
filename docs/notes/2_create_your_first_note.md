@@ -5,7 +5,7 @@ favorite: false
 last_reviewed_at: 2026-02-09
 level: 1
 seo_title: Create First Note
-seo_description: Learn how to create your first note in `mt`. This guide will walk you through the basics of writing and tagging your notes for easy organization.
+seo_description: Learn how to create your first note in MindThis. This guide will walk you through the basics of writing and tagging your notes for easy organization.
 seo_published: true
 seo_category: docs
 seo_slug: create-first-note
@@ -13,7 +13,7 @@ seo_slug: create-first-note
 
 # Create your first note
 
-In `mt` everything is a markdown note.
+In MindThis everything is a markdown note.
 
 Markdown by itself gives us a lot of power. We can use headings, lists, links, images. Here's a nice cheatsheet for markdown syntax: [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/markdown-cheatsheet).
 
@@ -22,7 +22,7 @@ So let's create a simple note. Click on the pencil icon, and write something lik
 ```markdown
 # Hello, world!
 
-This is my first note in `mt`.
+This is my first note in MindThis.
 
 ## Why am I excited?
 
@@ -39,7 +39,7 @@ A note can have a tag (like `#intro`) anywhere within its body. While I prefer t
 
 ## Linking notes
 
-Links are a first-class citizen in `mt`, and they are the key to building a good knowledge graph. A link to another note can be created like `[link to another note](123)`. Here `123` is the id of the note you want to link to. Ids are unique and sequential. You can check the ID of a note in the notes section.
+Links are a first-class citizen in MindThis, and they are the key to building a good knowledge graph. A link to another note can be created like `[link to another note](123)`. Here `123` is the id of the note you want to link to. Ids are unique and sequential. You can check the ID of a note in the notes section.
 
 Let's add a second note, and link it to the first one:
 
@@ -59,7 +59,7 @@ Once you add the link, you can click on it, and it will show up in a preview on 
 
 Now that we have created our first notes, how are they stored in the file system?
 
-By default, `mt` stores notes in the `~/mt` directory. If we list the files we will see:
+By default, MindThis stores notes in the `~/mt` directory. If we list the files we will see:
 
 ```
 notes/1_hello_world.md
@@ -74,7 +74,7 @@ You might also want to initialize a `git` repo in this directory. I back up my n
 
 You can override this by setting the `MT_HOME` environment variable to a different path.
 
-It also comes handy, as you can have multiple knowledge bases, and you can switch between them by changing the `MT_HOME` variable. For example, right now I have started `mt` with `MT_HOME=./docs`, because this is where the docs project is located.
+It also comes handy, as you can have multiple knowledge bases, and you can switch between them by changing the `MT_HOME` variable. For example, right now I have started MindThis with `MT_HOME=./docs`, because this is where the docs project is located.
 
 ## Next
 

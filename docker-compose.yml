@@ -4,7 +4,7 @@ services:
   mt:
     image: hiquest/mt:1.3.0
     ports:
-      # Only reachable from this machine. mt has no login, so exposing it to
+      # Only reachable from this machine. MindThis has no login, so exposing it to
       # your network gives everyone on it full access to your notes. To use it
       # from other devices anyway, change this to "3042:3042".
       - "127.0.0.1:3042:3042"

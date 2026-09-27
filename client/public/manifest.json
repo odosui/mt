@@ -1,6 +1,6 @@
 {
-  "name": "mt - Knowledge Management",
-  "short_name": "mt",
+  "name": "MindThis - Knowledge Management",
+  "short_name": "MindThis",
   "description": "Knowledge management with spaced repetition",
   "start_url": "/app/notes",
   "display_override": ["fullscreen", "standalone"],

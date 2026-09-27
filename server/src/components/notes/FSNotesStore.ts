@@ -62,7 +62,7 @@ export async function createFSNotesStore(
       });
       watcher.on("error", (e) => {
         console.warn(
-          "mt: notes directory watcher failed, falling back to uncached reads",
+          "MindThis: notes directory watcher failed, falling back to uncached reads",
           e,
         );
         watcher = null;
@@ -71,7 +71,7 @@ export async function createFSNotesStore(
       watching = true;
     } catch (e) {
       console.warn(
-        "mt: could not watch the notes directory, falling back to uncached reads",
+        "MindThis: could not watch the notes directory, falling back to uncached reads",
         e,
       );
       watching = false;

@@ -26,7 +26,7 @@ start() {
   fi
 
   if is_running; then
-    echo "mt is already running (pid $(cat "$PIDFILE"))"
+    echo "MindThis is already running (pid $(cat "$PIDFILE"))"
     return 0
   fi
 
@@ -50,7 +50,7 @@ start() {
 
 stop() {
   if ! is_running; then
-    echo "mt is not running"
+    echo "MindThis is not running"
     rm -f "$PIDFILE" 2>/dev/null || true
     return 0
   fi
@@ -78,9 +78,9 @@ stop() {
 
 status() {
   if is_running; then
-    echo "mt is running (pid $(cat "$PIDFILE"))"
+    echo "MindThis is running (pid $(cat "$PIDFILE"))"
   else
-    echo "mt is stopped"
+    echo "MindThis is stopped"
     return 1
   fi
 }

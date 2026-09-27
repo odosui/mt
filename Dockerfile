@@ -1,4 +1,4 @@
-# Multi-stage build for mt application
+# Multi-stage build for MindThis
 
 # Stage 1: Build client
 FROM node:24-alpine AS client-builder

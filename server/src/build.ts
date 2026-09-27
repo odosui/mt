@@ -265,7 +265,7 @@ function renderNotePage(
   const contentWithFooter =
     htmlContent +
     (buttondownForm ? `\n${buttondownForm}\n` : "") +
-    `\n<footer class="mt-footer">Built with <a href="https://github.com/odosui/mt/">mt</a></footer>\n`;
+    `\n<footer class="mt-footer">Built with <a href="https://github.com/odosui/mt/">MindThis</a></footer>\n`;
   return pageLayout(
     titleFor(note),
     contentWithFooter,
@@ -285,7 +285,7 @@ function renderIndexPage(pages: Note[], layoutTemplate: string, analytics: strin
     grouped[cat].push(p);
   }
 
-  let content = `<h1>mt's docs pages</h1>\n`;
+  let content = `<h1>MindThis docs</h1>\n`;
   for (const [category, notes] of Object.entries(grouped)) {
     content += `<h2>${escapeHtml(category)}</h2>\n`;
     for (const note of notes) {

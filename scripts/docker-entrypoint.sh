@@ -15,7 +15,7 @@ if [ "$(id -u)" = "0" ]; then
   fi
 
   find "$MT_HOME" ! -user "$uid" -exec chown "$uid:$gid" {} + ||
-    echo "mt: could not change ownership of $MT_HOME; some files may be read-only" >&2
+    echo "MindThis: could not change ownership of $MT_HOME; some files may be read-only" >&2
 
   exec su-exec "$uid:$gid" "$@"
 fi
