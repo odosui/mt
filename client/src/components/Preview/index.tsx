@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm'
 import { IImageMetas } from '../../types'
 import HashTagPlugin from '../../utils/rehype/tag_plugin'
 import CrossLink from './CrossLink'
+import SoundCloudEmbed from './SoundCloudEmbed'
 
 const Mermaid = lazy(() => import('./Mermaid'))
 
@@ -140,41 +141,7 @@ function renderPreBlock({ node }: any) {
   const lang = match ? match[1] : 'none'
 
   if (content.trim() && lang === 'soundcloud') {
-    const meta = Object.fromEntries(
-      content.split('\n').map((p: string) => {
-        const [key, value] = p.split(':')
-        return [key, value?.trim() || '']
-      }),
-    )
-    const { track_id, track_name, track_title, user } = meta
-
-    if (!track_id || !user) {
-      return (
-        <div className="code-error">
-          SoundCloud embed error: missing track_id or user
-        </div>
-      )
-    }
-
-    const embed = `
-<iframe width="100%" height="20" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${track_id}&color=%23ff5500&inverse=true&auto_play=false&show_user=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/${user}" title="YT" target="_blank" style="color: #cccccc; text-decoration: none;">YT</a> · <a href="https://soundcloud.com/${user}/${track_name}" title="${track_title}" target="_blank" style="color: #cccccc; text-decoration: none;">${track_title}</a></div>
-    `.trim()
-
-    return (
-      <div
-        className="soundcloud"
-        style={{
-          backgroundColor: '#222',
-          borderRadius: '4px',
-          padding: '8px',
-        }}
-      >
-        <div
-          className="soundcloud-embed"
-          dangerouslySetInnerHTML={{ __html: embed }}
-        ></div>
-      </div>
-    )
+    return <SoundCloudEmbed content={content} />
   }
 
   if (content.trim() && lang === 'mermaid') {

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { extractSnippetWithContext, extractTitle, snakeCased } from "./utils.ts";
+import {
+  extractSnippetWithContext,
+  extractTitle,
+  snakeCased,
+} from "./utils.ts";
 
 describe("extractTitle", () => {
   it("should extract the first non-empty line", () => {
@@ -154,28 +158,28 @@ describe("extractSnippetWithContext", () => {
   });
 
   describe("with query - basic matching", () => {
-    it("should highlight matched text with <mark> tags", () => {
+    it("should include the matched text", () => {
       const body = "This is a simple test with some text.";
       const result = extractSnippetWithContext(body, "test");
-      expect(result).toContain("<mark>test</mark>");
+      expect(result).toContain("test");
     });
 
     it("should be case-insensitive when matching", () => {
       const body = "This is a TEST with different cases.";
       const result = extractSnippetWithContext(body, "test");
-      expect(result).toContain("<mark>TEST</mark>");
+      expect(result).toContain("TEST");
     });
 
     it("should preserve original case in result", () => {
       const body = "This is a MixedCase word in the text.";
       const result = extractSnippetWithContext(body, "mixedcase");
-      expect(result).toContain("<mark>MixedCase</mark>");
+      expect(result).toContain("MixedCase");
     });
 
     it("should handle query with leading/trailing whitespace", () => {
       const body = "This is a test with some text.";
       const result = extractSnippetWithContext(body, "  test  ");
-      expect(result).toContain("<mark>test</mark>");
+      expect(result).toContain("test");
     });
   });
 
@@ -193,7 +197,7 @@ describe("extractSnippetWithContext", () => {
         "This is a long text with many words before the target word and many words after it.";
       const result = extractSnippetWithContext(body, "target");
       expect(result).toContain("before");
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
       expect(result).toContain("after");
     });
 
@@ -202,14 +206,14 @@ describe("extractSnippetWithContext", () => {
       const body = `${longPrefix} this is the target word here`;
       const result = extractSnippetWithContext(body, "target");
       expect(result).toMatch(/^\.\.\./);
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
     });
 
     it("should add ellipsis at the end when match is not at the end", () => {
       const longSuffix = "z".repeat(150);
       const body = `this is the target word ${longSuffix}`;
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
       expect(result).toMatch(/\.\.\.$/);
     });
 
@@ -219,7 +223,7 @@ describe("extractSnippetWithContext", () => {
       const body = `${longPrefix} target ${longSuffix}`;
       const result = extractSnippetWithContext(body, "target");
       expect(result).toMatch(/^\.\.\./);
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
       expect(result).toMatch(/\.\.\.$/);
     });
 
@@ -227,13 +231,13 @@ describe("extractSnippetWithContext", () => {
       const body = "target word at the start with more text";
       const result = extractSnippetWithContext(body, "target");
       expect(result).not.toMatch(/^\.\.\./);
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
     });
 
     it("should not add ellipsis when match is at the end", () => {
       const body = "Some text ending with the target";
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
       expect(result).not.toMatch(/\.\.\.$/);
     });
 
@@ -242,7 +246,7 @@ describe("extractSnippetWithContext", () => {
       const result = extractSnippetWithContext(body, "target", 10);
       // Should only include ~10 chars before and after
       expect(result.length).toBeLessThan(100);
-      expect(result).toContain("<mark>TARGET</mark>");
+      expect(result).toContain("TARGET");
     });
   });
 
@@ -250,37 +254,49 @@ describe("extractSnippetWithContext", () => {
     it("should handle match at position 0", () => {
       const body = "target is at the beginning";
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toBe("<mark>target</mark> is at the beginning");
+      expect(result).toBe("target is at the beginning");
     });
 
     it("should handle match at the very end", () => {
       const body = "at the very end is target";
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toBe("at the very end is <mark>target</mark>");
+      expect(result).toBe("at the very end is target");
     });
 
     it("should handle single word body that matches", () => {
       const body = "target";
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toBe("<mark>target</mark>");
+      expect(result).toBe("target");
     });
 
     it("should handle multi-word query", () => {
       const body = "This is a test with multiple words in the query.";
       const result = extractSnippetWithContext(body, "multiple words");
-      expect(result).toContain("<mark>multiple words</mark>");
+      expect(result).toContain("multiple words");
     });
 
     it("should handle query with special characters", () => {
       const body = "Testing with C++ programming language.";
       const result = extractSnippetWithContext(body, "c++");
-      expect(result).toContain("<mark>C++</mark>");
+      expect(result).toContain("C++");
     });
 
     it("should handle newlines in body", () => {
       const body = "First line\nSecond line with target word\nThird line";
       const result = extractSnippetWithContext(body, "target");
-      expect(result).toContain("<mark>target</mark>");
+      expect(result).toContain("target");
+    });
+
+    it("should return HTML in the body as plain text", () => {
+      const body = "a <img src=x onerror=alert(1)> b";
+      expect(extractSnippetWithContext(body, "img")).toBe(body);
+    });
+
+    it("should not cut into a match at the window edge", () => {
+      const body = "x".repeat(20) + " " + "y".repeat(20) + "target more";
+      const result = extractSnippetWithContext(body, "target", 5);
+      expect(result).toContain("target");
+      expect(result).toMatch(/^\.\.\./);
     });
 
     it("should handle very short body", () => {
@@ -294,19 +310,19 @@ describe("extractSnippetWithContext", () => {
     it("should handle Chinese characters", () => {
       const body = "这是一个测试文本，包含目标词汇。";
       const result = extractSnippetWithContext(body, "目标");
-      expect(result).toContain("<mark>目标</mark>");
+      expect(result).toContain("目标");
     });
 
     it("should handle Arabic characters", () => {
       const body = "هذا نص تجريبي يحتوي على كلمة مستهدفة.";
       const result = extractSnippetWithContext(body, "مستهدفة");
-      expect(result).toContain("<mark>مستهدفة</mark>");
+      expect(result).toContain("مستهدفة");
     });
 
     it("should handle emojis", () => {
       const body = "This text has 🎯 target emoji in it.";
       const result = extractSnippetWithContext(body, "🎯");
-      expect(result).toContain("<mark>🎯</mark>");
+      expect(result).toContain("🎯");
     });
   });
 });

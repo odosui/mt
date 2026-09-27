@@ -8,7 +8,7 @@ import { useNoteListNavigation } from '../../hooks/useNoteListNavigation'
 import { StateContext } from '../../state/StateProvider'
 import Button from '../../ui/Button'
 import debounce from '../../utils/debounce'
-import { title } from '../../utils/notes'
+import NoteSnippet from '../../components/NoteSnippet'
 
 const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
   const {
@@ -221,14 +221,11 @@ const Notes: React.FC<{ mode: 'all' | 'fav' | 'review' }> = ({ mode }) => {
                 </div>
               </div>
               <div className="snippet">
-                <div
+                <NoteSnippet
                   className="snippet-body"
-                  dangerouslySetInnerHTML={{
-                    __html: note.snippet.includes('<mark>')
-                      ? note.snippet
-                      : title(note.snippet),
-                  }}
-                ></div>
+                  snippet={note.snippet}
+                  query={query}
+                />
               </div>
             </div>
           ))}

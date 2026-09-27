@@ -15,6 +15,7 @@ import { StateContext } from '../state/StateProvider'
 import ThemeToggle from './ThemeToggle'
 import GitStatus from './GitStatus'
 import { useTags } from '../state/TagsProvider'
+import Highlighted from '../ui/Highlighted'
 
 const Sidebar: React.FC = () => {
   const [tagTerm, setTagTerm] = useState('')
@@ -147,12 +148,9 @@ const Sidebar: React.FC = () => {
             >
               <div className="tag-and-icon">
                 <HashIcon />
-                <div
-                  className="tag-name"
-                  dangerouslySetInnerHTML={{
-                    __html: fmt(t.title, tagTerm),
-                  }}
-                ></div>
+                <div className="tag-name">
+                  <Highlighted text={t.title} term={tagTerm} />
+                </div>
               </div>
               <div className="tag-count">{t.count}</div>
             </NavLink>
@@ -175,13 +173,6 @@ const Sidebar: React.FC = () => {
       <div className="menu-item settings-link"></div>
     </aside>
   )
-}
-
-function fmt(title: string, term: string) {
-  if (!term || !title) {
-    return title
-  }
-  return title.replace(new RegExp(`(${term})`, 'i'), '<mark>$1</mark>')
 }
 
 export default Sidebar

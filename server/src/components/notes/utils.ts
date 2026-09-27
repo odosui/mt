@@ -25,61 +25,37 @@ export function noteFilename(sid: string, title: string | null): string {
   return `${name}.md`;
 }
 
+// Plain text: the client escapes it and highlights the query itself.
 export function extractSnippetWithContext(
   body: string,
   query?: string,
   contextChars = 100,
 ): string {
-  if (!query || !query.trim()) {
-    // No query - return first 3 lines as before
-    return body ? body.split("\n").slice(0, 3).join("\n") : "";
+  const searchTerm = query?.trim().toLowerCase() ?? "";
+  const matchStart = searchTerm ? body.toLowerCase().indexOf(searchTerm) : -1;
+  if (matchStart === -1) {
+    return firstLines(body, 3);
   }
 
-  const searchTerm = query.trim().toLowerCase();
-  const bodyLower = body.toLowerCase();
-  const matchIndex = bodyLower.indexOf(searchTerm);
-
-  if (matchIndex === -1) {
-    // No match found (shouldn't happen if filtered correctly)
-    return body ? body.split("\n").slice(0, 3).join("\n") : "";
-  }
-
-  // Calculate start and end positions for context
-  const start = Math.max(0, matchIndex - contextChars);
-  const end = Math.min(
-    body.length,
-    matchIndex + searchTerm.length + contextChars,
-  );
-
-  // Extract the snippet with context
-  let snippet = body.substring(start, end);
-
-  // Calculate where the match is within the snippet
-  const matchStart = matchIndex - start;
   const matchEnd = matchStart + searchTerm.length;
+  let start = Math.max(0, matchStart - contextChars);
+  let end = Math.min(body.length, matchEnd + contextChars);
 
-  // Wrap the matched text with <mark> tags
-  const before = snippet.substring(0, matchStart);
-  const match = snippet.substring(matchStart, matchEnd);
-  const after = snippet.substring(matchEnd);
-  snippet = before + "<mark>" + match + "</mark>" + after;
-
-  // Add ellipsis if we're not at the boundaries
+  // Trim partial words at the edges, but never into the match itself.
   if (start > 0) {
-    // Find the start of the first complete word
-    const firstSpace = snippet.indexOf(" ");
-    if (firstSpace !== -1) {
-      snippet = "..." + snippet.substring(firstSpace + 1);
-    }
+    const space = body.indexOf(" ", start);
+    if (space !== -1 && space < matchStart) start = space + 1;
   }
-
   if (end < body.length) {
-    // Find the end of the last complete word
-    const lastSpace = snippet.lastIndexOf(" ");
-    if (lastSpace !== -1) {
-      snippet = snippet.substring(0, lastSpace) + "...";
-    }
+    const space = body.lastIndexOf(" ", end);
+    if (space >= matchEnd) end = space;
   }
 
-  return snippet;
+  const prefix = start > 0 ? "..." : "";
+  const suffix = end < body.length ? "..." : "";
+  return prefix + body.slice(start, end) + suffix;
+}
+
+function firstLines(body: string, count: number): string {
+  return body.split("\n").slice(0, count).join("\n");
 }

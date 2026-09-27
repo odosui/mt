@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { StateContext } from '../state/StateProvider'
-import { title } from '../utils/notes'
+import NoteSnippet from '../components/NoteSnippet'
 
 import { useLocation, useNavigate } from 'slim-react-router'
 import Spinner from '../ui/Spinner'
@@ -49,10 +49,7 @@ const NotesMobile: React.FC<{ review: boolean }> = ({ review = false }) => {
 
               <Tags tags={note.tags} />
             </div>
-            <div
-              className="snippet"
-              dangerouslySetInnerHTML={{ __html: title(note.snippet) }}
-            />
+            <NoteSnippet className="snippet" snippet={note.snippet} />
           </div>
         ))}
       </div>

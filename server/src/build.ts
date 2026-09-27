@@ -152,15 +152,18 @@ function renderSoundCloudEmbed(code: string): string {
       return [key, value?.trim() || ""];
     }),
   );
-  const { track_id, track_name, track_title, user } = meta;
+  const trackId = encodeURIComponent(meta.track_id ?? "");
+  const user = encodeURIComponent(meta.user ?? "");
+  const trackName = encodeURIComponent(meta.track_name ?? "");
+  const trackTitle = meta.track_title ?? "";
 
-  if (!track_id || !user) {
+  if (!trackId || !user) {
     return `<div class="code-error">SoundCloud embed error: missing track_id or user</div>`;
   }
 
   return `<div class="soundcloud" style="background-color: #222; border-radius: 4px; padding: 8px;">
 <div class="soundcloud-embed">
-<iframe width="100%" height="20" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${track_id}&color=%23ff5500&inverse=true&auto_play=false&show_user=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/${user}" title="YT" target="_blank" style="color: #cccccc; text-decoration: none;">YT</a> · <a href="https://soundcloud.com/${user}/${track_name}" title="${escapeAttr(track_title)}" target="_blank" style="color: #cccccc; text-decoration: none;">${escapeHtml(track_title)}</a></div>
+<iframe width="100%" height="20" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&inverse=true&auto_play=false&show_user=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/${user}" title="YT" target="_blank" style="color: #cccccc; text-decoration: none;">YT</a> · <a href="https://soundcloud.com/${user}/${trackName}" title="${escapeAttr(trackTitle)}" target="_blank" style="color: #cccccc; text-decoration: none;">${escapeHtml(trackTitle)}</a></div>
 </div>
 </div>`;
 }
@@ -342,5 +345,5 @@ function escapeHtml(str: string): string {
 }
 
 function escapeAttr(str: string): string {
-  return str.replace(/"/g, "&quot;").replace(/&/g, "&amp;");
+  return str.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
