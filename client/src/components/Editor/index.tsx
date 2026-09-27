@@ -3,9 +3,15 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import AutoresizableTextarea from '../../ui/AutoresizableTextarea'
 import { TRANSFORMATIONS } from './transformations'
 import TagAutocomplete from '../TagAutocomplete'
+import NoteLinkAutocomplete from '../NoteLinkAutocomplete'
 import { getCaretCoordinates } from '../../utils/caret'
+import { CaretPosition } from '../../ui/AutocompleteList'
+import { NoteRef } from '../../types'
+import { detectTrigger, Trigger } from './triggers'
+import { Inserted, insertNoteLink, insertTag } from './insertions'
 
 type Props = {
+  noteSid: number
   initialText: string
   onChange: (changed: string) => void
   onSave: () => void
@@ -16,6 +22,7 @@ type Props = {
 const DEFAULT_TEXT = '# New note'
 
 const Editor: React.FC<Props> = ({
+  noteSid,
   initialText,
   onChange,
   onSave,
@@ -26,13 +33,11 @@ const Editor: React.FC<Props> = ({
   const [selectionStart, setSelectionStart] = useState(0)
   const [selectionEnd, setSelectionEnd] = useState(0)
 
-  const [autocompleteVisible, setAutocompleteVisible] = useState(false)
-  const [autocompleteQuery, setAutocompleteQuery] = useState('')
-  const [autocompletePosition, setAutocompletePosition] = useState({
+  const [trigger, setTrigger] = useState<Trigger | null>(null)
+  const [triggerPosition, setTriggerPosition] = useState<CaretPosition>({
     top: 0,
     left: 0,
   })
-  const [hashPosition, setHashPosition] = useState(0)
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -47,75 +52,58 @@ const Editor: React.FC<Props> = ({
     }, 0)
   }
 
-  const detectHashtagTyping = useCallback((text: string, cursorPos: number) => {
-    const before = text.substring(0, cursorPos)
-    const lastHash = before.lastIndexOf('#')
-    if (lastHash === -1) return null
-
-    // The '#' must be at the start of the text or preceded by whitespace —
-    // this filters out URL fragments (foo.com#bar), preprocessor directives
-    // (#include), and other in-word '#' characters.
-    if (lastHash > 0) {
-      const prev = before[lastHash - 1]
-      if (prev && !/\s/.test(prev)) return null
+  const updateAutocomplete = useCallback((text: string, cursorPos: number) => {
+    const detected = detectTrigger(text, cursorPos)
+    setTrigger(detected)
+    if (detected && textareaRef.current) {
+      const caret = getCaretCoordinates(textareaRef.current, cursorPos)
+      setTriggerPosition({ top: caret.top + caret.height, left: caret.left })
     }
-
-    const afterHash = before.substring(lastHash + 1)
-    // A space after '#' means it's a markdown heading, not a tag.
-    if (afterHash.includes(' ') || afterHash.includes('\n')) return null
-
-    return { query: afterHash, position: lastHash }
   }, [])
 
-  const updateAutocomplete = useCallback(
-    (text: string, cursorPos: number) => {
-      const match = detectHashtagTyping(text, cursorPos)
-      if (match && textareaRef.current) {
-        const caret = getCaretCoordinates(textareaRef.current, cursorPos)
-        setAutocompleteVisible(true)
-        setAutocompleteQuery(match.query)
-        setAutocompletePosition({
-          top: caret.top + caret.height,
-          left: caret.left,
-        })
-        setHashPosition(match.position)
-      } else {
-        setAutocompleteVisible(false)
-      }
-    },
-    [detectHashtagTyping],
-  )
-
-  const handleTagSelect = useCallback(
-    (tag: string) => {
+  const applyInsertion = useCallback(
+    (insert: (text: string, start: number, end: number) => Inserted) => {
       const textarea = textareaRef.current
-      if (!textarea) return
+      if (!textarea || !trigger) return
 
       // Read live text/cursor from the DOM — React state may be stale
       // (e.g. fast typing between change and select).
-      const text = textarea.value
-      const cursorPos = textarea.selectionStart
-      const beforeHash = text.substring(0, hashPosition)
-      const afterCursor = text.substring(cursorPos)
-      const newValue = beforeHash + '#' + tag + ' ' + afterCursor
-      const newCursorPos = hashPosition + tag.length + 2
+      const { text, cursor } = insert(
+        textarea.value,
+        trigger.start,
+        textarea.selectionStart,
+      )
 
-      setValue(newValue)
-      onChange(newValue)
-      setAutocompleteVisible(false)
+      setValue(text)
+      onChange(text)
+      setTrigger(null)
 
       setTimeout(() => {
         if (textareaRef.current) {
           textareaRef.current.focus()
-          textareaRef.current.setSelectionRange(newCursorPos, newCursorPos)
+          textareaRef.current.setSelectionRange(cursor, cursor)
         }
       }, 0)
     },
-    [hashPosition, onChange],
+    [trigger, onChange],
+  )
+
+  const handleTagSelect = useCallback(
+    (tag: string) =>
+      applyInsertion((text, start, end) => insertTag(text, start, end, tag)),
+    [applyInsertion],
+  )
+
+  const handleNoteLinkSelect = useCallback(
+    (ref: NoteRef) =>
+      applyInsertion((text, start, end) =>
+        insertNoteLink(text, start, end, ref),
+      ),
+    [applyInsertion],
   )
 
   const closeAutocomplete = useCallback(() => {
-    setAutocompleteVisible(false)
+    setTrigger(null)
   }, [])
 
   const handleTextSelection = useCallback(
@@ -208,10 +196,18 @@ const Editor: React.FC<Props> = ({
         minHeight={0}
       />
       <TagAutocomplete
-        isVisible={autocompleteVisible}
-        query={autocompleteQuery}
-        position={autocompletePosition}
+        isVisible={trigger?.kind === 'tag'}
+        query={trigger?.query ?? ''}
+        position={triggerPosition}
         onSelect={handleTagSelect}
+        onClose={closeAutocomplete}
+      />
+      <NoteLinkAutocomplete
+        isVisible={trigger?.kind === 'noteLink'}
+        query={trigger?.query ?? ''}
+        position={triggerPosition}
+        currentNoteSid={noteSid}
+        onSelect={handleNoteLinkSelect}
         onClose={closeAutocomplete}
       />
     </div>

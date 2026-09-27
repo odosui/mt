@@ -36,6 +36,11 @@ export const createRoutes = (api: Api): RouteConfig[] => [
   },
   {
     method: "get",
+    path: "/api/notes/refs",
+    handler: async () => api.notes.refs(),
+  },
+  {
+    method: "get",
     path: "/api/reviews",
     handler: async () => api.reviews.counts(),
   },
@@ -50,6 +55,12 @@ export const createRoutes = (api: Api): RouteConfig[] => [
     path: "/api/notes/:id",
     handler: async ({ pathParams: { id } }) =>
       isNoteId(id) ? api.notes.get(id) : invalidId(),
+  },
+  {
+    method: "get",
+    path: "/api/notes/:id/backlinks",
+    handler: async ({ pathParams: { id } }) =>
+      isNoteId(id) ? api.notes.backlinks(id) : invalidId(),
   },
   {
     method: "post",

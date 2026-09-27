@@ -1,5 +1,6 @@
 import {
   BeakerIcon,
+  CrossReferenceIcon,
   CheckIcon,
   CopyIcon,
   DownloadIcon,
@@ -21,8 +22,10 @@ import Button from '../../ui/Button'
 import DropdownMenu from '../../ui/DropdownMenu'
 import EditSwitch from '../../ui/EditSwitch'
 import pubsub from '../../utils/pubsub'
+import { useBacklinks } from '../../hooks/useBacklinks'
 import Editor from '../Editor'
 import Preview from '../Preview'
+import Backlinks from './Backlinks'
 import Flashcards from './Flashcards'
 import HelpModal from './HelpModal'
 import Images from './Images'
@@ -70,6 +73,8 @@ const Note: React.FC<{
     flashcardsVisible,
     imagesVisible,
     quizzesVisible,
+    backlinksVisible,
+    toggleBacklinksVisible,
     createNoteAndLinkFromCurrent,
     saveCurrentNote,
   } = useContext(StateContext)
@@ -233,6 +238,11 @@ const Note: React.FC<{
 
   const previewRef = useRef<HTMLDivElement>(null)
 
+  const backlinks = useBacklinks(
+    currentNote?.sid ?? 0,
+    currentNote?.updated_at ?? '',
+  )
+
   if (!currentNote) {
     return null
   }
@@ -290,6 +300,18 @@ const Note: React.FC<{
               <BeakerIcon /> Quizzes
               {quizCount > 0 && (
                 <span className="side-toggler-badge">{quizCount}</span>
+              )}
+            </div>
+          )}
+
+          {!focusMode && (
+            <div
+              className={`side-toggler backlinks-toggler ${backlinksVisible ? 'active' : ''}`}
+              onClick={toggleBacklinksVisible}
+            >
+              <CrossReferenceIcon /> Backlinks
+              {backlinks.length > 0 && (
+                <span className="side-toggler-badge">{backlinks.length}</span>
               )}
             </div>
           )}
@@ -430,6 +452,7 @@ const Note: React.FC<{
             )}
             {mode === 'edit' && (
               <Editor
+                noteSid={currentNote.sid}
                 initialText={currentNote.body}
                 onChange={handleChange}
                 key={currentNote.sid}
@@ -445,6 +468,7 @@ const Note: React.FC<{
         {!focusMode && (
           <Quizzes noteId={currentNote.id} onCountChange={setQuizCount} />
         )}
+        {!focusMode && <Backlinks backlinks={backlinks} />}
       </div>
     </div>
   )

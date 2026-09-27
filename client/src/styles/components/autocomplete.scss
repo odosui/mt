@@ -1,16 +1,21 @@
 @use '../vars' as *;
 
-.tag-autocomplete {
+.autocomplete {
   background-color: var(--color-hovering-preview-bg);
   border-radius: $radius-md;
   box-shadow: var(--shadow-menu);
   padding: $unit0;
   max-height: $unit10;
+  max-width: $unit12;
   overflow-y: auto;
   min-width: $unit7;
 }
 
-.tag-autocomplete-item {
+.autocomplete-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $unit2;
   padding: $unit1 $unit2;
   cursor: pointer;
   font-size: 13px;
@@ -23,4 +28,17 @@
     background-color: var(--color-bg-hover);
     color: var(--color-accent);
   }
+}
+
+.autocomplete-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.autocomplete-item-hint {
+  flex-shrink: 0;
+  font-family: $font-mono;
+  font-size: $text0;
+  color: var(--color-note-area-text-secondary);
 }

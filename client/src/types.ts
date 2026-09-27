@@ -119,3 +119,8 @@ export type SyncStatus = {
   behind: number
   is_git_repo?: boolean
 }
+
+export type NoteRef = {
+  sid: number
+  title: string
+}

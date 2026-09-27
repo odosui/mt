@@ -1,0 +1,49 @@
+@use '../vars' as *;
+
+.backlinks-panel {
+  .backlinks-empty {
+    padding: $unit5 0;
+    text-align: center;
+    color: var(--color-flashcards-panel-text-secondary);
+  }
+
+  .backlinks-list {
+    display: flex;
+    flex-direction: column;
+    gap: $unit1;
+  }
+
+  .backlinks-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $unit2;
+    padding: $unit2 $unit3;
+    border-radius: $radius-md;
+    background: var(--color-flashcards-panel-form-bg);
+    border: 1px solid var(--color-flashcards-panel-border);
+    box-shadow: var(--shadow-card);
+    color: var(--color-flashcards-panel-text);
+    text-decoration: none;
+    transition: border-color 0.15s ease-out;
+
+    &:hover {
+      border-color: var(--color-flashcards-panel-accent);
+    }
+  }
+
+  .backlinks-item-title {
+    font-size: $text1;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .backlinks-item-id {
+    flex-shrink: 0;
+    font-family: $font-mono;
+    font-size: $text0;
+    color: var(--color-flashcards-panel-text-secondary);
+  }
+}

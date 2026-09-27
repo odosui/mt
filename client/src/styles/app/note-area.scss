@@ -248,6 +248,10 @@
         .images-toggler {
           top: calc($unit10 + $unit11);
         }
+
+        .backlinks-toggler {
+          top: calc($unit10 + $unit11 + $unit9 + $unit5);
+        }
       }
     }
   }

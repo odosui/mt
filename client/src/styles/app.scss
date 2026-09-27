@@ -12,7 +12,8 @@
 @use './app/hovering-preview';
 @use './app/flashcards-page';
 @use './app/quiz-page';
-@use './components/tag-autocomplete';
+@use './app/backlinks-panel';
+@use './components/autocomplete';
 @use './components/theme-toggle';
 @use './app/git';
 

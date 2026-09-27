@@ -46,8 +46,10 @@ const HelpModal: React.FC<{
         <p>
           You can link other notes like this{' '}
           <code>`[See my other note](22)`</code>. Here 22 is the number of your
-          note. You can see the note numbers in the sidebar. As an alternative,
-          you link directly in the form of <code>`[[22]]`</code>
+          note. You can see the note numbers in the sidebar. Easier still, type{' '}
+          <code>[[</code> and start typing a note title (or number) to pick
+          the note from a list. Notes linking to the current one are listed
+          under "Linked from" at the bottom of the note.
         </p>
         <h3>Lists</h3>
         <p>

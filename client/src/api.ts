@@ -4,6 +4,7 @@ import {
   INoteImage,
   INoteSearch,
   ITag,
+  NoteRef,
   Question,
   Quiz,
   ReviewLog,
@@ -65,6 +66,9 @@ export default {
     pin: (id: number): Promise<void> => api('post', `/notes/${id}/pin`),
     unpin: (id: number): Promise<void> => api('post', `/notes/${id}/unpin`),
     timeline: (): Promise<TimelineItem[]> => api('get', '/notes/timeline'),
+    refs: (): Promise<NoteRef[]> => api('get', '/notes/refs'),
+    backlinks: (id: number): Promise<NoteRef[]> =>
+      api('get', `/notes/${id}/backlinks`),
   },
   tags: {
     list: (): Promise<Array<ITag>> => api('get', '/tags'),

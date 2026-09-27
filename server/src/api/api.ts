@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
+import { createBacklinksService } from "../components/links/BacklinksService.ts";
 import { createFSMediaStore } from "../components/media/FSMediaStore.ts";
 import { type NoteStore } from "../components/notes/NotesStore.ts";
 import createQuestionsService from "../components/questions/QuestionService.ts";
@@ -21,6 +22,7 @@ export const createApi = (noteStore: NoteStore, mtHome: string) => {
   const reviewService = createReviewService(noteStore);
   const questionsService = createQuestionsService(noteStore);
   const timelineService = createTimelineService(noteStore);
+  const backlinksService = createBacklinksService(noteStore);
   const syncService = createSyncService(mtHome);
   const mediaStore = createFSMediaStore(mtHome);
   const quizStore = createFSQuizStore(mtHome);
@@ -82,6 +84,10 @@ export const createApi = (noteStore: NoteStore, mtHome: string) => {
         }),
       timeline: async () =>
         safe(async () => ok(await timelineService.getTimeline())),
+      refs: async () =>
+        safe(async () => ok(await backlinksService.getAllRefs())),
+      backlinks: async (id: string) =>
+        safe(async () => ok(await backlinksService.getBacklinks(id))),
       fav: async (id: string) =>
         safe(async () => {
           const note = await noteStore.getNote(id);
