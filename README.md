@@ -4,6 +4,7 @@
 [![Docker version](https://img.shields.io/docker/v/hiquest/mt?sort=semver&label=docker)](https://hub.docker.com/r/hiquest/mt)
 [![Docker pulls](https://img.shields.io/docker/pulls/hiquest/mt)](https://hub.docker.com/r/hiquest/mt)
 [![Image size](https://img.shields.io/docker/image-size/hiquest/mt/latest)](https://hub.docker.com/r/hiquest/mt)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Knowledge management meets spaced repetition.
 
@@ -107,3 +108,7 @@ Contributions are welcome! Please open issues and pull requests.
 ### AI usage
 
 AI usage is allowed. Just make sure you review the code before submitting.
+
+## License
+
+mt is released under the [MIT License](LICENSE).
