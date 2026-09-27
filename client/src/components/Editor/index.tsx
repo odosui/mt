@@ -40,17 +40,24 @@ const Editor: React.FC<Props> = ({
   })
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const pendingSelection = useRef<{ start: number; end: number } | null>(null)
 
+  // Applied right after React writes the new value, before any further
+  // keystroke lands; a deferred timer would move the caret under fast typing.
   const setSelectionRange = (start: number, end: number): void => {
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus()
-        textareaRef.current.setSelectionRange(start, end)
-        setSelectionStart(start)
-        setSelectionEnd(end)
-      }
-    }, 0)
+    pendingSelection.current = { start, end }
   }
+
+  useLayoutEffect(() => {
+    const selection = pendingSelection.current
+    if (!selection || !textareaRef.current) return
+
+    pendingSelection.current = null
+    textareaRef.current.focus()
+    textareaRef.current.setSelectionRange(selection.start, selection.end)
+    setSelectionStart(selection.start)
+    setSelectionEnd(selection.end)
+  })
 
   const updateAutocomplete = useCallback((text: string, cursorPos: number) => {
     const detected = detectTrigger(text, cursorPos)
@@ -77,13 +84,7 @@ const Editor: React.FC<Props> = ({
       setValue(text)
       onChange(text)
       setTrigger(null)
-
-      setTimeout(() => {
-        if (textareaRef.current) {
-          textareaRef.current.focus()
-          textareaRef.current.setSelectionRange(cursor, cursor)
-        }
-      }, 0)
+      setSelectionRange(cursor, cursor)
     },
     [trigger, onChange],
   )
