@@ -33,6 +33,10 @@ function currentCommit() {
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // Mermaid's parser chunk (~660 kB) is lazy-loaded only for notes with diagrams.
+    chunkSizeWarningLimit: 800,
+  },
   define: {
     API_SERVER_URL: JSON.stringify(apiServerUrl),
     APP_VERSION: JSON.stringify(APP_VERSION),
