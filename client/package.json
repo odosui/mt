@@ -15,7 +15,6 @@
     "@primer/octicons-react": "^19.15.1",
     "date-fns": "^4.1.0",
     "mermaid": "^11.12.0",
-    "motion": "^12.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^9.1.0",

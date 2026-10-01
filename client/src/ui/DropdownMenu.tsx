@@ -1,6 +1,8 @@
-import { AnimatePresence, motion } from 'motion/react'
 import React, { memo, useCallback } from 'react'
+import { usePresence } from '../hooks/usePresence'
 import ClickOutside from './ClickOutside'
+
+const EXIT_MS = 200
 
 type Props = {
   open: boolean
@@ -14,22 +16,18 @@ const DropdownMenu = ({ open, onClose, children }: Props) => {
       onClose()
     }
   }, [open, onClose])
+  const { isMounted, isExiting } = usePresence(open, EXIT_MS)
+
+  if (!isMounted) {
+    return null
+  }
 
   return (
-    <AnimatePresence>
-      {open && (
-        <ClickOutside onClickOutside={handleClose}>
-          <motion.div
-            className="dropdown-menu"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-          >
-            {children}
-          </motion.div>
-        </ClickOutside>
-      )}
-    </AnimatePresence>
+    <ClickOutside onClickOutside={handleClose}>
+      <div className={isExiting ? 'dropdown-menu is-exiting' : 'dropdown-menu'}>
+        {children}
+      </div>
+    </ClickOutside>
   )
 }
 

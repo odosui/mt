@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import api from '../../api'
@@ -49,19 +48,13 @@ const FlashCards: React.FC = () => {
       <div className="flashcards-page">
         {mode == 'review' && question && (
           <div className="review-mode">
-            <motion.div
-              className="question-area"
-              key={question?.question}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-            >
+            <div className="question-area" key={question?.question}>
               <Flashcard
                 q={question}
                 onReviewGood={handleGood}
                 onReviewBad={handleBad}
               />
-            </motion.div>
+            </div>
             <div className="stats">{rest.length} cards left</div>
           </div>
         )}

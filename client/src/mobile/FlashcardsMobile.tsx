@@ -1,8 +1,10 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import api from '../api'
 import Flashcard from '../components/Flashcard'
 import { Question } from '../types'
+import SwapTransition from '../ui/SwapTransition'
+
+const CARD_SWAP_MS = 200
 
 const FlashCardsMobile = () => {
   const [questions, setQuestions] = useState<Question[]>([])
@@ -58,24 +60,17 @@ const FlashCardsMobile = () => {
                 <b>{rest.length}</b> cards left to review
               </div>
             </div>
-            <AnimatePresence initial={false}>
-              <motion.div
-                className="question-area"
-                key={question?.note_id + question?.question}
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                style={{ position: 'absolute' }}
-              >
-                <Flashcard
-                  q={question}
-                  onReviewGood={handleGood}
-                  onReviewBad={handleBad}
-                  key={question?.note_id + question?.question}
-                />
-              </motion.div>
-            </AnimatePresence>
+            <SwapTransition
+              itemKey={question.note_id + question.question}
+              className="question-area"
+              durationMs={CARD_SWAP_MS}
+            >
+              <Flashcard
+                q={question}
+                onReviewGood={handleGood}
+                onReviewBad={handleBad}
+              />
+            </SwapTransition>
           </div>
         )}
 

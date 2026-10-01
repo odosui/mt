@@ -348,6 +348,15 @@ body {
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(2px);
+  animation: modal-overlay-in 0.2s ease-out;
+
+  &.is-exiting {
+    animation: modal-overlay-out 0.2s ease-in forwards;
+
+    .generic-modal {
+      animation: modal-out 0.2s ease-in forwards;
+    }
+  }
 
   .generic-modal {
     position: relative;
@@ -356,11 +365,38 @@ body {
     border-radius: $radius-lg;
     z-index: 11;
     box-shadow: var(--shadow-modal);
+    animation: modal-in 0.2s ease-out;
 
     .generic-modal-content {
       max-width: $unit14;
       width: 100%;
     }
+  }
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20vh);
+  }
+}
+
+@keyframes modal-out {
+  to {
+    opacity: 0;
+    transform: translateY(-20vh);
   }
 }
 
@@ -745,6 +781,25 @@ body {
   @extend .hover-menu;
   right: 0;
   top: 2rem;
+  animation: dropdown-in 0.2s ease-out;
+
+  &.is-exiting {
+    animation: dropdown-out 0.2s ease-in forwards;
+  }
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes dropdown-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 
 .dropzone {

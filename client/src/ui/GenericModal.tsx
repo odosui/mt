@@ -1,7 +1,9 @@
 import { XIcon } from '@primer/octicons-react'
-import { AnimatePresence, motion } from 'motion/react'
 import * as React from 'react'
 import { createPortal } from 'react-dom'
+import { usePresence } from '../hooks/usePresence'
+
+const EXIT_MS = 200
 
 const GenericModal: React.FC<{
   isOpen: boolean
@@ -10,6 +12,12 @@ const GenericModal: React.FC<{
   contentClass?: string
   children: React.ReactNode
 }> = ({ isOpen, onClose, children, contentLabel, contentClass }) => {
+  const { isMounted, isExiting } = usePresence(isOpen, EXIT_MS)
+
+  if (!isMounted) {
+    return null
+  }
+
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose()
@@ -17,48 +25,34 @@ const GenericModal: React.FC<{
   }
 
   return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="generic-modal-overlay"
-          role="presentation"
-          onClick={handleOverlayClick}
-          // motion animation
-          // appears from the top
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+    <div
+      className={
+        isExiting ? 'generic-modal-overlay is-exiting' : 'generic-modal-overlay'
+      }
+      role="presentation"
+      onClick={handleOverlayClick}
+    >
+      <div
+        className="generic-modal"
+        aria-modal="true"
+        role="dialog"
+        aria-label={contentLabel}
+      >
+        <a
+          className="modalClose"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault()
+            onClose()
+          }}
         >
-          <motion.div
-            className="generic-modal"
-            aria-modal="true"
-            role="dialog"
-            aria-label={contentLabel}
-            // motion animation
-            // appears from the top
-            initial={{ y: '-20vh', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '-20vh', opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <a
-              className="modalClose"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                onClose()
-              }}
-            >
-              <XIcon />
-            </a>
-            <div className={['generic-modal-content', contentClass].join(' ')}>
-              {children}
-            </div>
-          </motion.div>
-          ,
-        </motion.div>
-      )}
-    </AnimatePresence>,
+          <XIcon />
+        </a>
+        <div className={['generic-modal-content', contentClass].join(' ')}>
+          {children}
+        </div>
+      </div>
+    </div>,
     document.body,
   )
 }

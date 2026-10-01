@@ -317,8 +317,32 @@
     justify-content: center;
     height: calc(100% - $unit7);
     flex-direction: column;
+    position: absolute;
     left: 0;
     right: 0;
+
+    &.is-entering {
+      animation: mobile-card-in 0.2s ease-out;
+    }
+
+    &.is-leaving {
+      animation: mobile-card-out 0.2s ease-out forwards;
+      pointer-events: none;
+    }
+  }
+
+  @keyframes mobile-card-in {
+    from {
+      opacity: 0;
+      transform: translateX(300px);
+    }
+  }
+
+  @keyframes mobile-card-out {
+    to {
+      opacity: 0;
+      transform: translateX(-300px);
+    }
   }
 
   .review-card {

@@ -19,6 +19,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      animation: review-card-in 0.3s ease-out;
       .review-card {
         border: 1px solid var(--borderColor);
         box-shadow: var(--shadow-card);
@@ -242,5 +243,12 @@
         justify-content: flex-start;
       }
     }
+  }
+}
+
+@keyframes review-card-in {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
   }
 }
