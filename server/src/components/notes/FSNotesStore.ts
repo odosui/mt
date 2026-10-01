@@ -5,6 +5,7 @@ import os from "os";
 import path from "path";
 import { noSkipReviewByTag, requresReview } from "../reviews/utils.ts";
 import { type Flashcard, type Note, type NoteStore } from "./NotesStore.ts";
+import { dedupeFlashcards } from "./dedupeFlashcards.ts";
 import { extractTitle, noteFilename } from "./utils.ts";
 
 function getDefaultMTHome() {
@@ -435,7 +436,7 @@ function readNote(id: string, content: string): Note {
     id,
     body: (body ?? "").trim(),
     tags: extractTags(body ?? ""),
-    flashcards: flashcards,
+    flashcards: dedupeFlashcards(flashcards),
     level: parseInt(mt.level ?? "0", 10),
     created_at: mt.created_at ?? "",
     updated_at: mt.updated_at ?? "",
